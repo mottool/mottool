@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>mottool</title>
+<base href="/mottool/v1-handdrawn/" />
+<meta name="description" content="mottool — a small bookshop, taking its time." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600&family=Gaegu:wght@400;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="/mottool/assets/book.png" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- SVG filter for wobbly hand-drawn look -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <filter id="wobble">
+      <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="3"/>
+      <feDisplacementMap in="SourceGraphic" scale="2.4"/>
+    </filter>
+    <filter id="wobble-soft">
+      <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="2" seed="7"/>
+      <feDisplacementMap in="SourceGraphic" scale="1.4"/>
+    </filter>
+  </defs>
+</svg>
+
+<header class="hdr">
+  <a href="/" class="logo">
+    <img src="/mottool/assets/book.png" alt="" class="logo-mark"/>
+    <span>mottool</span>
+  </a>
+  <nav class="nav">
+    <a href="#" class="on">all</a>
+    <a href="#">new</a>
+    <a href="#">featured</a>
+    <a href="#">back in stock</a>
+    <a href="#">curated</a>
+    <a href="#">editorial</a>
+  </nav>
+  <div class="util">
+    <a href="#">search</a>
+    <a href="#">cart (0)</a>
+  </div>
+</header>
+
+<section class="hero">
+  <img src="/mottool/assets/mascot.png" alt="A long creature looking at a book" />
+  <canvas id="heroCanvas" class="hello-canvas" aria-label="hello, come read something quiet."></canvas>
+  <noscript><p class="hello">hello, come read<br/>something quiet.</p></noscript>
+</section>
+
+<nav class="tags">
+  <a href="#" class="on">all</a>
+  <a href="#">art</a>
+  <a href="#">architecture</a>
+  <a href="#">design</a>
+  <a href="#">fashion</a>
+  <a href="#">film</a>
+  <a href="#">fiction</a>
+  <a href="#">food</a>
+  <a href="#">music</a>
+  <a href="#">nature</a>
+  <a href="#">photography</a>
+  <a href="#">poetry</a>
+  <a href="#">politics</a>
+  <a href="#">queer</a>
+  <a href="#">theory</a>
+  <a href="#">travel</a>
+</nav>
+
+<section class="block">
+  <div class="bh"><h2>new books</h2><a href="#">view all →</a></div>
+  <div class="grid">
+    <article class="c"><a href="#" class="book"><span class="bspine"></span><span class="btitle">Quiet<br/>Rooms</span></a><h3>Quiet Rooms</h3><p>Hanna Lee</p><p class="pub">Paper Island Press</p><p class="p">£24.00</p></article>
+    <article class="c"><a href="#" class="book b2"><span class="bspine"></span><span class="btitle">Index 01<br/>Ground</span></a><h3>Index 01 — Ground</h3><p>ed. Min Park</p><p class="pub">mottool editions</p><p class="p">£18.00</p></article>
+    <article class="c"><a href="#" class="book"><span class="bspine"></span><span class="btitle">Soft<br/>Field</span></a><h3>Soft Field</h3><p>Yuji Nakamura</p><p class="pub">Loam Books</p><p class="p">£32.00</p></article>
+    <article class="c"><a href="#" class="book b3"><span class="bspine"></span><span class="btitle">After<br/>Noon</span></a><h3>After Noon</h3><p>Clara Voss</p><p class="pub">Halftone</p><p class="p">£28.00</p></article>
+    <article class="c"><a href="#" class="book"><span class="bspine"></span><span class="btitle">A Guide to<br/>Weather</span></a><h3>A Guide to Weather</h3><p>Ines Auriol</p><p class="pub">Cold Press</p><p class="p">£38.00</p></article>
+    <article class="c"><a href="#" class="book b2"><span class="bspine"></span><span class="btitle">Blue<br/>Hour</span></a><h3>Blue Hour</h3><p>Tomás Aguirre</p><p class="pub">Night School</p><p class="p">£29.00</p></article>
+    <article class="c"><a href="#" class="book b3"><span class="bspine"></span><span class="btitle">Brick &amp;<br/>Mortar</span></a><h3>Brick &amp; Mortar</h3><p>Studio Noor</p><p class="pub">MASS</p><p class="p">£45.00</p></article>
+    <article class="c out"><a href="#" class="book"><span class="bspine"></span><span class="btitle">Open<br/>Door</span></a><h3>Open Door</h3><p>Rae Okamoto</p><p class="pub">Field Notes</p><p class="p">£24.00 <em>(out)</em></p></article>
+  </div>
+</section>
+
+<section class="block">
+  <div class="bh"><h2>featured books</h2><a href="#">view all →</a></div>
+  <div class="grid">
+    <article class="c"><a href="#" class="book b3"><span class="bspine"></span><span class="btitle">Slow<br/>Hours</span></a><h3>Slow Hours</h3><p>Mira Chen</p><p class="pub">Verso Editions</p><p class="p">£30.00</p></article>
+    <article class="c"><a href="#" class="book b2"><span class="bspine"></span><span class="btitle">Earthworks</span></a><h3>Earthworks</h3><p>D. Halloran</p><p class="pub">Granary</p><p class="p">£42.00</p></article>
+    <article class="c"><a href="#" class="book"><span class="bspine"></span><span class="btitle">Lemon<br/>Paper</span></a><h3>Lemon Paper</h3><p>Sora Kim</p><p class="pub">Small Hours</p><p class="p">£16.00</p></article>
+    <article class="c"><a href="#" class="book"><span class="bspine"></span><span class="btitle">Ground<br/>Plan</span></a><h3>Ground Plan</h3><p>Office AB</p><p class="pub">Plinth</p><p class="p">£55.00</p></article>
+    <article class="c"><a href="#" class="book b3"><span class="bspine"></span><span class="btitle">Sea<br/>Grass</span></a><h3>Sea Grass</h3><p>N. Oshiro</p><p class="pub">Littoral</p><p class="p">£28.00</p></article>
+    <article class="c"><a href="#" class="book b2"><span class="bspine"></span><span class="btitle">Black<br/>Book</span></a><h3>Black Book</h3><p>Various</p><p class="pub">mottool editions</p><p class="p">£35.00</p></article>
+    <article class="c"><a href="#" class="book"><span class="bspine"></span><span class="btitle">Kitchen<br/>Plans</span></a><h3>Kitchen Plans</h3><p>Studio Ordinary</p><p class="pub">Ordinary</p><p class="p">£26.00</p></article>
+    <article class="c"><a href="#" class="book"><span class="bspine"></span><span class="btitle">Low<br/>Tide</span></a><h3>Low Tide</h3><p>E. Marston</p><p class="pub">Harbour</p><p class="p">£22.00</p></article>
+  </div>
+</section>
+
+<section class="block">
+  <div class="bh"><h2>back in stock</h2><a href="#">view all →</a></div>
+  <div class="grid">
+    <article class="c"><a href="#" class="book"><span class="bspine"></span><span class="btitle">Year<br/>One</span></a><h3>Year One</h3><p>K. Andersen</p><p class="pub">Verso Editions</p><p class="p">£19.00</p></article>
+    <article class="c"><a href="#" class="book b3"><span class="bspine"></span><span class="btitle">Field<br/>Studies</span></a><h3>Field Studies</h3><p>J. Park</p><p class="pub">Loam</p><p class="p">£27.00</p></article>
+    <article class="c"><a href="#" class="book b2"><span class="bspine"></span><span class="btitle">Noise</span></a><h3>Noise</h3><p>T. Vogel</p><p class="pub">Night School</p><p class="p">£21.00</p></article>
+    <article class="c"><a href="#" class="book"><span class="bspine"></span><span class="btitle">Rose<br/>Chapter</span></a><h3>Rose Chapter</h3><p>Lin Wei</p><p class="pub">Small Hours</p><p class="p">£18.00</p></article>
+  </div>
+</section>
+
+<section class="block curated">
+  <div class="bh"><h2>curated — studio ordinary</h2><a href="#">see the shelf →</a></div>
+  <p class="note">ten books on the architecture of the everyday — doors, hallways, kitchens, and the spaces between. hand-picked for mottool, april 2026.</p>
+  <div class="grid">
+    <article class="c"><a href="#" class="book"><span class="bspine"></span><span class="btitle">Kitchen<br/>Plans</span></a><h3>Kitchen Plans</h3><p>Studio Ordinary</p><p class="pub">Ordinary</p><p class="p">£26.00</p></article>
+    <article class="c"><a href="#" class="book"><span class="bspine"></span><span class="btitle">Ground<br/>Plan</span></a><h3>Ground Plan</h3><p>Office AB</p><p class="pub">Plinth</p><p class="p">£55.00</p></article>
+    <article class="c"><a href="#" class="book b3"><span class="bspine"></span><span class="btitle">Doors</span></a><h3>Doors</h3><p>H. Wilmot</p><p class="pub">Plinth</p><p class="p">£34.00</p></article>
+    <article class="c"><a href="#" class="book b2"><span class="bspine"></span><span class="btitle">Hallway</span></a><h3>Hallway</h3><p>Studio Ordinary</p><p class="pub">Ordinary</p><p class="p">£24.00</p></article>
+  </div>
+</section>
+
+<section class="block editorial">
+  <div class="bh"><h2>editorial</h2><a href="#">all articles →</a></div>
+  <div class="edit-grid">
+    <a href="#" class="ed"><div class="ed-thumb t1"></div><p class="kicker">interview</p><h3>a day in the life of a small press</h3><p>with paper island press, on binding by hand.</p></a>
+    <a href="#" class="ed"><div class="ed-thumb t2"></div><p class="kicker">reading list</p><h3>ten books for a long spring</h3><p>slow-paced titles for april and may.</p></a>
+    <a href="#" class="ed"><div class="ed-thumb t3"></div><p class="kicker">essay</p><h3>on the weight of a book</h3><p>why physical publications still matter in 2026.</p></a>
+  </div>
+</section>
+
+<section class="block index-block">
+  <div class="bh"><h2>the index</h2><span class="bh-note">hover a title</span></div>
+  <ul class="index-list" id="indexList">
+    <li data-cover="#d9d4c7" data-title="Quiet Rooms"><a href="#"><span class="t">Quiet Rooms</span><span class="a">Hanna Lee</span><span class="y">2025</span><span class="pr">£24</span></a></li>
+    <li data-cover="#1a1a1a" data-title="Index 01"><a href="#"><span class="t">Index 01 — Ground</span><span class="a">ed. Min Park</span><span class="y">2026</span><span class="pr">£18</span></a></li>
+    <li data-cover="#e7b7a6" data-title="Soft Field"><a href="#"><span class="t">Soft Field</span><span class="a">Yuji Nakamura</span><span class="y">2024</span><span class="pr">£32</span></a></li>
+    <li data-cover="#c8d3bd" data-title="After Noon"><a href="#"><span class="t">After Noon</span><span class="a">Clara Voss</span><span class="y">2025</span><span class="pr">£28</span></a></li>
+    <li data-cover="#efe9df" data-title="A Guide to Weather"><a href="#"><span class="t">A Guide to Weather</span><span class="a">Ines Auriol</span><span class="y">2023</span><span class="pr">£38</span></a></li>
+    <li data-cover="#2b3a52" data-title="Blue Hour"><a href="#"><span class="t">Blue Hour</span><span class="a">Tomás Aguirre</span><span class="y">2025</span><span class="pr">£29</span></a></li>
+    <li data-cover="#b6643b" data-title="Brick &amp; Mortar"><a href="#"><span class="t">Brick &amp; Mortar</span><span class="a">Studio Noor</span><span class="y">2022</span><span class="pr">£45</span></a></li>
+    <li data-cover="#f2d24a" data-title="Citrus"><a href="#"><span class="t">Citrus</span><span class="a">Ha-neul Seo</span><span class="y">2024</span><span class="pr">£15</span></a></li>
+    <li data-cover="#3d3d3d" data-title="Night Walk"><a href="#"><span class="t">Night Walk</span><span class="a">L. Moreau</span><span class="y">2024</span><span class="pr">£20</span></a></li>
+    <li data-cover="#dcc7f0" data-title="Lilac Notes"><a href="#"><span class="t">Lilac Notes</span><span class="a">June Ito</span><span class="y">2023</span><span class="pr">£25</span></a></li>
+    <li data-cover="#c2d9e0" data-title="Tide"><a href="#"><span class="t">Tide</span><span class="a">Anders Vik</span><span class="y">2024</span><span class="pr">£22</span></a></li>
+    <li data-cover="#e2ddd1" data-title="Slow Hours"><a href="#"><span class="t">Slow Hours</span><span class="a">Mira Chen</span><span class="y">2025</span><span class="pr">£30</span></a></li>
+    <li data-cover="#4a3b2f" data-title="Earthworks"><a href="#"><span class="t">Earthworks</span><span class="a">D. Halloran</span><span class="y">2022</span><span class="pr">£42</span></a></li>
+    <li data-cover="#f5e7c1" data-title="Lemon Paper"><a href="#"><span class="t">Lemon Paper</span><span class="a">Sora Kim</span><span class="y">2026</span><span class="pr">£16</span></a></li>
+    <li data-cover="#bdb1a4" data-title="Ground Plan"><a href="#"><span class="t">Ground Plan</span><span class="a">Office AB</span><span class="y">2024</span><span class="pr">£55</span></a></li>
+    <li data-cover="#9fb7a2" data-title="Sea Grass"><a href="#"><span class="t">Sea Grass</span><span class="a">N. Oshiro</span><span class="y">2023</span><span class="pr">£28</span></a></li>
+  </ul>
+
+  <!-- Floating cursor preview -->
+  <div class="preview" id="preview" aria-hidden="true">
+    <div class="preview-book">
+      <span class="preview-spine"></span>
+      <span class="preview-title"></span>
+    </div>
+  </div>
+</section>
+
+<section class="news">
+  <img src="/mottool/assets/mascot.png" alt="" class="news-mascot"/>
+  <div>
+    <h2>a letter, now and then.</h2>
+    <p>new arrivals, editorial, and 15% off your first order.</p>
+    <form onsubmit="event.preventDefault(); this.querySelector('button').textContent='thanks ♡';">
+      <input type="email" placeholder="your email" required />
+      <button type="submit">subscribe</button>
+    </form>
+  </div>
+</section>
+
+<footer class="ftr">
+  <div><h4>shop</h4><a href="#">all books</a><a href="#">new</a><a href="#">featured</a><a href="#">back in stock</a><a href="#">curated</a></div>
+  <div><h4>mottool</h4><a href="#">about</a><a href="#">editorial</a><a href="#">stockists</a><a href="#">trade / wholesale</a></div>
+  <div><h4>links</h4><a href="#">instagram</a><a href="#">faqs</a><a href="#">shipping &amp; returns</a><a href="#">contact</a></div>
+  <div><h4>visit</h4><p>mottool<br/>대전 서구<br/>둔산동 00-00, 2F<br/>daejeon, kr</p><p class="hrs">tue–sun · 12–20</p></div>
+  <div class="fb">
+    <p>© 2026 mottool — a small bookshop, taking its time.</p>
+    <p><a href="#">privacy</a> · <a href="#">terms</a></p>
+  </div>
+</footer>
+
+<script type="module">
+// ----- Hero kinetic typography, powered by pretext -----
+// pretext: https://github.com/chenglou/pretext
+import {
+  prepareWithSegments,
+  layoutNextLineRange,
+  materializeLineRange
+} from 'https://esm.sh/@chenglou/pretext';
+
+(async () => {
+  const canvas = document.getElementById('heroCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const TEXT = 'hello, come read\nsomething quiet.';
+
+  const mouse = { x: -9999, y: -9999, has: false };
+  canvas.addEventListener('pointermove', (e) => {
+    const r = canvas.getBoundingClientRect();
+    mouse.x = e.clientX - r.left;
+    mouse.y = e.clientY - r.top;
+    mouse.has = true;
+  });
+  canvas.addEventListener('pointerleave', () => { mouse.has = false; });
+
+  // Wait for Caveat to load so measurement is correct
+  try { await document.fonts.load('500 40px Caveat'); } catch {}
+
+  let lines = [];
+  let dims = { w: 0, h: 0, fontSize: 40, lineHeight: 48, font: '' };
+
+  function layout(){
+    const dpr = window.devicePixelRatio || 1;
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    canvas.width = Math.floor(w * dpr);
+    canvas.height = Math.floor(h * dpr);
+    const fontSize = Math.max(24, Math.min(w * 0.075, 56));
+    const font = `500 ${fontSize}px "Caveat", cursive`;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.font = font;
+
+    // pretext handles wrapping/measurement per line
+    const prepared = prepareWithSegments(TEXT, font, { whiteSpace: 'pre-wrap' });
+    let cursor = { segmentIndex: 0, graphemeIndex: 0 };
+    const out = [];
+    let guard = 0;
+    while (guard++ < 32){
+      const range = layoutNextLineRange(prepared, cursor, w);
+      if (!range) break;
+      const line = materializeLineRange(prepared, range);
+      out.push(line);
+      cursor = range.end;
+    }
+    lines = out;
+    dims = { w, h, fontSize, lineHeight: fontSize * 1.08, font };
+  }
+
+  layout();
+  window.addEventListener('resize', layout);
+
+  const start = performance.now();
+
+  function draw(now){
+    const t = (now - start) / 1000;
+    const { w, h, fontSize, lineHeight, font } = dims;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.font = font;
+    ctx.fillStyle = '#111';
+    ctx.textBaseline = 'alphabetic';
+
+    const totalH = lineHeight * lines.length;
+    let y = (h - totalH) / 2 + fontSize;
+
+    const R = 140;
+    for (const line of lines){
+      const chars = [...line.text];
+      // cumulative width via measureText
+      let x = 0;
+      const widths = chars.map(c => {
+        const w = ctx.measureText(c).width;
+        return w;
+      });
+      const lineW = widths.reduce((a,b)=>a+b, 0);
+      let cx = (w - lineW) / 2;
+
+      for (let i = 0; i < chars.length; i++){
+        const ch = chars[i];
+        const cw = widths[i];
+        const centerX = cx + cw/2;
+        const centerY = y - fontSize * 0.35;
+
+        // idle wave
+        const wave = Math.sin(t * 1.6 + i * 0.35 + y * 0.02) * 2.2;
+        let ox = 0, oy = wave, rot = Math.sin(t*0.9 + i*0.2) * 0.02;
+
+        // cursor repulsion
+        if (mouse.has){
+          const dx = centerX - mouse.x;
+          const dy = centerY - mouse.y;
+          const d2 = dx*dx + dy*dy;
+          if (d2 < R*R){
+            const d = Math.sqrt(d2) || 1;
+            const f = (1 - d/R);
+            ox += (dx/d) * f * 18;
+            oy += (dy/d) * f * 18;
+            rot += f * 0.35 * Math.sign(dx);
+          }
+        }
+
+        ctx.save();
+        ctx.translate(centerX + ox, y + oy);
+        ctx.rotate(rot);
+        ctx.fillText(ch, -cw/2, 0);
+        ctx.restore();
+
+        cx += cw;
+      }
+      y += lineHeight;
+    }
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+})().catch(err => {
+  console.warn('pretext hero failed, falling back:', err);
+  const c = document.getElementById('heroCanvas');
+  if (c) {
+    const p = document.createElement('p');
+    p.className = 'hello';
+    p.innerHTML = 'hello, come read<br/>something quiet.';
+    c.replaceWith(p);
+  }
+});
+
+// ----- Index hover preview (unchanged) -----
+(() => {
+  const list = document.getElementById('indexList');
+  const preview = document.getElementById('preview');
+  const book = preview.querySelector('.preview-book');
+  const titleEl = preview.querySelector('.preview-title');
+  let targetX = 0, targetY = 0, curX = 0, curY = 0, raf = null, visible = false;
+
+  const lerp = (a,b,t) => a + (b-a)*t;
+  const tick = () => {
+    curX = lerp(curX, targetX, 0.16);
+    curY = lerp(curY, targetY, 0.16);
+    preview.style.transform = `translate(${curX}px, ${curY}px)`;
+    raf = requestAnimationFrame(tick);
+  };
+
+  list.addEventListener('mousemove', (e) => {
+    const li = e.target.closest('li[data-cover]');
+    targetX = e.clientX + 24;
+    targetY = e.clientY - 60;
+    if (!li) return;
+    if (!visible){
+      visible = true;
+      preview.classList.add('on');
+      curX = targetX; curY = targetY;
+      if (!raf) tick();
+    }
+    book.style.background = li.dataset.cover;
+    book.style.color = isDark(li.dataset.cover) ? '#fff' : '#111';
+    titleEl.textContent = li.dataset.title;
+  });
+  list.addEventListener('mouseleave', () => {
+    visible = false;
+    preview.classList.remove('on');
+    cancelAnimationFrame(raf); raf = null;
+  });
+
+  function isDark(hex){
+    const c = hex.replace('#','');
+    const r = parseInt(c.substr(0,2),16);
+    const g = parseInt(c.substr(2,2),16);
+    const b = parseInt(c.substr(4,2),16);
+    return (r*299 + g*587 + b*114) / 1000 < 130;
+  }
+})();
+</script>
+</body>
+</html>

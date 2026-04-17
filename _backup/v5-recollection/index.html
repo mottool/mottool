@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>mottool recollection</title>
+<base href="/mottool/v5-recollection/" />
+<meta name="description" content="mottool recollection — an archive of books, held in memory." />
+<link rel="icon" type="image/png" href="/mottool/assets/book.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat+Brush&family=Rubik+Wet+Paint&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- Full-bleed background layer -->
+<div class="bg" id="bg"></div>
+<div class="grain"></div>
+<div class="vignette"></div>
+
+<!-- Top-left: just book icon -->
+<header class="corner tl">
+  <img src="/mottool/assets/book.png" alt="mottool" class="book-mark"/>
+</header>
+
+<!-- Top-right: mottool wordmark -->
+<div class="corner tr">
+  <span class="recol-mini">mottool</span>
+</div>
+
+<!-- Exit X button (visible only when launched) -->
+<button class="exit" id="exitBtn" aria-label="Exit">
+  <svg viewBox="0 0 40 40" aria-hidden="true">
+    <circle cx="20" cy="20" r="18" fill="none" stroke="#111" stroke-width="1"/>
+    <line x1="14" y1="14" x2="26" y2="26" stroke="#111" stroke-width="1.4"/>
+    <line x1="26" y1="14" x2="14" y2="26" stroke="#111" stroke-width="1.4"/>
+    <!-- blue hand-drawn scribble overlay -->
+    <path d="M8 10 Q 18 4 30 12 T 34 26 Q 22 34 10 28" fill="none" stroke="#2b6dff" stroke-width="3" stroke-linecap="round" opacity=".85"/>
+  </svg>
+</button>
+
+<!-- ===== LAUNCH SCREEN ===== -->
+<section class="launch" id="launch">
+  <img src="/mottool/assets/mascot.png" alt="mottool recollection" class="launch-mascot"/>
+  <div class="hold-row">
+    <span>Hold</span>
+    <button class="space-btn" id="spaceBtn">
+      <span class="space-fill" id="spaceFill"></span>
+      <span class="space-label">spacebar</span>
+    </button>
+    <span>to launch mottool recollection.</span>
+  </div>
+</section>
+
+<!-- ===== ARTIST (BOOK) CARD ===== -->
+<section class="card" id="card" aria-hidden="true">
+  <div class="card-inner">
+    <a href="#" class="cover" id="cardCover">
+      <span class="ct" id="cardCT">Quiet Rooms</span>
+    </a>
+    <div class="card-text">
+      <p class="year" id="cardYear">2026</p>
+      <h2 class="name"><span id="cardName">Hanna Lee</span><span class="high">— <span id="cardHigh">Quiet Rooms</span><svg class="stroke" viewBox="0 0 200 20" preserveAspectRatio="none"><path d="M3 14 Q 60 4 120 10 T 197 8" stroke="#ff6a2b" stroke-width="4" fill="none" stroke-linecap="round"/></svg></span></h2>
+      <p class="bio" id="cardBio"></p>
+      <a href="#" class="btn-line">
+        <span>Discover the book on mottool.kr</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Bottom prompt (when launched) -->
+<div class="hold-row bottom-prompt" id="bottomPrompt">
+  <span>Hold</span>
+  <button class="space-btn" id="spaceBtn2">
+    <span class="space-fill" id="spaceFill2"></span>
+    <span class="space-label">spacebar</span>
+  </button>
+  <span>to switch the book.</span>
+</div>
+
+<!-- Bottom corners -->
+<footer class="foot bl">
+  © Copyright mottool 2026 — <a href="#">about</a> — <a href="#">mottool.tv</a>
+</footer>
+<div class="foot br">
+  <span>#mottoolRecollection</span>
+  <span class="share">Share</span>
+  <a href="#" aria-label="Facebook" class="si">f</a>
+  <a href="#" aria-label="Twitter" class="si">t</a>
+  <a href="#" aria-label="Fullscreen" class="si">⇱</a>
+</div>
+
+<script>
+(() => {
+  const DATA = [
+    {year:'2026', name:'Hanna Lee', high:'Quiet Rooms', full:'Quiet Rooms',
+     bio:'Hanna Lee is a Seoul-based essayist whose first book "Quiet Rooms" gathers quiet observations on domestic spaces — kitchens, hallways, the light in borrowed apartments.',
+     color:'#f4f1ea', cover:'#d9d4c7'},
+    {year:'2025', name:'Min Park', high:'Index 01 — Ground', full:'Index 01',
+     bio:'Min Park edits the Index series for mottool editions. Volume 01, "Ground", collects writings on soil, floors, and the things we rest on.',
+     color:'#eceae2', cover:'#1a1a1a'},
+    {year:'2024', name:'Yuji Nakamura', high:'Soft Field', full:'Soft Field',
+     bio:'Yuji Nakamura photographs landscapes that refuse to resolve. "Soft Field" is his third monograph for Loam Books, printed in duotone.',
+     color:'#f6ebe2', cover:'#e7b7a6'},
+    {year:'2025', name:'Clara Voss', high:'After Noon', full:'After Noon',
+     bio:'Clara Voss writes essays about the hours that have no name. "After Noon" is her Halftone debut — a slow book for slow afternoons.',
+     color:'#eef0e6', cover:'#c8d3bd'},
+    {year:'2023', name:'Ines Auriol', high:'A Guide to Weather', full:'A Guide to Weather',
+     bio:'Ines Auriol\u2019s field notebook, eight years in the making. Published by Cold Press, with hand-sewn signatures.',
+     color:'#f4efe3', cover:'#efe9df'},
+    {year:'2025', name:'Tomás Aguirre', high:'Blue Hour', full:'Blue Hour',
+     bio:'Tomás Aguirre is a poet who writes only between 5 and 6 in the morning. Night School publishes him once a year.',
+     color:'#e6ecf2', cover:'#2b3a52'},
+    {year:'2022', name:'Studio Noor', high:'Brick & Mortar', full:'Brick & Mortar',
+     bio:'Studio Noor is a three-person architecture practice in Istanbul. "Brick & Mortar" is their first book, a photographic survey of facades.',
+     color:'#f3e4da', cover:'#b6643b'},
+  ];
+
+  const HOLD_MS = 650;
+  const bg = document.getElementById('bg');
+  const launch = document.getElementById('launch');
+  const card = document.getElementById('card');
+  const bottom = document.getElementById('bottomPrompt');
+  const exitBtn = document.getElementById('exitBtn');
+  const cover = document.getElementById('cardCover');
+  const ct = document.getElementById('cardCT');
+  const year = document.getElementById('cardYear');
+  const name = document.getElementById('cardName');
+  const high = document.getElementById('cardHigh');
+  const bio = document.getElementById('cardBio');
+
+  let idx = -1;
+  let launched = false;
+  let holding = false;
+  let holdStart = 0;
+  let raf = null;
+
+  function setBg(color){ bg.style.background = color; }
+  function render(){
+    const d = DATA[idx];
+    setBg(d.color);
+    cover.style.background = d.cover;
+    ct.textContent = d.full;
+    ct.style.color = isDark(d.cover) ? '#fff' : '#111';
+    year.textContent = d.year;
+    name.textContent = d.name + ' ';
+    high.textContent = d.high;
+    bio.textContent = d.bio;
+    card.classList.add('swap');
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => card.classList.remove('swap'));
+    });
+  }
+  function isDark(hex){
+    const c = hex.replace('#','');
+    const r=parseInt(c.slice(0,2),16),g=parseInt(c.slice(2,4),16),b=parseInt(c.slice(4,6),16);
+    return (r*299+g*587+b*114)/1000 < 130;
+  }
+
+  function enter(){
+    if (launched) return;
+    launched = true;
+    idx = 0;
+    document.body.classList.add('launched');
+    card.setAttribute('aria-hidden','false');
+    render();
+  }
+  function exit(){
+    launched = false;
+    idx = -1;
+    document.body.classList.remove('launched');
+    card.setAttribute('aria-hidden','true');
+    setBg('#f4f1ea');
+  }
+  function advance(){
+    if (!launched){ enter(); return; }
+    idx = (idx + 1) % DATA.length;
+    render();
+  }
+
+  const fills = [document.getElementById('spaceFill'), document.getElementById('spaceFill2')];
+  function setFill(pct){ fills.forEach(f => f && (f.style.width = (pct*100)+'%')); }
+
+  function tick(){
+    const t = (performance.now() - holdStart) / HOLD_MS;
+    if (t >= 1){
+      setFill(1);
+      advance();
+      stopHold();
+      return;
+    }
+    setFill(t);
+    raf = requestAnimationFrame(tick);
+  }
+  function startHold(){
+    if (holding) return;
+    holding = true;
+    holdStart = performance.now();
+    raf = requestAnimationFrame(tick);
+  }
+  function stopHold(){
+    holding = false;
+    if (raf) cancelAnimationFrame(raf);
+    raf = null;
+    setFill(0);
+  }
+
+  window.addEventListener('keydown', e => {
+    if (e.code === 'Space' && !e.repeat && !/^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName||'')){
+      e.preventDefault();
+      startHold();
+    }
+    if (e.key === 'Escape' && launched) exit();
+  });
+  window.addEventListener('keyup', e => {
+    if (e.code === 'Space') stopHold();
+  });
+
+  // Touch/mouse for mobile — long-press on buttons
+  ['spaceBtn','spaceBtn2'].forEach(id => {
+    const b = document.getElementById(id);
+    if (!b) return;
+    b.addEventListener('pointerdown', e => { e.preventDefault(); startHold(); });
+    b.addEventListener('pointerup', stopHold);
+    b.addEventListener('pointerleave', stopHold);
+    b.addEventListener('pointercancel', stopHold);
+  });
+
+  exitBtn.addEventListener('click', exit);
+
+  setBg('#f4f1ea');
+})();
+</script>
+
+</body>
+</html>

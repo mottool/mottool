@@ -1,0 +1,458 @@
+/* ====================================================
+   mottool v9 — loli moodboard collage (faithful)
+   每 section = pinterest moodboard panel
+==================================================== */
+
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+html,body{background:#1f5cff;color:#1a1a1a}
+body{
+  font-family:"Inter Tight",-apple-system,sans-serif;
+  font-size:14px;line-height:1.4;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block;user-select:none}
+button,input{font:inherit;color:inherit;background:none;border:0;outline:0}
+sup{font-size:.55em;vertical-align:super}
+
+/* ============ TOP NAV ============ */
+.topnav{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:12px 18px;
+  background:#fff;border-bottom:2px solid #1a1a1a;
+  position:sticky;top:0;z-index:100;
+  flex-wrap:wrap;gap:8px;
+}
+.logo{
+  font-family:"Bowlby One",sans-serif;
+  font-size:20px;color:#1a1a1a;letter-spacing:-0.02em;
+}
+.logo sup{color:#1f5cff}
+.nav-mid{display:flex;gap:14px;font-weight:700;font-size:12px;letter-spacing:.04em}
+.nav-mid a:hover{color:#1f5cff}
+.nav-r{display:flex;gap:6px}
+.ic{
+  font-size:10px;font-weight:900;letter-spacing:.06em;
+  background:#1a1a1a;color:#fff;padding:4px 9px;border-radius:999px;
+}
+.ic:hover{background:#1f5cff}
+
+/* ============ BOARD (moodboard panel) ============ */
+.board{
+  position:relative;
+  width:100%;
+  min-height:760px;
+  overflow:hidden;
+  padding:30px;
+}
+.b-hero{background:#1f5cff;min-height:920px}
+.b-2{background:#1f5cff;min-height:820px}
+.b-3{background:#fff;min-height:820px}
+.b-4{background:#ffd400;min-height:820px}
+.b-5{background:#ffd400;min-height:680px}
+
+@media (max-width:760px){
+  .board{min-height:680px;padding:20px 14px}
+  .b-hero{min-height:780px}
+}
+
+/* ============ BLOBS (background color shapes) ============ */
+.blob{
+  position:absolute;
+  background:#1f5cff;
+  z-index:0;
+  border-radius:0;
+}
+.blob-y{background:#ffd400}
+.blob-w{background:#fff}
+.blob-pk{background:#1f5cff}
+
+/* ============ TITLE FRAGMENTS (hero) ============ */
+.ft{
+  position:absolute;
+  letter-spacing:-0.04em;line-height:.85;z-index:6;
+  text-shadow:5px 5px 0 rgba(0,0,0,.18);
+}
+.ft-1{
+  top:8%;left:5%;
+  font-family:"Bowlby One",sans-serif;
+  font-size:clamp(60px, 11vw, 160px);color:#fff;
+}
+.ft-1 sup{
+  font-family:"Permanent Marker",cursive;
+  font-size:.45em;color:#ffd400;text-shadow:2px 2px 0 #1a1a1a;
+}
+.ft-2{
+  top:30%;right:6%;
+  font-family:"DM Serif Display",serif;
+  font-size:clamp(70px, 12vw, 180px);
+  color:#ffd400;font-style:italic;rotate:-3deg;
+}
+.ft-3{
+  top:64%;left:20%;
+  font-family:"Caveat Brush",cursive;
+  font-size:clamp(50px, 9vw, 120px);color:#fff;rotate:-6deg;
+}
+.ft-4{
+  bottom:8%;right:14%;
+  font-family:"Inter Tight",sans-serif;font-weight:900;
+  font-size:clamp(20px, 3.4vw, 50px);color:#1a1a1a;letter-spacing:-0.02em;
+  text-transform:uppercase;rotate:-2deg;
+  text-shadow:none;
+}
+@media (max-width:760px){
+  .ft-1{font-size:54px;top:4%;left:4%}
+  .ft-2{font-size:60px;top:24%;right:4%}
+  .ft-3{font-size:46px;top:54%;left:6%}
+  .ft-4{font-size:22px;bottom:6%;right:6%}
+}
+
+/* ============ TITLES (other boards) ============ */
+.title-2{
+  position:absolute;top:6%;left:6%;
+  font-family:"Bowlby One",sans-serif;
+  font-size:clamp(50px, 9vw, 130px);
+  color:#fff;letter-spacing:-0.04em;line-height:.85;
+  z-index:6;text-shadow:4px 4px 0 rgba(0,0,0,.18);
+}
+.title-3{
+  position:absolute;top:18%;left:14%;
+  font-family:"DM Serif Display",serif;
+  font-size:clamp(60px, 11vw, 160px);
+  color:#ffd400;font-style:italic;
+  letter-spacing:-0.04em;line-height:.85;
+  z-index:6;rotate:-2deg;
+  text-shadow:4px 4px 0 rgba(0,0,0,.15);
+}
+.title-2.black, .title-3.black{color:#1a1a1a}
+.title-3.black em{color:#1f5cff}
+.title-2.yellow{color:#ffd400}
+.title-3.yellow em{color:#1f5cff}
+.title-3 em{font-style:italic;color:inherit}
+
+/* ============ SCRAPS (book "covers" / cutouts) ============ */
+.scrap{
+  position:absolute;
+  display:flex;align-items:center;justify-content:center;
+  text-align:center;
+  aspect-ratio:1/1.35;
+  z-index:5;
+  border:2px solid #1a1a1a;
+  box-shadow:4px 4px 0 #1a1a1a;
+  color:#fff;
+  transition:transform .25s, box-shadow .25s, z-index 0s;
+}
+.scrap:hover{transform:rotate(0deg) scale(1.08);box-shadow:6px 8px 0 #1a1a1a;z-index:50}
+.lbl{
+  font-family:"Bowlby One",sans-serif;
+  font-size:clamp(11px, 1.1vw, 16px);
+  letter-spacing:-0.02em;line-height:.9;
+  padding:4px;
+}
+
+/* polaroid */
+.scrap.polaroid{
+  background:#fff;
+  aspect-ratio:1/1.18;
+  padding:6px 6px 4px;
+  display:block;
+  border:2px solid #1a1a1a;
+}
+.po-img{
+  display:block;
+  width:100%;aspect-ratio:1/1;
+  border:1px solid #1a1a1a;
+}
+.po-cap{
+  display:block;
+  font-family:"Caveat Brush",cursive;
+  font-size:11px;color:#1a1a1a;
+  text-align:center;margin-top:4px;
+  line-height:1.1;
+}
+
+/* ============ MAGAZINE CLIP ============ */
+.clip{
+  position:absolute;
+  background:#fff;
+  border:2px solid #1a1a1a;
+  box-shadow:5px 5px 0 #1a1a1a;
+  padding:10px 14px;
+  z-index:7;
+  display:flex;flex-direction:column;gap:4px;
+  max-width:200px;
+}
+.clip-1{
+  top:50%;left:50%;
+  rotate:-3deg;
+  background:#fff;
+}
+.clip-1 .clip-brand{
+  font-family:"DM Serif Display",serif;
+  font-size:24px;font-weight:700;color:#1a1a1a;
+  letter-spacing:.04em;line-height:1;
+  border-bottom:2px solid #1a1a1a;padding-bottom:4px;
+}
+.clip-1 .clip-head{
+  font-family:"DM Serif Display",serif;
+  font-size:14px;line-height:1.15;color:#1a1a1a;
+}
+.clip-1 .clip-head em{color:#1f5cff;font-style:italic}
+
+.clip-2{
+  bottom:14%;left:14%;rotate:5deg;
+  background:#000;color:#fff;
+  padding:14px 16px;
+  max-width:240px;
+}
+.clip-brand2{
+  font-family:"Bowlby One",sans-serif;
+  font-size:24px;color:#e50914;letter-spacing:.06em;
+}
+.clip-tag{
+  font-family:"VT323",monospace;
+  font-size:11px;color:#fff;letter-spacing:.16em;
+}
+.clip-head2{
+  font-family:"DM Serif Display",serif;font-style:italic;
+  font-size:24px;line-height:1.05;color:#fff;margin:4px 0;
+}
+.clip-meta{font-size:10px;color:#aaa;letter-spacing:.1em}
+
+@media (max-width:760px){
+  .clip-1{top:38%;left:30%;max-width:160px}
+  .clip-2{bottom:8%;left:5%;max-width:180px}
+}
+
+/* ============ MAG (board 2 magazine cover) ============ */
+.mag{
+  position:absolute;
+  top:46%;left:6%;
+  width:30%;min-width:220px;
+  background:#1f5cff;
+  border:3px solid #1a1a1a;
+  box-shadow:8px 8px 0 #1a1a1a;
+  padding:18px;
+  rotate:-3deg;
+  z-index:7;
+  display:flex;flex-direction:column;gap:8px;
+  color:#fff;
+}
+.mag-brand{
+  font-family:"Bowlby One",sans-serif;
+  font-size:30px;color:#1a1a1a;letter-spacing:-0.02em;
+}
+.mag-head{
+  font-family:"DM Serif Display",serif;
+  font-size:42px;line-height:.95;letter-spacing:-0.02em;color:#fff;
+}
+.mag-head em{color:#ffd400;font-style:italic}
+.mag-issue{
+  font-family:"VT323",monospace;font-size:14px;
+  color:#ffd400;letter-spacing:.1em;
+}
+.mag-tag{
+  font-family:"Permanent Marker",cursive;
+  font-size:13px;color:#1a1a1a;background:#ffd400;
+  padding:3px 8px;align-self:flex-start;rotate:-2deg;
+}
+@media (max-width:760px){
+  .mag{top:36%;left:5%;width:60%;min-width:180px}
+  .mag-head{font-size:32px}
+  .mag-brand{font-size:24px}
+}
+
+/* ============ TAPE STRIPS ============ */
+.tape{
+  position:absolute;width:80px;height:24px;
+  background:rgba(255,212,0,.7);
+  z-index:8;rotate:-12deg;
+  border:1px dashed rgba(0,0,0,.2);
+}
+.t-1{top:8%;left:34%;rotate:-12deg}
+.t-2{top:44%;right:30%;rotate:8deg;background:rgba(255,255,255,.6)}
+
+/* ============ PRICE TAGS ============ */
+.tag-pill{
+  position:absolute;
+  background:#1a1a1a;color:#ffd400;
+  font-family:"Bowlby One",sans-serif;
+  font-size:12px;letter-spacing:.06em;
+  padding:6px 12px;border-radius:999px;
+  border:2px solid #ffd400;
+  z-index:8;
+}
+
+/* ============ STICKERS ============ */
+.sticker{
+  position:absolute;
+  display:inline-flex;align-items:center;justify-content:center;
+  z-index:9;pointer-events:none;
+}
+.sticker svg{width:100%;height:auto;display:block}
+
+/* ============ SCRIBBLES ============ */
+.scrib{
+  position:absolute;z-index:9;pointer-events:none;
+}
+.scrib svg{width:100%;height:auto;display:block}
+
+/* ============ HANDWRITTEN MARKERS ============ */
+.hw{
+  position:absolute;
+  font-family:"Permanent Marker",cursive;
+  font-size:clamp(14px, 1.6vw, 22px);
+  z-index:10;white-space:nowrap;
+}
+
+/* ============ MASCOT ============ */
+.mascot{
+  position:absolute;
+  pointer-events:none;
+  z-index:4;
+}
+.mh{
+  bottom:2%;right:2%;
+  width:min(380px, 36vw);
+  filter:invert(1);
+  rotate:-4deg;
+}
+.mc{
+  bottom:-10%;left:-6%;
+  width:min(320px, 38vw);
+  rotate:8deg;
+  z-index:2;opacity:.7;
+}
+@media (max-width:760px){
+  .mh{width:140px;bottom:auto;top:6%;right:0;opacity:.7}
+}
+
+/* ============ QUOTE CLIP ============ */
+.quote-clip{
+  position:absolute;
+  background:#1a1a1a;color:#fff;
+  padding:16px 20px;
+  border:2px solid #1a1a1a;
+  box-shadow:6px 6px 0 #1f5cff;
+  max-width:240px;
+  z-index:7;
+  display:flex;flex-direction:column;gap:6px;
+}
+.qc-mark{
+  font-family:"DM Serif Display",serif;
+  font-size:60px;line-height:.6;color:#1f5cff;
+}
+.qc-text{
+  font-family:"DM Serif Display",serif;
+  font-size:22px;line-height:1.1;color:#fff;
+}
+.qc-text em{color:#ffd400;font-style:italic}
+.qc-by{
+  font-family:"Caveat Brush",cursive;
+  font-size:14px;color:#aaa;
+}
+
+/* ============ PROMPT CLIP (lab ai) ============ */
+.prompt-clip{
+  position:absolute;
+  width:240px;
+  padding:18px;
+  border:2px solid #1a1a1a;
+  box-shadow:5px 5px 0 #1a1a1a;
+  z-index:7;
+  display:flex;flex-direction:column;gap:8px;
+  overflow:hidden;
+}
+.pc-tag{
+  font-family:"VT323",monospace;
+  font-size:14px;letter-spacing:.16em;color:#1a1a1a;
+}
+.pc-text{
+  font-family:"DM Serif Display",serif;
+  font-style:italic;
+  font-size:20px;line-height:1.1;
+}
+.pc-mas{
+  position:absolute;bottom:-30%;right:-20%;
+  width:70%;filter:invert(1);
+  pointer-events:none;
+}
+@media (max-width:760px){
+  .prompt-clip{width:200px;padding:12px}
+  .pc-text{font-size:16px}
+}
+
+/* ============ CONTACT STACK ============ */
+.contact-stack{
+  position:absolute;
+  top:30%;left:50%;
+  transform:translateX(-50%);
+  width:min(600px, 90%);
+  display:flex;flex-direction:column;gap:14px;
+  z-index:7;
+}
+.contact-row{
+  background:#fff;
+  border:2px solid #1a1a1a;
+  box-shadow:5px 5px 0 #1a1a1a;
+  padding:14px 18px;
+  display:flex;align-items:center;gap:14px;
+  flex-wrap:wrap;
+}
+.cr-l{
+  font-family:"Bowlby One",sans-serif;
+  font-size:13px;letter-spacing:.16em;color:#1f5cff;
+  min-width:100px;
+}
+.cr-r{
+  font-family:"DM Serif Display",serif;
+  font-size:18px;color:#1a1a1a;flex:1;
+}
+.cr-r a{border-bottom:1.5px solid #1f5cff}
+.contact-row form{display:flex;gap:6px;flex:1}
+.contact-row input{
+  flex:1;min-width:0;padding:6px 8px;
+  border:2px solid #1a1a1a;font-size:13px;
+}
+.contact-row button{
+  background:#1a1a1a;color:#ffd400;
+  border:2px solid #1a1a1a;
+  padding:6px 12px;font-size:11px;font-weight:900;letter-spacing:.06em;cursor:pointer;
+}
+.contact-row button:hover{background:#1f5cff;color:#fff}
+
+/* ============ MARQUEE ============ */
+.mq{
+  background:#1a1a1a;color:#fff;
+  overflow:hidden;
+  padding:14px 0;
+  font-family:"Bowlby One",sans-serif;
+  font-size:clamp(20px, 2.6vw, 36px);
+  border-top:2px solid #1a1a1a;border-bottom:2px solid #1a1a1a;
+}
+.mq-y{background:#ffd400;color:#1a1a1a}
+.mq-track{
+  display:flex;gap:24px;white-space:nowrap;
+  animation:march 24s linear infinite;
+  width:max-content;
+}
+.pk{color:#1f5cff}
+@keyframes march{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ============ FOOTER ============ */
+.ftr{
+  background:#1a1a1a;color:#fff;
+  padding:30px 24px 24px;text-align:center;
+}
+.ftr-mega{
+  font-family:"Bowlby One",sans-serif;
+  font-size:clamp(70px, 14vw, 200px);letter-spacing:-0.04em;line-height:.85;
+  color:#1f5cff;
+  text-shadow:6px 6px 0 #ffd400;
+  margin-bottom:18px;
+}
+.ftr-mega sup{font-size:.4em;color:#ffd400}
+.ftr-meta{font-size:11px;color:#aaa}
+.ftr-meta a{color:#ffd400;border-bottom:1px solid #ffd400}

@@ -1,0 +1,276 @@
+/* ====================================================
+   mottool v5 — recollection
+   cinematic full-bleed · spacebar hold · hand marks
+==================================================== */
+
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{
+  width:100%;height:100%;min-height:100vh;min-height:100dvh;
+  background:#f4f1ea;color:#111;overflow:hidden;
+  overscroll-behavior:none;
+}
+body{
+  font-family:"Inter",-apple-system,BlinkMacSystemFont,"Pretendard Variable",sans-serif;
+  font-size:13px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  letter-spacing:.01em;
+}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;outline:0}
+img{max-width:100%;display:block}
+
+/* ---------- Layers ---------- */
+.bg{
+  position:fixed;inset:0;
+  background:#f4f1ea;
+  z-index:0;
+  transition:background 1.2s cubic-bezier(.2,.8,.2,1);
+}
+/* Grain noise over everything — lighter for paper feel */
+.grain{
+  position:fixed;inset:0;
+  pointer-events:none;z-index:2;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .12 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  mix-blend-mode:multiply;
+  opacity:.5;
+}
+.vignette{
+  position:fixed;inset:0;
+  pointer-events:none;z-index:3;
+  background:radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,.12) 100%);
+}
+
+/* ---------- Corners ---------- */
+.corner{
+  position:fixed;z-index:20;
+  padding:22px 28px;
+  color:#111;
+  display:flex;align-items:center;gap:10px;
+}
+.corner.tl{top:0;left:0}
+.corner.tr{top:0;right:0}
+
+.book-mark{
+  width:42px;height:auto;
+  opacity:.95;
+}
+.recol-mini{
+  font-family:"Rubik Wet Paint","Caveat Brush",cursive;
+  font-size:22px;letter-spacing:.02em;
+  line-height:1;
+}
+
+/* ---------- Exit button (only in launched state) ---------- */
+.exit{
+  position:fixed;top:18px;right:18px;
+  width:54px;height:54px;
+  z-index:30;
+  opacity:0;pointer-events:none;
+  transition:opacity .3s;
+}
+.exit svg{width:100%;height:100%}
+body.launched .exit{opacity:1;pointer-events:auto}
+body.launched .corner.tr{opacity:0;pointer-events:none;transition:opacity .3s}
+
+/* ---------- LAUNCH screen ---------- */
+.launch{
+  position:fixed;inset:0;z-index:10;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:clamp(32px,6vw,72px);
+  padding:20px;
+  padding-top:max(20px, env(safe-area-inset-top));
+  padding-bottom:max(20px, env(safe-area-inset-bottom));
+  transition:opacity .5s, transform .5s;
+}
+body.launched .launch{
+  opacity:0;pointer-events:none;
+  transform:scale(.95);
+}
+
+.launch-mascot{
+  width:min(920px, 78vw);
+  height:auto;
+  opacity:.95;
+  filter:drop-shadow(0 6px 28px rgba(0,0,0,.1));
+}
+
+/* ---------- Hold spacebar row ---------- */
+.hold-row{
+  display:flex;align-items:center;gap:10px;
+  font-size:14px;color:#111;
+  flex-wrap:wrap;justify-content:center;
+  text-align:center;
+}
+.bottom-prompt{
+  position:fixed;bottom:60px;left:50%;
+  transform:translateX(-50%);
+  z-index:15;
+  opacity:0;pointer-events:none;
+  transition:opacity .5s;
+  font-size:13px;
+}
+body.launched .bottom-prompt{opacity:1;pointer-events:auto}
+
+/* Pill "spacebar" button with fill progress */
+.space-btn{
+  position:relative;
+  padding:7px 18px;
+  border:1px solid currentColor;
+  border-radius:999px;
+  font-size:13px;letter-spacing:.02em;
+  overflow:hidden;
+  color:#111;
+  background:rgba(255,255,255,.5);
+  min-width:90px;
+  isolation:isolate;
+  touch-action:none;
+  -webkit-user-select:none;user-select:none;
+  -webkit-touch-callout:none;
+}
+.space-btn .space-label{position:relative;z-index:2}
+.space-fill{
+  position:absolute;left:0;top:0;bottom:0;
+  width:0;
+  background:#111;
+  z-index:1;
+  transition:width .08s linear;
+  mix-blend-mode:difference;
+}
+
+/* ---------- CARD (book detail) ---------- */
+.card{
+  position:fixed;inset:0;z-index:10;
+  display:flex;align-items:center;justify-content:center;
+  padding:clamp(20px,4vw,80px);
+  pointer-events:none;
+  opacity:0;
+  transition:opacity .5s;
+}
+body.launched .card{opacity:1;pointer-events:auto}
+
+.card-inner{
+  display:grid;
+  grid-template-columns:minmax(240px, 340px) 1fr;
+  gap:clamp(24px,4vw,60px);
+  align-items:center;
+  max-width:1000px;width:100%;
+  transition:opacity .5s, transform .5s;
+}
+.card.swap .card-inner{opacity:0;transform:translateY(12px)}
+
+.cover{
+  display:block;aspect-ratio:1/1;
+  background:#d9d4c7;
+  position:relative;
+  box-shadow:0 20px 60px rgba(0,0,0,.5);
+  overflow:hidden;
+}
+.cover .ct{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  text-align:center;padding:24px;
+  font-family:"Times New Roman",Georgia,serif;
+  font-size:clamp(20px,2.2vw,28px);line-height:1.1;
+  color:#111;
+}
+
+.card-text{color:#111;max-width:480px}
+.card-text .year{
+  font-size:14px;color:#8a8679;
+  margin-bottom:10px;font-weight:500;
+}
+.name{
+  font-family:"Inter",sans-serif;
+  font-size:clamp(36px,4.2vw,56px);
+  font-weight:500;letter-spacing:-0.02em;line-height:1.04;
+  margin-bottom:18px;
+}
+.name .high{
+  display:inline-block;position:relative;
+  color:#ff6a2b;
+  margin-left:4px;
+  font-weight:500;
+}
+.name .high .stroke{
+  position:absolute;left:0;right:0;bottom:-4px;
+  width:100%;height:14px;
+  pointer-events:none;
+}
+
+.bio{
+  font-size:13px;line-height:1.6;
+  color:#4a463e;max-width:400px;
+  margin-bottom:22px;
+}
+
+.btn-line{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:10px 18px;
+  border:1px solid #111;border-radius:999px;
+  color:#111;font-size:12px;letter-spacing:.02em;
+  transition:background .2s, color .2s;
+}
+.btn-line svg{width:16px;height:16px}
+.btn-line:hover{background:#111;color:#f4f1ea}
+
+/* ---------- Bottom corners (foot) ---------- */
+.foot{
+  position:fixed;bottom:0;z-index:20;
+  padding:22px 28px;
+  color:#111;font-size:11px;letter-spacing:.02em;
+  opacity:.75;
+}
+.foot.bl{left:0}
+.foot.br{right:0;display:flex;gap:10px;align-items:center}
+.foot a{color:#111;text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
+.foot .share{margin-left:6px;opacity:.8}
+.foot .si{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:20px;height:20px;
+  font-size:12px;opacity:.9;
+  text-decoration:none;
+}
+.foot .si:hover{opacity:1}
+
+/* ---------- Mobile ---------- */
+@media (max-width:760px){
+  .corner{padding:16px 18px}
+  .book-mark{width:34px}
+  .recol-mini{font-size:20px}
+
+  .exit{top:14px;right:14px;width:46px;height:46px}
+
+  .launch-mascot{width:88vw}
+
+  .hold-row{font-size:13px;gap:8px}
+  .space-btn{padding:6px 14px;font-size:12px;min-width:80px}
+
+  .bottom-prompt{bottom:60px}
+
+  .card-inner{
+    grid-template-columns:1fr;
+    gap:24px;
+    max-width:380px;
+    text-align:left;
+  }
+  .cover{max-width:220px}
+  .card-text .year{font-size:12px}
+  .name{font-size:32px;margin-bottom:14px}
+  .bio{font-size:12px;margin-bottom:18px}
+
+  .foot{padding:14px 18px;font-size:10px}
+  .foot.br{gap:8px}
+}
+
+@media (max-width:420px){
+  .launch-mascot{width:92vw}
+  .name{font-size:28px}
+  .foot.bl{max-width:55%}
+  .foot.br{max-width:45%;flex-wrap:wrap;justify-content:flex-end}
+}
+
+/* Safari/iOS: allow scroll when keyboard interactions are limited */
+@media (hover:none) and (pointer:coarse){
+  .hold-row{font-size:12px}
+}

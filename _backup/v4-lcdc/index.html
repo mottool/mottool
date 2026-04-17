@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SHOP MOTTOOL — 모뚤</title>
+<base href="/mottool/v4-lcdc/" />
+<meta name="description" content="mottool — curated bookshop, publisher, and lifestyle." />
+<link rel="icon" type="image/png" href="/mottool/assets/book.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- Tier 1: utility bar -->
+<div class="tier1">
+  <div class="t1-left">
+    <a href="#">NOTICE</a>
+    <a href="#">이벤트</a>
+  </div>
+  <div class="t1-right">
+    <button class="lang on">KR</button>
+    <button class="lang">EN</button>
+    <a href="#">LOGIN</a>
+    <a href="#">ACCOUNT</a>
+    <a href="#">WISHLIST</a>
+    <a href="#" class="cart">CART (0)</a>
+  </div>
+</div>
+
+<!-- Tier 2: logo + search + nav -->
+<header class="hdr">
+  <a href="/mottool/v4-lcdc/" class="brand">
+    <img src="/mottool/assets/book.png" alt="" class="brand-mark-ico"/>
+    <span>mottool<sup>™</sup></span>
+  </a>
+  <div class="search">
+    <input type="text" placeholder="Search books, authors, publishers…" />
+    <button aria-label="Search">SEARCH</button>
+  </div>
+  <nav class="main-nav">
+    <a href="#" class="off">SEASON OFF</a>
+    <a href="#">MOTTOOL<sup>™</sup></a>
+    <a href="#">FICTION</a>
+    <a href="#">NON&#8209;FICTION</a>
+    <a href="#">DESIGN</a>
+    <a href="#">PHOTOGRAPHY</a>
+    <a href="#">EDITIONS</a>
+    <a href="#" class="plus">PUBLISHERS+</a>
+  </nav>
+</header>
+
+<!-- Popular search chips -->
+<div class="chips">
+  <span class="chips-label">인기 검색어</span>
+  <a href="#">MOTTOOL™</a>
+  <a href="#">인덱스</a>
+  <a href="#">포토북</a>
+  <a href="#">에세이</a>
+  <a href="#">건축</a>
+  <a href="#">디자인 이론</a>
+  <a href="#">시집</a>
+  <a href="#">zine</a>
+</div>
+
+<!-- Hero slider -->
+<section class="hero">
+  <div class="slides">
+    <div class="slide on" style="background:#1a1a1a;color:#f4efe3">
+      <div class="slide-text">
+        <p class="kicker">LCDC™ EDITION · 2026 SPRING</p>
+        <h1>천천히 읽는 책.<br/>Quiet volumes for a long season.</h1>
+        <a href="#" class="btn-line">Shop the edition →</a>
+      </div>
+      <div class="slide-media" style="background:#2a2a2a">
+      <img src="/mottool/assets/mascot.png" alt="" class="hero-mascot"/>
+    </div>
+    </div>
+  </div>
+  <div class="slide-nav">
+    <span class="on">01</span>
+    <span>02</span>
+    <span>03</span>
+  </div>
+</section>
+
+<!-- Promo strip -->
+<div class="promo-strip">
+  <span>FREE SHIPPING OVER ₩80,000</span>
+  <span>·</span>
+  <span>NEWSLETTER 15% OFF FIRST ORDER</span>
+  <span>·</span>
+  <span>NEW PUBLISHER: PAPER ISLAND PRESS</span>
+</div>
+
+<!-- Category shortcuts -->
+<section class="block">
+  <div class="bh">
+    <div>
+      <p class="kicker">SHOP BY</p>
+      <h2>Category</h2>
+    </div>
+    <a href="#" class="view">VIEW ALL →</a>
+  </div>
+  <div class="shortcut">
+    <a href="#" class="sc"><div class="sc-img" style="background:#d9d4c7"></div><span>FICTION</span></a>
+    <a href="#" class="sc"><div class="sc-img" style="background:#1a1a1a"></div><span>NON-FICTION</span></a>
+    <a href="#" class="sc"><div class="sc-img" style="background:#e7b7a6"></div><span>DESIGN</span></a>
+    <a href="#" class="sc"><div class="sc-img" style="background:#c8d3bd"></div><span>PHOTOGRAPHY</span></a>
+  </div>
+</section>
+
+<!-- NEW ARRIVAL -->
+<section class="block">
+  <div class="bh">
+    <div>
+      <p class="kicker">01 — NEW ARRIVAL</p>
+      <h2>신간 입고</h2>
+    </div>
+    <a href="#" class="view">VIEW ALL (128) →</a>
+  </div>
+  <div class="grid">
+    <article class="item">
+      <a href="#" class="cover" style="background:#d9d4c7">
+        <span class="badge">NEW</span>
+        <span class="ct">Quiet Rooms</span>
+      </a>
+      <p class="publisher">PAPER ISLAND PRESS</p>
+      <p class="title">Quiet Rooms — 조용한 방들</p>
+      <p class="author">Hanna Lee</p>
+      <p class="price">₩38,000</p>
+    </article>
+    <article class="item">
+      <a href="#" class="cover dk" style="background:#1a1a1a">
+        <span class="badge">NEW</span>
+        <span class="ct">Index 01 · Ground</span>
+      </a>
+      <p class="publisher">MOTTOOL EDITIONS</p>
+      <p class="title">Index 01 — Ground</p>
+      <p class="author">ed. Min Park</p>
+      <p class="price">₩29,000</p>
+    </article>
+    <article class="item">
+      <a href="#" class="cover" style="background:#e7b7a6">
+        <span class="badge">NEW</span>
+        <span class="ct">Soft Field</span>
+      </a>
+      <p class="publisher">LOAM BOOKS</p>
+      <p class="title">Soft Field — 부드러운 영역</p>
+      <p class="author">Yuji Nakamura</p>
+      <p class="price">₩52,000</p>
+    </article>
+    <article class="item">
+      <a href="#" class="cover" style="background:#c8d3bd">
+        <span class="ct">After Noon</span>
+      </a>
+      <p class="publisher">HALFTONE</p>
+      <p class="title">After Noon — 오후 이후</p>
+      <p class="author">Clara Voss</p>
+      <p class="price">₩44,000</p>
+    </article>
+    <article class="item">
+      <a href="#" class="cover" style="background:#efe9df">
+        <span class="ct">A Guide to Weather</span>
+      </a>
+      <p class="publisher">COLD PRESS</p>
+      <p class="title">A Guide to Weather</p>
+      <p class="author">Ines Auriol</p>
+      <p class="price">₩62,000</p>
+    </article>
+    <article class="item">
+      <a href="#" class="cover dk" style="background:#2b3a52">
+        <span class="ct">Blue Hour</span>
+      </a>
+      <p class="publisher">NIGHT SCHOOL</p>
+      <p class="title">Blue Hour — 파란 시간</p>
+      <p class="author">Tomás Aguirre</p>
+      <p class="price">₩48,000</p>
+    </article>
+    <article class="item">
+      <a href="#" class="cover" style="background:#b6643b">
+        <span class="badge sale-badge">30%</span>
+        <span class="ct" style="color:#fff">Brick &amp; Mortar</span>
+      </a>
+      <p class="publisher">MASS</p>
+      <p class="title">Brick &amp; Mortar</p>
+      <p class="author">Studio Noor</p>
+      <p class="price"><span class="orig">₩75,000</span> ₩52,500</p>
+    </article>
+    <article class="item sold">
+      <a href="#" class="cover" style="background:#eaeaea">
+        <span class="badge sold-badge">SOLD OUT</span>
+        <span class="ct">Open Door</span>
+      </a>
+      <p class="publisher">FIELD NOTES</p>
+      <p class="title">Open Door — 열린 문</p>
+      <p class="author">Rae Okamoto</p>
+      <p class="price">₩39,000</p>
+    </article>
+  </div>
+</section>
+
+<!-- MD PICK / Curated -->
+<section class="block md-pick">
+  <div class="bh">
+    <div>
+      <p class="kicker">02 — MD PICK</p>
+      <h2>MD가 고른 이 달의 책</h2>
+    </div>
+    <a href="#" class="view">VIEW ALL →</a>
+  </div>
+  <div class="md-feature">
+    <a href="#" class="md-img" style="background:#efe9df"></a>
+    <div class="md-text">
+      <p class="kicker">FEATURE · 2026.04</p>
+      <h3>Ten Books for a Long Spring</h3>
+      <p class="lead">천천히 읽기 좋은 4월의 목록. 에세이, 사진, 작은 시 10권을 골랐습니다. 조용한 오후에 어울리는 책들.</p>
+      <ul class="md-list">
+        <li><span>01</span> Quiet Rooms — Hanna Lee</li>
+        <li><span>02</span> A Guide to Weather — Ines Auriol</li>
+        <li><span>03</span> Soft Field — Yuji Nakamura</li>
+        <li><span>04</span> After Noon — Clara Voss</li>
+        <li><span>05</span> Lilac Notes — June Ito</li>
+      </ul>
+      <a href="#" class="btn-line">컬렉션 전체 보기 →</a>
+    </div>
+  </div>
+</section>
+
+<!-- PUBLISHERS+ (multi-brand grid) -->
+<section class="block pub-block">
+  <div class="bh">
+    <div>
+      <p class="kicker">03 — PUBLISHERS+</p>
+      <h2>취급 출판사</h2>
+    </div>
+    <a href="#" class="view">VIEW ALL (42) →</a>
+  </div>
+  <div class="publishers">
+    <a href="#" class="pub"><span>PAPER ISLAND</span></a>
+    <a href="#" class="pub"><span>LOAM BOOKS</span></a>
+    <a href="#" class="pub"><span>HALFTONE</span></a>
+    <a href="#" class="pub"><span>COLD PRESS</span></a>
+    <a href="#" class="pub"><span>NIGHT SCHOOL</span></a>
+    <a href="#" class="pub"><span>MASS</span></a>
+    <a href="#" class="pub"><span>FIELD NOTES</span></a>
+    <a href="#" class="pub"><span>VERSO EDITIONS</span></a>
+    <a href="#" class="pub"><span>GRANARY</span></a>
+    <a href="#" class="pub"><span>SMALL HOURS</span></a>
+    <a href="#" class="pub"><span>PLINTH</span></a>
+    <a href="#" class="pub"><span>LITTORAL</span></a>
+    <a href="#" class="pub"><span>HARBOUR</span></a>
+    <a href="#" class="pub"><span>ORDINARY</span></a>
+    <a href="#" class="pub"><span>PAMPHLET</span></a>
+    <a href="#" class="pub"><span>SLOW PAPER</span></a>
+    <a href="#" class="pub"><span>ATLAS</span></a>
+    <a href="#" class="pub"><span>MOTTOOL™</span></a>
+  </div>
+</section>
+
+<!-- BEST -->
+<section class="block">
+  <div class="bh">
+    <div>
+      <p class="kicker">04 — BEST</p>
+      <h2>주간 베스트</h2>
+    </div>
+    <a href="#" class="view">VIEW ALL →</a>
+  </div>
+  <div class="grid best-grid">
+    <article class="item">
+      <a href="#" class="cover" style="background:#d5c7b2">
+        <span class="rank">1</span>
+        <span class="ct">Year One</span>
+      </a>
+      <p class="publisher">VERSO EDITIONS</p>
+      <p class="title">Year One</p>
+      <p class="author">K. Andersen</p>
+      <p class="price">₩19,000</p>
+    </article>
+    <article class="item">
+      <a href="#" class="cover" style="background:#a8b8a0">
+        <span class="rank">2</span>
+        <span class="ct">Field Studies</span>
+      </a>
+      <p class="publisher">LOAM BOOKS</p>
+      <p class="title">Field Studies</p>
+      <p class="author">J. Park</p>
+      <p class="price">₩27,000</p>
+    </article>
+    <article class="item">
+      <a href="#" class="cover dk" style="background:#2a2a2a">
+        <span class="rank">3</span>
+        <span class="ct">Noise</span>
+      </a>
+      <p class="publisher">NIGHT SCHOOL</p>
+      <p class="title">Noise</p>
+      <p class="author">T. Vogel</p>
+      <p class="price">₩21,000</p>
+    </article>
+    <article class="item">
+      <a href="#" class="cover" style="background:#f2d24a">
+        <span class="rank">4</span>
+        <span class="ct">Citrus</span>
+      </a>
+      <p class="publisher">PAMPHLET PRESS</p>
+      <p class="title">Citrus</p>
+      <p class="author">Ha-neul Seo</p>
+      <p class="price">₩15,000</p>
+    </article>
+  </div>
+</section>
+
+<!-- Journal -->
+<section class="block">
+  <div class="bh">
+    <div>
+      <p class="kicker">05 — JOURNAL</p>
+      <h2>에디토리얼</h2>
+    </div>
+    <a href="#" class="view">ALL ARTICLES →</a>
+  </div>
+  <div class="journal">
+    <a href="#" class="jr">
+      <div class="jr-img" style="background:#efe9df"></div>
+      <p class="jr-kicker">INTERVIEW · 2026.04.12</p>
+      <h3>Paper Island Press의 손제본 작업실</h3>
+      <p class="jr-desc">5평 남짓한 작업실에서 1년에 12권을 만드는 작은 출판사 이야기.</p>
+    </a>
+    <a href="#" class="jr">
+      <div class="jr-img" style="background:#1a1a1a"></div>
+      <p class="jr-kicker">READING LIST · 2026.04.05</p>
+      <h3>긴 봄을 위한 열 권</h3>
+      <p class="jr-desc">4월과 5월을 천천히 보낼 수 있는 조용한 목록.</p>
+    </a>
+    <a href="#" class="jr">
+      <div class="jr-img" style="background:#c8d3bd"></div>
+      <p class="jr-kicker">ESSAY · 2026.03.28</p>
+      <h3>책의 무게에 대하여</h3>
+      <p class="jr-desc">2026년에도 종이책이 남아있는 이유.</p>
+    </a>
+  </div>
+</section>
+
+<!-- Instagram feed -->
+<section class="block insta-block">
+  <div class="bh">
+    <div>
+      <p class="kicker">@mottool.kr</p>
+      <h2>Instagram</h2>
+    </div>
+    <a href="#" class="view">FOLLOW US →</a>
+  </div>
+  <div class="insta">
+    <a href="#" style="background:#d9d4c7"></a>
+    <a href="#" style="background:#e7b7a6"></a>
+    <a href="#" style="background:#1a1a1a"></a>
+    <a href="#" style="background:#c8d3bd"></a>
+    <a href="#" style="background:#efe9df"></a>
+    <a href="#" style="background:#2b3a52"></a>
+  </div>
+</section>
+
+<!-- Newsletter strip -->
+<section class="news-strip">
+  <div class="ns-inner">
+    <div>
+      <p class="kicker">06 — NEWSLETTER</p>
+      <h2>A letter, now and then.</h2>
+      <p class="ns-sub">신간·에디토리얼·첫 주문 15% 할인.</p>
+    </div>
+    <form onsubmit="event.preventDefault(); this.querySelector('button').textContent='SUBSCRIBED ✓';">
+      <input type="email" placeholder="YOUR@EMAIL.COM" required />
+      <button type="submit">SUBSCRIBE →</button>
+    </form>
+  </div>
+</section>
+
+<!-- Footer (Korean commerce style) -->
+<footer class="ftr">
+  <div class="ftr-top">
+    <div class="ftr-brand">
+      <img src="/mottool/assets/mascot.png" alt="" class="ftr-mascot"/>
+      <p class="brand-mark">mottool<sup>™</sup></p>
+      <p class="tag">a curated bookshop, taking its time.</p>
+      <div class="ftr-social">
+        <a href="#">Instagram</a>
+        <a href="#">KakaoTalk</a>
+        <a href="#">YouTube</a>
+      </div>
+    </div>
+    <div class="ftr-cols">
+      <div>
+        <h4>SHOP</h4>
+        <a href="#">ALL</a>
+        <a href="#">NEW ARRIVAL</a>
+        <a href="#">SEASON OFF</a>
+        <a href="#">MOTTOOL™ EDITIONS</a>
+        <a href="#">PUBLISHERS+</a>
+      </div>
+      <div>
+        <h4>INFO</h4>
+        <a href="#">ABOUT</a>
+        <a href="#">HOW TO SHOP</a>
+        <a href="#">SHIPPING</a>
+        <a href="#">RETURNS</a>
+        <a href="#">STOCKISTS</a>
+      </div>
+      <div>
+        <h4>HELP</h4>
+        <a href="#">F.A.Q.s</a>
+        <a href="#">NOTICE</a>
+        <a href="#">CONTACT</a>
+        <a href="#">TRADE / WHOLESALE</a>
+      </div>
+      <div>
+        <h4>CS CENTER</h4>
+        <p class="cs-phone">070-0000-0000</p>
+        <p class="cs-hours">MON–FRI 10:00–18:00<br/>LUNCH 12:30–13:30<br/>SAT/SUN/HOLIDAY OFF</p>
+        <p class="cs-bank">BANK · 신한 000-000-000000</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="ftr-biz">
+    <p>상호 mottool · 사업자등록번호 000-00-00000 · 통신판매업신고 제2026-대전서구-0000호</p>
+    <p>주소 대전 서구 둔산동 00-00 2F · 고객센터 070-0000-0000 · 이메일 hello@mottool.kr</p>
+    <p>개인정보관리책임자 (privacy@mottool.kr)</p>
+  </div>
+
+  <div class="ftr-bottom">
+    <p>© 2026 MOTTOOL. ALL RIGHTS RESERVED.</p>
+    <p>
+      <a href="#">TERMS</a> ·
+      <a href="#">PRIVACY POLICY</a> ·
+      <a href="#">YOUTH PROTECTION</a>
+    </p>
+  </div>
+</footer>
+
+
+</body>
+</html>

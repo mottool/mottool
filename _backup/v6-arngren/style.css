@@ -1,0 +1,321 @@
+/* ====================================================
+   mottool v6 — ARNGREN parody edition
+   intentional 90s chaos · rainbow · marquees · blink
+==================================================== */
+
+html,body{
+  margin:0;padding:0;
+  background:#ffffaa;
+  color:#000;
+  font-family:"Arial","Helvetica",sans-serif;
+  font-size:13px;
+}
+body{
+  cursor:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24'><text y='18' font-size='18'>👉</text></svg>") 4 4, auto;
+}
+a{color:#0000ee;text-decoration:underline;font-weight:bold}
+a:visited{color:#551a8b}
+a:hover{color:#ff0000;background:#ffff00}
+
+img{border:0;display:inline-block;vertical-align:middle}
+
+/* ============ Blink (CSS replacement for <blink>) ============ */
+.blink{animation:blink 1s steps(2, start) infinite}
+@keyframes blink{to{visibility:hidden}}
+
+/* ============ Top marquee ============ */
+.top-marq{
+  background:#ff0000;color:#ffff00;
+  font-weight:bold;font-size:14px;
+  padding:6px 0;
+  border-bottom:3px double #000;
+}
+.bottom-marq{
+  background:#0000ff;color:#ffff00;
+  font-weight:bold;font-size:14px;
+  padding:6px 0;
+  border-top:3px double #000;
+}
+
+/* ============ Top bar (counter + construction) ============ */
+.top-bar{
+  background:#00ffff;
+  padding:6px 10px;
+  border-bottom:2px solid #000;
+  font-size:12px;
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;
+}
+.counter .digit{
+  display:inline-block;
+  background:#000;color:#00ff00;
+  font-family:"Courier New",monospace;
+  font-weight:bold;font-size:14px;
+  width:18px;text-align:center;
+  border:1px solid #666;
+  margin:0 1px;
+}
+.construction{color:#ff6600;font-weight:bold}
+.best-viewed{font-style:italic;color:#333}
+
+/* ============ Rainbow logo ============ */
+.rainbow-logo{
+  text-align:center;
+  font-family:"Impact","Arial Black",sans-serif;
+  font-size:64px;
+  letter-spacing:4px;
+  margin:10px 0 0;
+  text-shadow:3px 3px 0 #000;
+  line-height:.9;
+}
+.rainbow-logo .logo-sub{
+  display:block;
+  font-size:18px;
+  color:#000;letter-spacing:2px;
+  text-shadow:none;
+  margin-top:4px;
+}
+
+/* ============ Blinking welcome ============ */
+.welcome{
+  text-align:center;
+  background:#00ff00;
+  color:#ff0000;
+  font-weight:bold;font-size:18px;
+  padding:8px;
+  border:3px dashed #ff0000;
+  margin:12px 20px;
+}
+
+/* ============ Quick links ============ */
+.quick-links{
+  background:#ffff00;
+  padding:6px 10px;
+  text-align:center;
+  border:2px solid #000;
+  margin:8px 20px;
+  font-size:13px;
+}
+.quick-links a{color:#0000ff;margin:0 4px}
+.quick-links.mini{background:#eef;font-size:11px;padding:4px}
+
+/* ============ HR styles ============ */
+hr.fancy{
+  border:0;height:10px;
+  background:repeating-linear-gradient(90deg, #ff0000 0 20px, #ffff00 20px 40px, #00ff00 40px 60px, #0000ff 60px 80px);
+  margin:10px 0;
+}
+hr.stars{
+  border:0;height:0;
+  border-top:2px dotted #ff0000;
+  margin:10px 0;position:relative;
+}
+hr.stars::before{
+  content:"★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★";
+  position:absolute;left:50%;top:-10px;transform:translateX(-50%);
+  background:#fff;padding:0 8px;color:#ff0000;font-size:12px;
+}
+
+/* ============ Chaos table ============ */
+.chaos{
+  width:96%;margin:0 auto;
+  border-collapse:separate;
+  border-spacing:4px;
+}
+.chaos td{
+  vertical-align:top;
+  padding:8px;
+  border:2px solid;
+}
+.col-yellow{background:#ffffcc;border-color:#ff9900!important}
+.col-white{background:#fff;border-color:#000!important}
+.col-orange{background:#ffe0b0;border-color:#ff3300!important}
+.col-blue{background:#c0e0ff;border-color:#0000ff!important}
+
+/* ============ Product items ============ */
+.product{
+  padding:8px;
+  margin:4px 0;
+  background:#fff9e0;
+  border:1px dashed #666;
+  overflow:auto;
+}
+.product img.float-l{float:left;margin:0 10px 5px 0}
+.product img.float-r{float:right;margin:0 0 5px 10px}
+
+/* ============ Price styles ============ */
+.price{color:#009900;font-weight:bold;font-size:16px}
+.price.big{font-size:22px}
+.price.old{color:#999;text-decoration:line-through;font-weight:normal}
+.price.hot{color:#ff0000!important;font-weight:bold}
+
+/* ============ Colors/sizes helpers ============ */
+.red{color:#ff0000}
+.blue{color:#0000ee}
+.green{color:#009900}
+.purple{color:#7000c0}
+.orange{color:#ff6600}
+.yellow{color:#ffff00;text-shadow:1px 1px 0 #000}
+.huge{font-size:20px}
+
+/* ============ Image rotations ============ */
+.rot-l{transform:rotate(-8deg)}
+.rot-r{transform:rotate(8deg)}
+.tilt-l{transform:rotate(-4deg)}
+.tilt-r{transform:rotate(4deg)}
+
+/* ============ Badges & bursts ============ */
+.nyhet-badge{
+  display:inline-block;
+  background:#ff0000;color:#ffff00;
+  padding:2px 8px;
+  font-weight:bold;font-size:11px;
+  transform:rotate(-6deg);
+  border:2px solid #ffff00;
+  box-shadow:2px 2px 0 #000;
+}
+.sale-burst{
+  display:inline-block;
+  background:#ffff00;color:#ff0000;
+  padding:3px 10px;
+  font-weight:bold;font-size:12px;
+  clip-path:polygon(0% 50%, 10% 0%, 20% 50%, 30% 0%, 40% 50%, 50% 0%, 60% 50%, 70% 0%, 80% 50%, 90% 0%, 100% 50%, 90% 100%, 80% 50%, 70% 100%, 60% 50%, 50% 100%, 40% 50%, 30% 100%, 20% 50%, 10% 100%);
+  border:2px solid #ff0000;
+  transform:rotate(-4deg);
+}
+
+/* ============ Wild button ============ */
+.btn-wild{
+  display:inline-block;
+  padding:6px 14px;
+  background:linear-gradient(#ffff00,#ff9900);
+  color:#ff0000!important;
+  font-weight:bold;
+  border:3px outset #ff6600;
+  text-decoration:none;
+  font-size:14px;
+  text-shadow:1px 1px 0 #fff;
+}
+.btn-wild:hover{
+  background:linear-gradient(#ff0000,#ffff00);
+  color:#0000ff!important;
+  border-style:inset;
+}
+
+/* ============ Lists ============ */
+.chaos-list{
+  list-style:none;padding:0;margin:8px 0;
+  font-size:13px;
+}
+.chaos-list li{
+  padding:2px 0;
+  border-bottom:1px dotted #999;
+}
+
+/* ============ Mascot GIF-like ============ */
+.mascot-gif{
+  animation:walk 2s linear infinite;
+  margin-top:8px;
+}
+@keyframes walk{
+  0%,100%{transform:translateX(-6px) rotate(-2deg)}
+  50%{transform:translateX(6px) rotate(2deg)}
+}
+
+/* ============ Rainbow box ============ */
+.rainbow-box{
+  margin-top:12px;
+  padding:10px;
+  background:linear-gradient(45deg, #ff0000, #ffff00, #00ff00, #0000ff, #9400d3);
+  color:#fff;
+  text-align:center;
+  font-weight:bold;
+  border:3px ridge #fff;
+  text-shadow:1px 1px 0 #000;
+}
+
+/* ============ Guestbook ============ */
+.guestbook{
+  background:#e0ffff;
+  border:3px groove #0000ff;
+  padding:10px;margin:10px 0;
+}
+.guestbook h3{
+  margin:0 0 8px;
+  color:#0000ff;
+  font-size:16px;
+}
+.guest-entry{
+  padding:4px 0;
+  border-bottom:1px dashed #999;
+  font-size:12px;
+}
+
+/* ============ Scatter section ============ */
+.scatter{
+  background:#fff;
+  padding:16px 20px;
+  border-top:3px double #000;
+  border-bottom:3px double #000;
+}
+.flame{
+  text-align:center;
+  font-family:"Impact",sans-serif;
+  font-size:28px;
+  background:linear-gradient(#ff0000,#ff9900,#ffff00);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  text-shadow:2px 2px 0 rgba(0,0,0,.3);
+  margin:0 0 12px;
+  letter-spacing:2px;
+}
+.scatter-items{
+  display:flex;flex-wrap:wrap;gap:8px;
+  justify-content:center;align-items:flex-start;
+}
+.si{
+  padding:8px;
+  border:2px solid #000;
+  transform:rotate(var(--r, 0deg));
+  width:140px;
+  text-align:center;
+  font-size:12px;
+  box-shadow:3px 3px 0 rgba(0,0,0,.25);
+}
+.si img{display:block;margin:0 auto 4px}
+
+/* ============ Web ring ============ */
+.webring{
+  background:#ffccff;
+  border:3px ridge #ff00ff;
+  padding:10px;
+  text-align:center;
+  margin:10px 20px;
+  font-size:13px;
+}
+
+/* ============ Footer ============ */
+.arngren-foot{
+  background:#d0d0ff;
+  border-top:3px double #000;
+  padding:10px 16px;
+  font-size:12px;
+  line-height:1.6;
+}
+.arngren-foot table{width:100%}
+.arngren-foot small{font-size:11px}
+
+/* ============ Responsive — deliberately minimal, stays chaotic ============ */
+@media (max-width:900px){
+  .rainbow-logo{font-size:48px}
+  .chaos{display:block;width:100%}
+  .chaos tr, .chaos td{display:block;width:100%!important;border-spacing:0}
+  .chaos td{margin-bottom:6px}
+  .top-bar{font-size:11px}
+  .counter .digit{width:15px;font-size:12px}
+  .scatter-items .si{width:calc(50% - 8px)}
+}
+
+@media (max-width:500px){
+  .rainbow-logo{font-size:36px;letter-spacing:2px}
+  .scatter-items .si{width:100%}
+  .quick-links{font-size:11px}
+}

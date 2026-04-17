@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>mottool — collect</title>
+<base href="/mottool/" />
+<link rel="icon" type="image/png" href="/mottool/assets/book.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ============ MOBILE INTRO SPLASH ============ -->
+<div class="intro" id="intro" aria-hidden="true">
+  <div class="intro-in">
+    <img src="/mottool/assets/mascot.png" alt="mottool" class="intro-logo"/>
+  </div>
+</div>
+
+<!-- ============ MOBILE FIXED TRIGGER (center-top mascot) ============ -->
+<button class="m-trigger" id="mTrigger" aria-label="Open menu">
+  <img src="/mottool/assets/mascot.png" alt="mottool"/>
+</button>
+
+<!-- ============ SIDE OVERLAY (mobile drawer bg) ============ -->
+<div class="side-overlay" id="sideOverlay"></div>
+
+<!-- ============ LEFT VERTICAL SIDEBAR ============ -->
+<aside class="side" id="side">
+  <button class="side-close" id="sideClose" aria-label="Close">✕</button>
+  <a href="/mottool/" class="side-mascot">
+    <img src="/mottool/assets/mascot.png" alt="mottool"/>
+  </a>
+  <nav class="side-nav">
+    <a href="#cart">CART</a>
+    <a href="#about">ABOUT</a>
+    <a href="#shop" class="on">SHOP</a>
+    <a href="#editions">EDITIONS</a>
+  </nav>
+  <a href="/mottool/" class="brand-mark">
+    <img src="/mottool/assets/book.png" alt="mottool"/>
+    <span>mottool</span>
+  </a>
+</aside>
+
+<!-- ============ MAIN GRID ============ -->
+<main class="main">
+
+  <section class="grid">
+
+    <!-- REAL BOOK -->
+    <article class="card" data-book="knight">
+      <a href="#" class="cv">
+        <img src="/mottool/mottool%20img/book/THE%20KNIGHT%2C%20THE%20PRINCESS%20AND%20THE%20GOOD/main.jpg" alt=""/>
+      </a>
+      <div class="meta">
+        <p>『 THE KNIGHT, THE PRINCESS AND THE GOOD 』</p>
+        <p>VICTOR UNWIN</p>
+        <p>piece 4</p>
+        <p>price soon</p>
+      </div>
+    </article>
+
+    <!-- placeholders -->
+    <article class="card">
+      <a href="#" class="cv">
+        <span class="ph" style="background:#d9d4c7"></span>
+      </a>
+      <div class="meta">
+        <p>QUIET ROOMS</p>
+        <p>HANNA LEE · ESSAY</p>
+        <p>piece 7</p>
+        <p>₩38,000</p>
+      </div>
+    </article>
+
+    <article class="card">
+      <a href="#" class="cv">
+        <span class="ph" style="background:#1a1a1a"></span>
+      </a>
+      <div class="meta">
+        <p>INDEX 01 — GROUND</p>
+        <p>ED. MIN PARK · INDEX SERIES</p>
+        <p>piece 12</p>
+        <p>₩29,000</p>
+      </div>
+    </article>
+
+    <article class="card">
+      <a href="#" class="cv">
+        <span class="ph" style="background:#e7b7a6"></span>
+      </a>
+      <div class="meta">
+        <p>SOFT FIELD</p>
+        <p>YUJI NAKAMURA · PHOTO</p>
+        <p>piece 3</p>
+        <p>₩52,000</p>
+      </div>
+    </article>
+
+    <article class="card">
+      <a href="#" class="cv">
+        <span class="ph" style="background:#c8d3bd"></span>
+      </a>
+      <div class="meta">
+        <p>AFTER NOON</p>
+        <p>CLARA VOSS · ESSAY</p>
+        <p>piece 5</p>
+        <p>₩44,000</p>
+      </div>
+    </article>
+
+    <article class="card">
+      <a href="#" class="cv">
+        <span class="ph" style="background:#efe9df"></span>
+      </a>
+      <div class="meta">
+        <p>A GUIDE TO WEATHER</p>
+        <p>INES AURIOL · FIELD GUIDE</p>
+        <p>piece 2</p>
+        <p>₩62,000</p>
+      </div>
+    </article>
+
+    <article class="card">
+      <a href="#" class="cv">
+        <span class="ph" style="background:#2b3a52"></span>
+      </a>
+      <div class="meta">
+        <p>BLUE HOUR</p>
+        <p>TOMÁS AGUIRRE · POETRY</p>
+        <p>piece 6</p>
+        <p>₩48,000</p>
+      </div>
+    </article>
+
+    <article class="card">
+      <a href="#" class="cv">
+        <span class="ph" style="background:#b6643b"></span>
+      </a>
+      <div class="meta">
+        <p>BRICK &amp; MORTAR</p>
+        <p>STUDIO NOOR · ARCHITECTURE</p>
+        <p>piece 4</p>
+        <p>₩75,000</p>
+      </div>
+    </article>
+
+    <article class="card sold">
+      <a href="#" class="cv">
+        <span class="ph" style="background:#eaeaea"></span>
+      </a>
+      <div class="meta">
+        <p>OPEN DOOR</p>
+        <p>RAE OKAMOTO · FICTION</p>
+        <p>piece 0</p>
+        <p>품절</p>
+      </div>
+    </article>
+
+    <article class="card">
+      <a href="#" class="cv">
+        <span class="ph" style="background:#f2d24a"></span>
+      </a>
+      <div class="meta">
+        <p>CITRUS</p>
+        <p>HA-NEUL SEO · ZINE</p>
+        <p>piece 9</p>
+        <p>₩15,000</p>
+      </div>
+    </article>
+
+    <article class="card">
+      <a href="#" class="cv">
+        <span class="ph" style="background:#dcc7f0"></span>
+      </a>
+      <div class="meta">
+        <p>LILAC NOTES</p>
+        <p>JUNE ITO · NOTEBOOK</p>
+        <p>piece 6</p>
+        <p>₩25,000</p>
+      </div>
+    </article>
+
+    <article class="card">
+      <a href="#" class="cv">
+        <span class="ph" style="background:#c2d9e0"></span>
+      </a>
+      <div class="meta">
+        <p>TIDE</p>
+        <p>ANDERS VIK · POETRY</p>
+        <p>piece 4</p>
+        <p>₩22,000</p>
+      </div>
+    </article>
+
+    <article class="card">
+      <a href="#" class="cv">
+        <span class="ph" style="background:#1a1d3a"></span>
+      </a>
+      <div class="meta">
+        <p>NIGHT WALK</p>
+        <p>L. MOREAU · PHOTO</p>
+        <p>piece 3</p>
+        <p>₩33,000</p>
+      </div>
+    </article>
+
+    <article class="card">
+      <a href="#" class="cv">
+        <span class="ph" style="background:#9fb7a2"></span>
+      </a>
+      <div class="meta">
+        <p>SEA GRASS</p>
+        <p>N. OSHIRO · PHOTO</p>
+        <p>piece 5</p>
+        <p>₩28,000</p>
+      </div>
+    </article>
+
+    <article class="card">
+      <a href="#" class="cv">
+        <span class="ph" style="background:#e8c7b0"></span>
+      </a>
+      <div class="meta">
+        <p>KITCHEN PLANS</p>
+        <p>STUDIO ORDINARY · DESIGN</p>
+        <p>piece 4</p>
+        <p>₩26,000</p>
+      </div>
+    </article>
+
+    <article class="card">
+      <a href="#" class="cv">
+        <span class="ph" style="background:#fff;border:1px solid #ddd"></span>
+      </a>
+      <div class="meta">
+        <p>YEAR ONE</p>
+        <p>K. ANDERSEN · ESSAY</p>
+        <p>piece 8</p>
+        <p>₩19,000</p>
+      </div>
+    </article>
+
+    <article class="card">
+      <a href="#" class="cv">
+        <span class="ph" style="background:#a8b8a0"></span>
+      </a>
+      <div class="meta">
+        <p>FIELD STUDIES</p>
+        <p>J. PARK · NATURE</p>
+        <p>piece 5</p>
+        <p>₩27,000</p>
+      </div>
+    </article>
+
+    <article class="card sold">
+      <a href="#" class="cv">
+        <span class="ph" style="background:#3a3a3a"></span>
+      </a>
+      <div class="meta">
+        <p>NOISE</p>
+        <p>T. VOGEL · MUSIC</p>
+        <p>piece 0</p>
+        <p>품절</p>
+      </div>
+    </article>
+
+  </section>
+
+  <!-- ============ DETAIL ============ -->
+  <section class="detail" id="detail">
+
+    <!-- top bar -->
+    <header class="dt-bar">
+      <button class="dt-back" id="dtClose">← back to shelf</button>
+      <span class="dt-ix">04 / 17</span>
+    </header>
+
+    <!-- hero block -->
+    <div class="dt-hero">
+      <p class="dt-kicker">KERMESSE — EDITION · 2025</p>
+      <h2 class="dt-h">The Knight,<br/>the Princess<br/>&amp; the Good.</h2>
+      <p class="dt-byline">by <em>VICTOR UNWIN</em></p>
+    </div>
+
+    <!-- big slider -->
+    <div class="dt-slider" id="dtSlider">
+      <div class="dt-slides" id="dtSlides">
+        <div class="dt-slide"><img src="/mottool/mottool%20img/book/THE%20KNIGHT%2C%20THE%20PRINCESS%20AND%20THE%20GOOD/main.jpg" alt=""/></div>
+        <div class="dt-slide"><img src="/mottool/mottool%20img/book/THE%20KNIGHT%2C%20THE%20PRINCESS%20AND%20THE%20GOOD/1.jpg" alt=""/></div>
+        <div class="dt-slide"><img src="/mottool/mottool%20img/book/THE%20KNIGHT%2C%20THE%20PRINCESS%20AND%20THE%20GOOD/2.jpg" alt=""/></div>
+        <div class="dt-slide"><img src="/mottool/mottool%20img/book/THE%20KNIGHT%2C%20THE%20PRINCESS%20AND%20THE%20GOOD/3.jpg" alt=""/></div>
+        <div class="dt-slide"><img src="/mottool/mottool%20img/book/THE%20KNIGHT%2C%20THE%20PRINCESS%20AND%20THE%20GOOD/4.jpg" alt=""/></div>
+        <div class="dt-slide"><img src="/mottool/mottool%20img/book/THE%20KNIGHT%2C%20THE%20PRINCESS%20AND%20THE%20GOOD/5.jpg" alt=""/></div>
+      </div>
+      <div class="dt-dots" id="dtDots"></div>
+      <div class="dt-counter" id="dtCounter">01 / 06</div>
+    </div>
+
+    <!-- body: description + specs -->
+    <div class="dt-body">
+      <div class="dt-desc-col">
+        <p class="dt-label">NOTE</p>
+        <p class="dt-desc">2023년 비오는 날, 뉴욕에서 장갑 전투 모임 중 촬영된 비디오의 스틸을 담은 <em>KERMESSE</em> 출판물입니다.</p>
+        <p class="dt-desc">250호 초판. 2025년에 <em>Die Keure</em>가 Symbol Freelife Gloss 150 및 300gsm으로 인쇄되었습니다.</p>
+      </div>
+      <div class="dt-spec-col">
+        <p class="dt-label">SPEC</p>
+        <dl class="dt-spec-list">
+          <dt>publisher</dt><dd>KERMESSE</dd>
+          <dt>printed by</dt><dd>Die Keure</dd>
+          <dt>paper</dt><dd>Symbol Freelife Gloss 150 / 300gsm</dd>
+          <dt>size</dt><dd>210 × 148 mm</dd>
+          <dt>pages</dt><dd>276</dd>
+          <dt>binding</dt><dd>softcover</dd>
+          <dt>edition</dt><dd>1st · 250 copies</dd>
+          <dt>year</dt><dd>2025</dd>
+        </dl>
+      </div>
+    </div>
+
+    <!-- sticky buy bar -->
+    <div class="dt-buybar">
+      <div class="dt-buy-info">
+        <p class="dt-buy-title">『 THE KNIGHT, THE PRINCESS AND THE GOOD 』</p>
+        <p class="dt-buy-meta"><span>piece 4</span> · <span>price soon</span></p>
+      </div>
+      <a href="#" class="dt-cta">PRE-ORDER →</a>
+    </div>
+
+  </section>
+
+</main>
+
+<script>
+(() => {
+  // ===== Intro splash (mobile only) =====
+  const intro = document.getElementById('intro');
+  function hideIntro(){
+    intro.classList.add('hide');
+    setTimeout(() => intro.classList.add('gone'), 700);
+  }
+  if (window.innerWidth <= 760){
+    intro.classList.add('on');
+    document.body.style.overflow = 'hidden';
+    // tap to dismiss (anywhere except nav links work normally)
+    intro.addEventListener('click', () => {
+      document.body.style.overflow = '';
+      hideIntro();
+    });
+  } else {
+    intro.classList.add('gone');
+  }
+
+  // ===== Mobile sidebar drawer =====
+  const side = document.getElementById('side');
+  const overlay = document.getElementById('sideOverlay');
+  const trigger = document.getElementById('mTrigger');
+  const sideClose = document.getElementById('sideClose');
+  function openSide(){
+    side.classList.add('open');
+    overlay.classList.add('on');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeSide(){
+    side.classList.remove('open');
+    overlay.classList.remove('on');
+    document.body.style.overflow = '';
+  }
+  trigger.addEventListener('click', openSide);
+  sideClose.addEventListener('click', closeSide);
+  overlay.addEventListener('click', closeSide);
+
+  // ===== Auto-invert trigger based on background luminance =====
+  const sampleCanvas = document.createElement('canvas');
+  sampleCanvas.width = 1; sampleCanvas.height = 1;
+  const sampleCtx = sampleCanvas.getContext('2d', {willReadFrequently:true});
+
+  function sampleImgColor(imgEl, x, y){
+    try {
+      const r = imgEl.getBoundingClientRect();
+      if (!imgEl.complete || !imgEl.naturalWidth) return null;
+      const sx = Math.floor((x - r.left) / r.width * imgEl.naturalWidth);
+      const sy = Math.floor((y - r.top) / r.height * imgEl.naturalHeight);
+      if (sx < 0 || sy < 0 || sx >= imgEl.naturalWidth || sy >= imgEl.naturalHeight) return null;
+      sampleCtx.clearRect(0,0,1,1);
+      sampleCtx.drawImage(imgEl, sx, sy, 1, 1, 0, 0, 1, 1);
+      const d = sampleCtx.getImageData(0,0,1,1).data;
+      return [d[0], d[1], d[2]];
+    } catch(e){ return null; }
+  }
+
+  function getRGB(str){
+    const m = str.match(/\d+/g);
+    return m ? [+m[0], +m[1], +m[2]] : null;
+  }
+
+  function getBgAtPoint(x, y){
+    if (window.innerWidth > 760) return null;
+    trigger.style.pointerEvents = 'none';
+    const el = document.elementFromPoint(x, y);
+    trigger.style.pointerEvents = '';
+    if (!el) return null;
+
+    // If it's an image, sample pixel
+    if (el.tagName === 'IMG'){
+      const c = sampleImgColor(el, x, y);
+      if (c) return c;
+    }
+
+    // Walk up the tree finding a non-transparent bg
+    let node = el;
+    while (node && node !== document.documentElement){
+      const cs = getComputedStyle(node);
+      const bg = cs.backgroundColor;
+      if (bg && bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent'){
+        const rgb = getRGB(bg);
+        if (rgb) return rgb;
+      }
+      node = node.parentElement;
+    }
+    return [255, 255, 255];
+  }
+
+  let rafPending = false;
+  function checkContrast(){
+    rafPending = false;
+    if (window.innerWidth > 760) return;
+    const r = trigger.getBoundingClientRect();
+    const x = r.left + r.width/2;
+    const y = r.top + r.height/2;
+    const c = getBgAtPoint(x, y);
+    if (!c) return;
+    const lum = (0.299*c[0] + 0.587*c[1] + 0.114*c[2]) / 255;
+    trigger.classList.toggle('inverted', lum < 0.5);
+  }
+  function onScroll(){
+    if (!rafPending){
+      requestAnimationFrame(checkContrast);
+      rafPending = true;
+    }
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  window.addEventListener('resize', onScroll);
+  // initial after layout settles
+  setTimeout(checkContrast, 200);
+  side.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    if (window.innerWidth <= 760) closeSide();
+  }));
+
+  const detail = document.getElementById('detail');
+  const close = document.getElementById('dtClose');
+  document.querySelectorAll('.card[data-book="knight"] a').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      detail.classList.add('on');
+      document.body.style.overflow = 'hidden';
+      startAuto();
+    });
+  });
+  function shut(){
+    detail.classList.remove('on');
+    document.body.style.overflow = '';
+    stopAuto();
+  }
+  close.addEventListener('click', shut);
+  detail.addEventListener('click', e => { if (e.target === detail) shut(); });
+  document.addEventListener('keydown', e => {
+    if (!detail.classList.contains('on')) return;
+    if (e.key === 'Escape') shut();
+    if (e.key === 'ArrowRight') goTo(idx + 1);
+    if (e.key === 'ArrowLeft')  goTo(idx - 1);
+  });
+
+  // ===== SLIDER =====
+  const slider = document.getElementById('dtSlider');
+  const slides = document.getElementById('dtSlides');
+  const dotsBox = document.getElementById('dtDots');
+  const total = slides.children.length;
+  let idx = 0;
+  let autoTimer = null;
+  const AUTO_MS = 4000;
+
+  // build dots
+  for (let i = 0; i < total; i++){
+    const b = document.createElement('button');
+    b.setAttribute('aria-label', `Slide ${i+1}`);
+    b.addEventListener('click', () => { goTo(i); resetAuto(); });
+    dotsBox.appendChild(b);
+  }
+
+  const counter = document.getElementById('dtCounter');
+  function goTo(i){
+    idx = ((i % total) + total) % total;
+    slides.style.transform = `translateX(${-idx * 100}%)`;
+    [...dotsBox.children].forEach((d, j) => d.classList.toggle('on', j === idx));
+    if (counter) counter.textContent = `${String(idx+1).padStart(2,'0')} / ${String(total).padStart(2,'0')}`;
+  }
+  function next(){ goTo(idx + 1); }
+  function startAuto(){
+    stopAuto();
+    goTo(0);
+    autoTimer = setInterval(next, AUTO_MS);
+  }
+  function stopAuto(){
+    if (autoTimer){ clearInterval(autoTimer); autoTimer = null; }
+  }
+  function resetAuto(){
+    if (autoTimer){ stopAuto(); autoTimer = setInterval(next, AUTO_MS); }
+  }
+
+  // pause on hover (desktop)
+  slider.addEventListener('mouseenter', stopAuto);
+  slider.addEventListener('mouseleave', () => {
+    if (detail.classList.contains('on')) autoTimer = setInterval(next, AUTO_MS);
+  });
+
+  // touch swipe
+  let sx = 0, sxLast = 0, swiping = false;
+  slider.addEventListener('touchstart', e => {
+    sx = e.touches[0].clientX; sxLast = sx; swiping = true;
+    stopAuto();
+  }, {passive:true});
+  slider.addEventListener('touchmove', e => {
+    if (swiping) sxLast = e.touches[0].clientX;
+  }, {passive:true});
+  slider.addEventListener('touchend', () => {
+    if (!swiping) return;
+    swiping = false;
+    const dx = sxLast - sx;
+    if (Math.abs(dx) > 40){
+      goTo(dx < 0 ? idx + 1 : idx - 1);
+    }
+    resetAuto();
+    if (detail.classList.contains('on') && !autoTimer) autoTimer = setInterval(next, AUTO_MS);
+  }, {passive:true});
+
+  // click left/right halves on slide area
+  slider.addEventListener('click', e => {
+    const r = slider.getBoundingClientRect();
+    const x = e.clientX - r.left;
+    if (e.target.tagName === 'BUTTON') return; // dots handled
+    if (x > r.width / 2) goTo(idx + 1);
+    else goTo(idx - 1);
+    resetAuto();
+  });
+})();
+</script>
+
+</body>
+</html>

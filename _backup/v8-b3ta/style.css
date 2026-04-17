@@ -1,0 +1,278 @@
+/* ====================================================
+   mottool v8 — b3ta literal homage
+   gray bg · white wrapper · text-dense sidebar
+==================================================== */
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{
+  background:#888;
+  color:#000;
+  font-family:Verdana,Tahoma,Arial,sans-serif;
+  font-size:11px;line-height:1.45;
+}
+a{color:#0044cc;text-decoration:underline}
+a:visited{color:#7c2d8d}
+a:hover{color:#ff2975;background:transparent;text-decoration:underline}
+img{display:block;max-width:100%}
+button,input{font:inherit}
+ul{list-style:none}
+p{margin:0}
+
+.page{
+  max-width:760px;margin:0 auto;
+  background:#fff;
+  border-left:1px solid #444;
+  border-right:1px solid #444;
+}
+
+/* ============ TOP NAV ============ */
+.topnav{
+  background:#222;color:#aaa;
+  padding:5px 10px;
+  font-size:10px;
+  display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;
+}
+.topnav a{color:#fff}
+.topnav a:hover{color:#ff2975}
+.tn-r a{margin-left:4px}
+
+/* ============ HEADER (small) ============ */
+.head{
+  background:#fff;color:#000;
+  padding:8px 12px;
+  border-bottom:1px solid #ccc;
+  display:flex;align-items:center;gap:10px;
+}
+.logo{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:Georgia,serif;
+  font-size:28px;font-weight:900;color:#000;text-decoration:none;
+  letter-spacing:-0.02em;line-height:1;
+}
+.logo:hover{color:#ff2975;background:transparent}
+.logo img{width:46px;height:auto}
+.tagline{
+  font-size:13px;color:#666;font-style:italic;
+}
+
+/* ============ PROMO BAR ============ */
+.promo{
+  background:#ffe800;color:#000;
+  padding:6px 10px;
+  font-size:11px;text-align:center;
+  border-top:1px solid #c2a900;
+  border-bottom:1px solid #c2a900;
+}
+.promo b{color:#000}
+.promo a{color:#0044cc}
+.promo.small{
+  font-size:10px;padding:5px 8px;margin:0 8px;
+  border:1px solid #c2a900;
+}
+
+/* ============ CHALLENGE HEADER ============ */
+.ch-head{
+  padding:14px 12px 10px;
+  background:#fff;
+  border-bottom:1px solid #ccc;
+}
+.ch-head h1{
+  font-family:Georgia,serif;
+  font-size:24px;font-weight:700;color:#000;
+  letter-spacing:-0.01em;line-height:1.1;
+  margin-bottom:6px;
+}
+.ch-head p{
+  font-size:11px;color:#333;line-height:1.45;
+}
+.ch-head a{color:#0044cc}
+
+/* ============ MAIN GRID ============ */
+.main{
+  display:grid;
+  grid-template-columns:1fr 280px;
+  gap:8px;
+  padding:8px 8px 0;
+  background:#fff;
+}
+@media (max-width:680px){ .main{grid-template-columns:1fr} }
+
+/* ============ FEED ============ */
+.feed{display:flex;flex-direction:column;gap:14px}
+.post{}
+.img.scene{
+  position:relative;
+  aspect-ratio:1/1;
+  overflow:hidden;
+  background:#000;
+  border:1px solid #000;
+}
+.img .bg{position:absolute;inset:0;display:block}
+.stars{
+  position:absolute;inset:0;
+  background-image:
+    radial-gradient(1.5px 1.5px at 20% 30%, #fff 50%, transparent 50%),
+    radial-gradient(1.5px 1.5px at 70% 20%, #fff 50%, transparent 50%),
+    radial-gradient(1.5px 1.5px at 40% 60%, #fff 50%, transparent 50%),
+    radial-gradient(1.5px 1.5px at 80% 75%, #fff 50%, transparent 50%),
+    radial-gradient(1.5px 1.5px at 15% 85%, #fff 50%, transparent 50%),
+    radial-gradient(1.5px 1.5px at 90% 45%, #fff 50%, transparent 50%),
+    radial-gradient(1px 1px at 55% 25%, #fff 60%, transparent 60%),
+    radial-gradient(1px 1px at 30% 70%, #fff 60%, transparent 60%),
+    radial-gradient(1px 1px at 65% 90%, #fff 60%, transparent 60%);
+}
+.moon{
+  position:absolute;top:14%;right:12%;
+  width:90px;height:90px;border-radius:50%;
+  background:radial-gradient(circle at 30% 30%, #f6e8c6 0%, #c4ad77 100%);
+  box-shadow:0 0 40px rgba(255,240,200,.3);
+}
+.planet{
+  position:absolute;bottom:14%;left:10%;
+  width:140px;height:140px;border-radius:50%;
+  background:radial-gradient(circle at 30% 30%, #d65a3f 0%, #5a1410 100%);
+  box-shadow:inset -20px -20px 40px rgba(0,0,0,.4);
+}
+.trail{
+  position:absolute;top:50%;left:-10%;width:120%;height:2px;
+  background:linear-gradient(90deg, transparent, #ffe800, transparent);
+  transform:rotate(-20deg);opacity:.6;
+}
+.bk{
+  position:absolute;top:50%;left:50%;
+  width:42%;height:auto;
+  transform:translate(-50%,-50%);
+  filter:drop-shadow(0 4px 16px rgba(0,0,0,.5));
+}
+.bk.big{width:60%}
+.bk.small{width:30%}
+.bk.t1{transform:translate(-90%,-50%) rotate(-12deg);width:32%}
+.bk.t2{transform:translate(-50%,-50%) rotate(4deg);width:32%}
+.bk.t3{transform:translate(-10%,-50%) rotate(15deg);width:32%}
+.bk.rocket{
+  transform:translate(-50%,-50%) rotate(45deg);width:38%;
+  filter:drop-shadow(8px -8px 0 #ff2975) drop-shadow(0 4px 16px rgba(0,0,0,.5));
+}
+.bk.c{width:22%;filter:none}
+.bk.c1{transform:translate(-160%,-50%)}
+.bk.c2{transform:translate(-90%,-50%)}
+.bk.c3{transform:translate(-20%,-50%)}
+.bk.c4{transform:translate(50%,-50%)}
+.mas{
+  position:absolute;top:50%;left:50%;
+  width:80%;height:auto;transform:translate(-50%,-50%);
+  filter:invert(1) brightness(1) drop-shadow(0 4px 16px rgba(0,0,0,.5));
+}
+.mas.small{width:45%;transform:translate(-50%,-50%) rotate(-8deg)}
+.cap{
+  position:absolute;left:0;right:0;bottom:14px;
+  text-align:center;
+  font-family:Georgia,serif;
+  font-size:22px;font-weight:900;letter-spacing:-0.02em;line-height:1;
+  color:#fff;
+  text-shadow:2px 2px 0 #000, 0 0 12px rgba(0,0,0,.8);
+  padding:0 12px;
+}
+.cap.huge{font-size:30px;line-height:.95}
+.cap.italic{font-style:italic;font-weight:400}
+.cap small{
+  display:block;font-size:.55em;font-weight:400;
+  margin-top:4px;color:#ffe800;text-shadow:1px 1px 0 #000;
+}
+
+.meta{
+  font-size:10px;color:#333;
+  padding:4px 2px 2px;line-height:1.4;
+}
+.meta a{color:#0044cc;font-weight:700}
+.best{
+  background:#ffe800;color:#000;
+  padding:1px 5px;font-size:9px;font-weight:700;
+  letter-spacing:.05em;margin-left:4px;
+}
+
+.seemore{
+  font-size:10px;text-align:center;
+  padding:8px;background:#eee;border:1px solid #ccc;
+  margin-top:4px;
+}
+
+/* ============ SIDEBAR ============ */
+.side{
+  display:flex;flex-direction:column;gap:0;
+  font-size:10px;
+}
+.sb-h{
+  background:#000;color:#ffe800;
+  padding:5px 8px;
+  font-size:10px;font-weight:700;letter-spacing:.06em;
+  margin-top:8px;
+  border-bottom:2px solid #ff2975;
+}
+.sb-h:first-child{margin-top:0}
+.sb-item{
+  padding:6px 8px;
+  border-bottom:1px solid #eee;
+}
+.sb-item p{margin:0}
+.sb-item p + p{margin-top:2px}
+.sb-item b{color:#000}
+.sb-item b a{color:#000}
+.sb-item b a:hover{color:#ff2975;background:transparent}
+.sb-item .m{font-size:9px;color:#888}
+.sb-item .m a{color:#888}
+.sb-item.small{padding:4px 8px;font-size:10px;color:#444}
+.sb-item.small p{font-size:10px}
+
+.sb-list{padding:0;margin:0}
+.sb-list li{
+  padding:4px 8px;border-bottom:1px solid #eee;
+  font-size:10px;line-height:1.4;
+  display:flex;justify-content:space-between;gap:6px;align-items:baseline;
+}
+.sb-list li a{flex:1;color:#0044cc}
+.sb-list li b{color:#666;width:30px;flex-shrink:0;font-size:10px}
+.sb-list .m{font-size:9px;color:#888;flex-shrink:0;text-align:right}
+.sb-list .open{
+  background:#ff2975;color:#fff;font-size:8px;padding:1px 4px;
+  font-weight:700;letter-spacing:.04em;
+}
+
+.side form{display:flex;gap:3px;margin:4px 0}
+.side input{
+  flex:1;min-width:0;padding:3px;font-size:10px;
+  border:1px solid #888;font-family:Verdana,sans-serif;
+}
+.side button{
+  background:#000;color:#fff;border:1px solid #000;
+  padding:3px 8px;font-size:9px;font-weight:700;cursor:pointer;
+  letter-spacing:.04em;
+}
+.side button:hover{background:#ff2975;border-color:#ff2975}
+
+.donate-link{
+  display:inline-block;color:#000!important;
+  background:#ffe800;padding:4px 8px;
+  font-weight:700;text-decoration:none;font-size:11px;
+  border:1px solid #c2a900;
+}
+.donate-link:hover{background:#ff2975;color:#fff!important}
+
+/* ============ RULES ============ */
+.rules{
+  background:#000;color:#fff;
+  padding:8px 12px;font-size:10px;text-align:center;
+  margin-top:8px;
+}
+.rules b{color:#ffe800}
+
+/* ============ FOOTER ============ */
+.footer{
+  background:#222;color:#aaa;
+  padding:10px 12px;font-size:10px;line-height:1.55;
+}
+.footer p{margin:3px 0}
+.footer b{color:#fff}
+.footer a{color:#fff}
+.footer a:hover{color:#ff2975}
+.footer .dis{font-style:italic;color:#777}

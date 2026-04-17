@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>mottool — a small bookshop that moves</title>
+<base href="/mottool/v7-animejs/" />
+<meta name="description" content="mottool — a small bookshop in Dunsan, Daejeon." />
+<link rel="icon" type="image/png" href="/mottool/assets/book.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat+Brush&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;1,9..144,400;1,9..144,700&family=Inter+Tight:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- Header -->
+<header class="hdr">
+  <a href="/mottool/v7-animejs/" class="brand">
+    <img src="/mottool/assets/book.png" alt=""/>
+    mottool
+  </a>
+  <nav class="nav">
+    <a href="#shelf">the shelf</a>
+    <a href="#pickup">pick up</a>
+    <a href="#new">new arrivals</a>
+    <a href="#open">open a page</a>
+    <a href="#visit">visit</a>
+  </nav>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+    <span class="dot"></span>
+  </button>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-text">
+    <p class="kicker">A SMALL BOOKSHOP IN DUNSAN</p>
+    <h1 class="hero-title">
+      Books,<br/>
+      read them <span class="hl">slowly.</span>
+    </h1>
+    <p class="hero-sub">mottool is a small bookshop and tiny publisher. The covers on the right are our shelf — click them, or press below to rearrange.</p>
+    <div class="hero-ctas">
+      <button class="btn-primary" id="restartHero">↻ rearrange the shelf</button>
+      <a href="#visit" class="btn-ghost">visit us →</a>
+    </div>
+    <img src="/mottool/assets/mascot.png" alt="" class="hero-mascot"/>
+  </div>
+
+  <!-- 13x13 stagger grid of books -->
+  <div class="stagger-wrap">
+    <div class="stagger-grid" id="staggerGrid"></div>
+  </div>
+</section>
+
+<!-- 01 The shelf / what we are -->
+<section class="block" id="shelf">
+  <div class="bh">
+    <p class="kicker">01 — THE SHELF</p>
+    <h2>A small room of good books.</h2>
+  </div>
+  <div class="features">
+    <div class="f"><span class="f-ico">⬡</span><h3>Curated, not complete</h3><p>Around 800 titles on the shelf at any time. Each one we can vouch for.</p></div>
+    <div class="f"><span class="f-ico">◈</span><h3>New every week</h3><p>A small stack of new arrivals lands on Wednesdays.</p></div>
+    <div class="f"><span class="f-ico">◉</span><h3>Good covers, kept upright</h3><p>We treat books as objects. Scratch-free, dust-jacketed, faced outward.</p></div>
+    <div class="f"><span class="f-ico">▤</span><h3>Reading room upstairs</h3><p>A quiet corner for long sitting. Coffee not required.</p></div>
+    <div class="f"><span class="f-ico">⬙</span><h3>Editions by mottool</h3><p>Two books a year, made with small Korean presses.</p></div>
+    <div class="f"><span class="f-ico">↯</span><h3>Orders &amp; shipping</h3><p>Nationwide in Korea, and carefully packed for overseas readers too.</p></div>
+  </div>
+</section>
+
+<!-- 02 Pick up a book -->
+<section class="block demo-block" id="pickup">
+  <div class="bh">
+    <p class="kicker">02 — PICK ONE UP</p>
+    <h2>A book wants to be held.</h2>
+  </div>
+  <div class="demo-full">
+    <div class="demo-stage" id="springStage">
+      <div class="spring-book" id="springBook">
+        <img src="/mottool/assets/book.png" alt=""/>
+        <span>Quiet<br/>Rooms</span>
+      </div>
+      <p class="stage-hint">grab it. drag it. let it go.</p>
+    </div>
+    <p class="stage-note">
+      Every shop is really a room full of small things waiting to be handled.
+      <br/><em>— a reader, probably.</em>
+    </p>
+  </div>
+</section>
+
+<!-- 03 Scroll reveal — new arrivals -->
+<section class="block" id="new">
+  <div class="bh">
+    <p class="kicker">03 — NEW ARRIVALS</p>
+    <h2>This week on the table.</h2>
+  </div>
+  <div class="reveal-grid" id="revealGrid">
+    <div class="rv" data-r="1"><span>Soft Field</span></div>
+    <div class="rv" data-r="2"><span>Index 01</span></div>
+    <div class="rv" data-r="3"><span>Citrus</span></div>
+    <div class="rv" data-r="4"><span>After Noon</span></div>
+    <div class="rv" data-r="5"><span>Blue Hour</span></div>
+    <div class="rv" data-r="6"><span>Tide</span></div>
+    <div class="rv" data-r="7"><span>Night Walk</span></div>
+    <div class="rv" data-r="8"><span>Sea Grass</span></div>
+  </div>
+</section>
+
+<!-- 04 Open a page (SVG morph) -->
+<section class="block svg-block" id="open">
+  <div class="bh">
+    <p class="kicker">04 — OPEN A PAGE</p>
+    <h2>A line becomes a page.</h2>
+  </div>
+  <div class="svg-stage">
+    <svg viewBox="0 0 400 240" class="morph-svg" aria-hidden="true">
+      <path id="morphPath" d="M20,120 Q200,20 380,120" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+    </svg>
+    <div class="morph-ctrls">
+      <button data-morph="line" class="on">a line</button>
+      <button data-morph="book">a book</button>
+      <button data-morph="wave">a wave</button>
+      <button data-morph="circle">a circle</button>
+    </div>
+  </div>
+</section>
+
+<!-- 05 A sentence (timeline) -->
+<section class="block" id="sentence">
+  <div class="bh">
+    <p class="kicker">05 — A SENTENCE</p>
+    <h2>One word at a time.</h2>
+  </div>
+  <div class="tl-stage" id="tlStage">
+    <div class="tl-word w1">The</div>
+    <div class="tl-word w2">quiet</div>
+    <div class="tl-word w3">book</div>
+    <div class="tl-word w4">is</div>
+    <div class="tl-word w5">open.</div>
+  </div>
+  <div class="tl-ctrls">
+    <button id="tlPlay" class="btn-primary">↻ read again</button>
+  </div>
+</section>
+
+<!-- 06 Visit -->
+<section class="block visit-block" id="visit">
+  <div class="bh">
+    <p class="kicker">06 — VISIT</p>
+    <h2>Dunsan, second floor.</h2>
+  </div>
+  <div class="visit-grid">
+    <div>
+      <p class="visit-label">ADDRESS</p>
+      <p class="visit-val">대전 서구 둔산동 00-00<br/>2F · mottool</p>
+    </div>
+    <div>
+      <p class="visit-label">HOURS</p>
+      <p class="visit-val">TUE – SUN<br/>12:00 – 20:00</p>
+    </div>
+    <div>
+      <p class="visit-label">CONTACT</p>
+      <p class="visit-val">hello@mottool.kr<br/>070-0000-0000</p>
+    </div>
+    <div>
+      <p class="visit-label">INSTAGRAM</p>
+      <p class="visit-val"><a href="#">@mottool.kr</a></p>
+    </div>
+  </div>
+</section>
+
+<!-- Newsletter -->
+<section class="news">
+  <div class="news-inner">
+    <h2>A letter, now and then.</h2>
+    <p>New arrivals, editorial, and 15% off your first order.</p>
+    <form onsubmit="event.preventDefault(); this.querySelector('button').textContent='subscribed ✓';">
+      <input type="email" placeholder="you@email.com" required />
+      <button type="submit">subscribe →</button>
+    </form>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="ftr">
+  <div class="ftr-left">
+    <p>© 2026 mottool — 대전 둔산, KR.</p>
+    <p>a small bookshop, taking its time.</p>
+  </div>
+  <div class="ftr-right">
+    <a href="#shelf">the shelf</a>
+    <a href="#visit">visit</a>
+    <a href="/mottool/">← samples</a>
+  </div>
+</footer>
+
+<script type="module">
+(async () => {
+  // ---- Theme toggle ----
+  const root = document.documentElement;
+  const toggle = document.getElementById('themeToggle');
+  toggle.addEventListener('click', () => {
+    root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+  });
+
+  // ---- Build 13x13 stagger grid ----
+  const grid = document.getElementById('staggerGrid');
+  const N = 13;
+  const covers = ['#d9d4c7','#e7b7a6','#c8d3bd','#1a1a1a','#efe9df','#2b3a52','#b6643b','#f2d24a','#dcc7f0','#c2d9e0','#e2ddd1','#4a3b2f','#f5e7c1'];
+  for (let i = 0; i < N*N; i++){
+    const d = document.createElement('div');
+    d.className = 'cell';
+    d.style.background = covers[(i * 7) % covers.length];
+    grid.appendChild(d);
+  }
+
+  // ---- Try to load anime.js v4 (silent, no branding) ----
+  let anime = null;
+  try {
+    anime = await import('https://esm.sh/animejs@4');
+  } catch (e) {
+    console.warn('animation engine failed to load; using CSS fallbacks', e);
+  }
+
+  // ======= Hero stagger animation =======
+  function playHero(){
+    if (anime){
+      const cells = grid.querySelectorAll('.cell');
+      anime.animate(cells, {
+        scale: [{from: 0, to: 1.15}, {to: 1}],
+        rotate: [{from: -180, to: 0}],
+        opacity: [{from: 0, to: 1}],
+        duration: 900,
+        ease: 'outElastic(1, .6)',
+        delay: anime.stagger(40, { grid: [N, N], from: 'center' }),
+      });
+    } else {
+      grid.querySelectorAll('.cell').forEach((c, i) => {
+        c.style.animation = `pop 600ms ${i * 5}ms both`;
+      });
+    }
+  }
+  setTimeout(playHero, 200);
+  document.getElementById('restartHero').addEventListener('click', playHero);
+  grid.addEventListener('click', playHero);
+
+  // ======= Spring draggable book =======
+  const book = document.getElementById('springBook');
+  if (anime && anime.createDraggable){
+    anime.createDraggable(book, {
+      releaseMass: 1,
+      releaseStiffness: 80,
+      releaseDamping: 12,
+      container: document.getElementById('springStage'),
+    });
+  } else {
+    let sx=0, sy=0, dx=0, dy=0, dragging=false;
+    book.addEventListener('pointerdown', e => {
+      dragging=true; sx=e.clientX-dx; sy=e.clientY-dy;
+      book.style.transition='none';
+      book.setPointerCapture(e.pointerId);
+    });
+    book.addEventListener('pointermove', e => {
+      if (!dragging) return;
+      dx = e.clientX-sx; dy = e.clientY-sy;
+      book.style.transform = `translate(${dx}px,${dy}px) rotate(${dx*0.1}deg)`;
+    });
+    const release = () => {
+      if (!dragging) return;
+      dragging=false;
+      book.style.transition = 'transform 800ms cubic-bezier(.2,1.5,.4,1)';
+      book.style.transform = 'translate(0,0) rotate(0deg)';
+      dx=0;dy=0;
+    };
+    book.addEventListener('pointerup', release);
+    book.addEventListener('pointercancel', release);
+  }
+
+  // ======= Scroll reveal grid =======
+  const revealItems = document.querySelectorAll('.rv');
+  if (anime && anime.onScroll){
+    revealItems.forEach((el) => {
+      anime.animate(el, {
+        y: [{from: 60, to: 0}],
+        opacity: [{from: 0, to: 1}],
+        duration: 800,
+        ease: 'outQuart',
+        autoplay: anime.onScroll({ target: el, enter: 'bottom top', leave: 'top bottom' }),
+      });
+    });
+  } else {
+    const io = new IntersectionObserver(es => {
+      es.forEach(e => {
+        if (e.isIntersecting){
+          e.target.classList.add('in');
+          io.unobserve(e.target);
+        }
+      });
+    }, {threshold:0.2});
+    revealItems.forEach(el => io.observe(el));
+  }
+
+  // ======= SVG morph =======
+  const path = document.getElementById('morphPath');
+  const shapes = {
+    line:   'M20,120 Q200,20 380,120',
+    book:   'M80,40 L320,40 L320,200 L80,200 L80,40 Z M200,40 L200,200',
+    wave:   'M20,120 Q80,40 140,120 T260,120 T380,120',
+    circle: 'M200,40 A80,80 0 1,0 201,40 Z',
+  };
+  document.querySelectorAll('.morph-ctrls button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.morph-ctrls button').forEach(b => b.classList.remove('on'));
+      btn.classList.add('on');
+      const target = shapes[btn.dataset.morph];
+      if (anime){
+        anime.animate(path, { d: target, duration: 900, ease: 'inOutQuad' });
+      } else {
+        path.setAttribute('d', target);
+      }
+    });
+  });
+
+  // ======= Timeline =======
+  const tlPlay = document.getElementById('tlPlay');
+  function playTimeline(){
+    const words = document.querySelectorAll('.tl-word');
+    if (anime && anime.createTimeline){
+      const tl = anime.createTimeline({ loop: false });
+      words.forEach((w, i) => {
+        tl.add(w, {
+          y: [{from: 40, to: 0}],
+          opacity: [{from: 0, to: 1}],
+          scale: [{from: 0.6, to: 1}],
+          duration: 500,
+          ease: 'outBack',
+        }, i * 240);
+      });
+    } else {
+      words.forEach((w, i) => {
+        w.style.animation = 'none';
+        void w.offsetHeight;
+        w.style.animation = `wordIn 500ms ${i*240}ms both`;
+      });
+    }
+  }
+  tlPlay.addEventListener('click', playTimeline);
+  setTimeout(playTimeline, 1200);
+
+})();
+</script>
+
+</body>
+</html>
