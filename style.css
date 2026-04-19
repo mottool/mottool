@@ -454,8 +454,10 @@ html.dark .dt-back:hover{background:var(--ink);color:var(--bg)}
 .dt-slide img{
   width:100%;height:auto;
   display:block;
-  pointer-events:none;
   background:var(--card-bg);
+  -webkit-touch-callout:none;
+  -webkit-user-select:none;
+  user-select:none;
 }
 .dt-dots{
   position:absolute;
@@ -484,8 +486,35 @@ html.dark .dt-back:hover{background:var(--ink);color:var(--bg)}
 .dt-dots.scrub button.on{transform:scale(1.5)}
 .dt-dots.tick{transform:translateX(-50%) scale(1.35)}
 .dt-dots.tick button.on{transform:scale(1.8)}
-.dt-slider{cursor:grab}
+.dt-slider{
+  cursor:grab;
+  -webkit-touch-callout:none;
+  -webkit-user-select:none;
+  user-select:none;
+}
 .dt-slider:active{cursor:grabbing}
+
+/* ---------- Magnifier loupe ---------- */
+.mag{
+  position:fixed;
+  width:200px;height:200px;
+  pointer-events:none;
+  z-index:200;
+  display:none;
+  transform:translate(-50%,-110%);
+  filter:drop-shadow(0 6px 20px rgba(0,0,0,.25));
+}
+.mag.on{display:block;animation:magPop .25s cubic-bezier(.2,.8,.2,1) both}
+@keyframes magPop{
+  from{transform:translate(-50%,-110%) scale(.4);opacity:0}
+  to{transform:translate(-50%,-110%) scale(1);opacity:1}
+}
+.mag-svg{width:100%;height:100%;overflow:visible}
+.mag-lens{
+  width:200px;height:200px;
+  background-color:var(--card-bg);
+  background-repeat:no-repeat;
+}
 
 /* ---------- Body: description + specs ---------- */
 .dt-body{

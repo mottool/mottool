@@ -316,6 +316,25 @@
       <div class="dt-counter" id="dtCounter">01 / 06</div>
     </div>
 
+    <!-- magnifier loupe (SVG unified: mask + border same shape) -->
+    <div class="mag" id="mag">
+      <svg class="mag-svg" viewBox="0 0 200 200" aria-hidden="true">
+        <defs>
+          <filter id="roughCircle">
+            <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="4" seed="3"/>
+            <feDisplacementMap in="SourceGraphic" scale="5"/>
+          </filter>
+          <mask id="magMask">
+            <circle cx="100" cy="100" r="84" fill="white" filter="url(#roughCircle)"/>
+          </mask>
+        </defs>
+        <foreignObject width="200" height="200" mask="url(#magMask)">
+          <div xmlns="http://www.w3.org/1999/xhtml" class="mag-lens" id="magLens"></div>
+        </foreignObject>
+        <circle cx="100" cy="100" r="86" fill="none" stroke="var(--ink,#000)" stroke-width="3.5" filter="url(#roughCircle)"/>
+      </svg>
+    </div>
+
     <!-- body: description + specs -->
     <div class="dt-body">
       <div class="dt-desc-col">
@@ -508,9 +527,10 @@
       mCards.forEach(c => { c.style.cssText = ''; });
       return;
     }
-    for (let i = 0; i < mCards.length; i++){
-      const card = mCards[i];
-      const next = mCards[i + 1];
+    const visible = mCards.filter(c => c.style.display !== 'none');
+    for (let i = 0; i < visible.length; i++){
+      const card = visible[i];
+      const next = visible[i + 1];
       if (!next){
         card.style.setProperty('transform', 'none');
         card.style.setProperty('opacity', '1');
@@ -693,6 +713,69 @@
     else goTo(idx - 1);
     resetAuto();
   });
+
+  // ===== MAGNIFIER (long press on slide image) =====
+  const mag = document.getElementById('mag');
+  const magLens = document.getElementById('magLens');
+  let magTimer = null, magActive = false, magImgSrc = '';
+  const ZOOM = 2.8;
+
+  function showMag(cx, cy){
+    mag.style.left = cx + 'px';
+    mag.style.top = cy + 'px';
+    const curSlide = slides.children[idx];
+    const img = curSlide?.querySelector('img');
+    if (!img) return;
+    magImgSrc = img.src;
+    const imgRect = img.getBoundingClientRect();
+    const px = (cx - imgRect.left) / imgRect.width * 100;
+    const py = (cy - imgRect.top) / imgRect.height * 100;
+    magLens.style.backgroundImage = `url(${magImgSrc})`;
+    magLens.style.backgroundSize = `${imgRect.width * ZOOM}px ${imgRect.height * ZOOM}px`;
+    magLens.style.backgroundPosition = `${-((cx - imgRect.left) * ZOOM - 100)}px ${-((cy - imgRect.top) * ZOOM - 100)}px`;
+  }
+  function moveMag(cx, cy){
+    mag.style.left = cx + 'px';
+    mag.style.top = cy + 'px';
+    const curSlide = slides.children[idx];
+    const img = curSlide?.querySelector('img');
+    if (!img) return;
+    const imgRect = img.getBoundingClientRect();
+    magLens.style.backgroundPosition = `${-((cx - imgRect.left) * ZOOM - 100)}px ${-((cy - imgRect.top) * ZOOM - 100)}px`;
+  }
+  function hideMag(){
+    magActive = false;
+    mag.classList.remove('on');
+    clearTimeout(magTimer);
+    magTimer = null;
+  }
+
+  let magSX = 0, magSY = 0;
+  slider.addEventListener('pointerdown', e => {
+    if (e.target.closest('.dt-dots') || e.target.closest('.dt-counter')) return;
+    magSX = e.clientX; magSY = e.clientY;
+    magTimer = setTimeout(() => {
+      magActive = true;
+      dragging = false;
+      stopAuto();
+      mag.classList.add('on');
+      showMag(e.clientX, e.clientY);
+      if (navigator.vibrate) navigator.vibrate(20);
+    }, 400);
+  });
+  slider.addEventListener('pointermove', e => {
+    if (magActive){
+      e.preventDefault();
+      moveMag(e.clientX, e.clientY);
+      return;
+    }
+    if (magTimer && (Math.abs(e.clientX - magSX) > 8 || Math.abs(e.clientY - magSY) > 8)){
+      clearTimeout(magTimer); magTimer = null;
+    }
+  });
+  slider.addEventListener('pointerup', () => { if (magActive) hideMag(); else { clearTimeout(magTimer); magTimer = null; } });
+  slider.addEventListener('pointercancel', () => { hideMag(); });
+  slider.addEventListener('contextmenu', e => e.preventDefault());
 
   // ===== DOT SCRUBBING (long press + drag on dots) =====
   let dotScrubbing = false, dotLongTimer = null;
