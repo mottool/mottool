@@ -370,6 +370,9 @@
 
 </main>
 
+<!-- ============ SCROLL TO TOP ============ -->
+<button class="scroll-top" id="scrollTop" aria-label="Scroll to top">↑</button>
+
 <!-- ============ DARK MODE TOGGLE (fixed bottom-right) ============ -->
 <button class="dark-toggle" id="darkToggle" aria-label="Toggle dark mode">◐</button>
 
@@ -584,6 +587,15 @@
   window.addEventListener('resize', () => { requestAnimationFrame(updateDepth); });
   setTimeout(updateDepth, 500);
 
+  // ===== Scroll to top =====
+  const scrollTopBtn = document.getElementById('scrollTop');
+  document.addEventListener('scroll', () => {
+    scrollTopBtn.classList.toggle('show', window.scrollY > 300);
+  }, {passive:true});
+  scrollTopBtn.addEventListener('click', () => {
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+
   // ===== Dark mode =====
   const darkToggle = document.getElementById('darkToggle');
   let flashTimer = null;
@@ -636,6 +648,7 @@
     detail.scrollTop = 0;
     detail.classList.add('on');
     darkToggle.classList.add('above-bar');
+    scrollTopBtn.classList.add('above-bar');
     document.body.style.overflow = 'hidden';
     history.pushState({detail:true}, '', '#book');
     startAuto();
@@ -644,6 +657,7 @@
     if (!detail.classList.contains('on')) return;
     detail.classList.remove('on');
     darkToggle.classList.remove('above-bar');
+    scrollTopBtn.classList.remove('above-bar');
     stopAuto();
     setTimeout(() => { document.body.style.overflow = ''; }, 450);
   }

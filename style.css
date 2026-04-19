@@ -151,6 +151,33 @@ html.dark .side-mascot img{filter:invert(1)}
 .side-nav a:first-child{font-size:18px;font-weight:500;letter-spacing:.04em;margin-bottom:14px;color:var(--sub)}
 .side-nav a:first-child:hover{color:var(--ink)}
 
+/* ============ SCROLL TO TOP ============ */
+.scroll-top{
+  position:fixed;
+  bottom:24px;right:72px;
+  width:40px;height:40px;
+  border:1px solid var(--line);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;
+  color:var(--ink);
+  background:var(--bg);
+  z-index:130;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .3s, transform .3s, bottom .3s;
+  cursor:pointer;
+}
+.scroll-top.show{
+  opacity:.3;
+  pointer-events:auto;
+}
+.scroll-top.show:hover{
+  opacity:1;
+  transform:translateY(-2px);
+}
+.scroll-top.above-bar{bottom:86px}
+
 .dark-toggle{
   position:fixed;
   bottom:24px;right:24px;
