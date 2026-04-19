@@ -63,7 +63,9 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;outlin
   height:auto;
   display:block;
   animation:introBreath 3s ease-in-out 1s infinite;
+  transition:filter .4s;
 }
+html.dark .intro-logo{filter:invert(1)}
 @keyframes introBreath{
   0%,100%{transform:scale(1)}
   50%{transform:scale(1.03)}
