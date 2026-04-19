@@ -592,41 +592,6 @@
   window.addEventListener('resize', () => { requestAnimationFrame(updateDepth); });
   setTimeout(updateDepth, 500);
 
-  // ===== Easter eggs =====
-  // 1) Click mascot 5 times → dance
-  let eggClicks = 0, eggTimer = null;
-  const sideMascot = document.querySelector('.side-mascot img');
-  if (sideMascot){
-    sideMascot.style.cursor = 'pointer';
-    sideMascot.addEventListener('click', e => {
-      e.preventDefault();
-      eggClicks++;
-      clearTimeout(eggTimer);
-      eggTimer = setTimeout(() => eggClicks = 0, 2000);
-      if (eggClicks >= 5){
-        eggClicks = 0;
-        sideMascot.classList.add('dance');
-        if (navigator.vibrate) navigator.vibrate([50,50,50,50,100]);
-        setTimeout(() => sideMascot.classList.remove('dance'), 2000);
-      }
-    });
-  }
-  // 2) Search "hello" → mascot wave
-  searchInput.addEventListener('input', () => {
-    const v = searchInput.value.toLowerCase().trim();
-    if (v === 'hello' || v === '안녕'){
-      if (sideMascot && !sideMascot.classList.contains('wave')){
-        sideMascot.classList.add('wave');
-        setTimeout(() => sideMascot.classList.remove('wave'), 1500);
-      }
-    }
-  });
-
-  // ===== Image blur-up =====
-  document.querySelectorAll('.cv img').forEach(img => {
-    if (img.complete) { img.classList.add('loaded'); }
-    else { img.addEventListener('load', () => img.classList.add('loaded'), {once:true}); }
-  });
 
   // ===== Scroll to top =====
   const scrollTopBtn = document.getElementById('scrollTop');
