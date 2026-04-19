@@ -430,11 +430,19 @@
     side.classList.add('open');
     overlay.classList.add('on');
     document.body.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.width = '100%';
+    document.body.dataset.scrollY = window.scrollY;
+    document.body.style.top = `-${window.scrollY}px`;
   }
   function closeSide(){
     side.classList.remove('open');
     overlay.classList.remove('on');
     document.body.style.overflow = '';
+    document.body.style.position = '';
+    document.body.style.width = '';
+    document.body.style.top = '';
+    window.scrollTo(0, parseInt(document.body.dataset.scrollY || '0'));
   }
   trigger.addEventListener('click', openSide);
   sideClose.addEventListener('click', closeSide);
@@ -603,6 +611,17 @@
       const text = card.textContent.toLowerCase();
       card.style.display = q === '' || text.includes(q) ? '' : 'none';
     });
+  });
+  // prevent background scroll when keyboard opens on mobile
+  searchInput.addEventListener('focus', () => {
+    if (window.innerWidth <= 760) {
+      document.body.style.overflow = 'hidden';
+    }
+  });
+  searchInput.addEventListener('blur', () => {
+    if (window.innerWidth <= 760) {
+      document.body.style.overflow = '';
+    }
   });
 
   const detail = document.getElementById('detail');
