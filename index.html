@@ -767,6 +767,9 @@
     mag.classList.remove('on');
     clearTimeout(magTimer);
     magTimer = null;
+    // restore scroll
+    document.body.style.overflow = '';
+    document.body.style.touchAction = '';
   }
 
   let magSX = 0, magSY = 0;
@@ -780,6 +783,9 @@
       mag.classList.add('on');
       showMag(e.clientX, e.clientY);
       if (navigator.vibrate) navigator.vibrate(20);
+      // lock scroll while magnifier active
+      document.body.style.overflow = 'hidden';
+      document.body.style.touchAction = 'none';
     }, 400);
   });
   slider.addEventListener('pointermove', e => {
