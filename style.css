@@ -689,6 +689,7 @@ html.dark .dt-back:hover{background:var(--ink);color:var(--bg)}
     transition:filter .25s ease;
   }
   .m-trigger.inverted img{filter:invert(1)}
+  html.dark .m-trigger img{filter:invert(1)}
   .m-trigger:active img{transform:scale(.96)}
 
   .main{margin-left:0;padding:120px 16px 40px}
