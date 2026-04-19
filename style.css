@@ -128,7 +128,7 @@ html.dark .side-mascot img{filter:invert(1)}
   border:0;border-bottom:1px solid var(--line);
   background:transparent;
   font-family:"Space Grotesk","Inter",sans-serif;
-  font-size:14px;color:var(--ink);
+  font-size:16px;color:var(--ink);
   outline:0;
   transition:border-color .2s;
 }

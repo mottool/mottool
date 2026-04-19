@@ -321,17 +321,17 @@
       <svg class="mag-svg" viewBox="0 0 200 200" aria-hidden="true">
         <defs>
           <filter id="roughCircle">
-            <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="4" seed="3"/>
-            <feDisplacementMap in="SourceGraphic" scale="5"/>
+            <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="3" seed="7"/>
+            <feDisplacementMap in="SourceGraphic" scale="12"/>
           </filter>
           <mask id="magMask">
-            <circle cx="100" cy="100" r="84" fill="white" filter="url(#roughCircle)"/>
+            <circle cx="100" cy="100" r="82" fill="white" filter="url(#roughCircle)"/>
           </mask>
         </defs>
         <foreignObject width="200" height="200" mask="url(#magMask)">
           <div xmlns="http://www.w3.org/1999/xhtml" class="mag-lens" id="magLens"></div>
         </foreignObject>
-        <circle cx="100" cy="100" r="86" fill="none" stroke="var(--ink,#000)" stroke-width="3.5" filter="url(#roughCircle)"/>
+        <circle cx="100" cy="100" r="86" fill="none" stroke="var(--ink,#000)" stroke-width="4.5" filter="url(#roughCircle)"/>
       </svg>
     </div>
 
