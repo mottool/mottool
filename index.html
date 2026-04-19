@@ -535,6 +535,7 @@
   function openDetail(){
     detail.scrollTop = 0;
     detail.classList.add('on');
+    darkToggle.classList.add('above-bar');
     document.body.style.overflow = 'hidden';
     history.pushState({detail:true}, '', '#book');
     startAuto();
@@ -542,6 +543,7 @@
   function shut(){
     if (!detail.classList.contains('on')) return;
     detail.classList.remove('on');
+    darkToggle.classList.remove('above-bar');
     stopAuto();
     setTimeout(() => { document.body.style.overflow = ''; }, 450);
   }

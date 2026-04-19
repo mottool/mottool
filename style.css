@@ -37,7 +37,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;outlin
 /* ============ INTRO SPLASH (mobile) ============ */
 .intro{
   position:fixed;inset:0;
-  background:#fff;
+  background:var(--bg);
   z-index:200;
   display:flex;align-items:center;justify-content:center;
   opacity:0;pointer-events:none;
@@ -72,7 +72,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;outlin
 .intro-tag{
   font-family:"Space Grotesk","Inter",sans-serif;
   font-size:13px;line-height:1.55;letter-spacing:.02em;
-  color:#000;text-align:center;
+  color:var(--ink);text-align:center;
   max-width:320px;
 }
 .intro-nav{
@@ -82,14 +82,14 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;outlin
 .intro-nav a{
   font-family:"Space Grotesk","Inter",sans-serif;
   font-size:22px;font-weight:700;letter-spacing:-0.01em;
-  color:#000;
+  color:var(--ink);
 }
-.intro-nav a:hover{color:#888}
+.intro-nav a:hover{color:var(--sub)}
 
 .intro-hint{
   margin-top:16px;
   font-family:"JetBrains Mono",monospace;
-  font-size:10px;color:#888;letter-spacing:.16em;
+  font-size:10px;color:var(--mute);letter-spacing:.16em;
   animation:introPulse 1.6s ease-in-out infinite;
 }
 @keyframes introPulse{
@@ -123,22 +123,22 @@ html.dark .side-mascot img{filter:invert(1)}
 .side-search input{
   width:100%;
   padding:8px 0;
-  border:0;border-bottom:1px solid #ccc;
+  border:0;border-bottom:1px solid var(--line);
   background:transparent;
   font-family:"Space Grotesk","Inter",sans-serif;
-  font-size:14px;color:#000;
+  font-size:14px;color:var(--ink);
   outline:0;
   transition:border-color .2s;
 }
-.side-search input:focus{border-color:#000}
-.side-search input::placeholder{color:#bbb;font-size:13px}
+.side-search input:focus{border-color:var(--ink)}
+.side-search input::placeholder{color:var(--mute);font-size:13px}
 
 .side-nav{
   display:flex;flex-direction:column;gap:10px;
   font-family:"Space Grotesk","Inter",sans-serif;
   font-size:32px;font-weight:700;letter-spacing:-0.02em;
   line-height:1.05;
-  color:#000;
+  color:var(--ink);
   text-transform:uppercase;
   margin-top:0;
   margin-bottom:auto;
@@ -159,10 +159,13 @@ html.dark .side-mascot img{filter:invert(1)}
   font-size:18px;
   color:var(--ink);
   background:var(--bg);
-  z-index:80;
+  z-index:130;
   opacity:.2;
-  transition:opacity .4s ease, border-color .3s, transform .3s, background .3s;
+  transition:opacity .4s ease, border-color .3s, transform .3s, background .3s, bottom .3s;
   cursor:pointer;
+}
+.dark-toggle.above-bar{
+  bottom:86px;
 }
 .dark-toggle:hover{
   opacity:1;
@@ -298,7 +301,7 @@ html.dark .brand-mark img{filter:invert(1)}
 }
 
 .card.sold .cv{opacity:.55}
-.card.sold .meta p:last-child{color:#000;font-weight:500}
+.card.sold .meta p:last-child{color:var(--ink);font-weight:500}
 
 .meta{
   display:flex;flex-direction:column;
@@ -363,20 +366,27 @@ html.dark .brand-mark img{filter:invert(1)}
   background:rgba(255,255,255,.92);
   backdrop-filter:blur(8px);
   -webkit-backdrop-filter:blur(8px);
-  border-bottom:1px solid #e7e3d5;
+  border-bottom:1px solid var(--line);
   z-index:10;
   font-family:"Space Grotesk","Inter",sans-serif;
   font-size:12px;letter-spacing:.04em;
+  transition:background .4s,border-color .4s;
+}
+html.dark .dt-bar{
+  background:rgba(14,14,16,.92);
+  border-bottom-color:rgba(255,255,255,.15);
 }
 .dt-back{
-  font:inherit;color:#000;
+  font:inherit;color:var(--ink);
   padding:6px 10px;
-  border:1px solid #000;border-radius:999px;
-  background:#fff;
-  transition:background .2s,color .2s;
+  border:1px solid var(--ink);border-radius:999px;
+  background:var(--bg);
+  transition:background .2s,color .2s,border-color .2s;
 }
-.dt-back:hover{background:#000;color:#fff}
-.dt-ix{color:#888;font-family:"JetBrains Mono",monospace;font-size:11px}
+.dt-back:hover{background:var(--ink);color:var(--bg)}
+html.dark .dt-back{color:var(--ink);border-color:var(--ink);background:transparent}
+html.dark .dt-back:hover{background:var(--ink);color:var(--bg)}
+.dt-ix{color:var(--mute);font-family:"JetBrains Mono",monospace;font-size:11px}
 
 /* hero */
 .dt-hero{
@@ -386,7 +396,7 @@ html.dark .brand-mark img{filter:invert(1)}
 .dt-kicker{
   font-family:"Space Grotesk","Inter",sans-serif;
   font-size:11px;font-weight:500;letter-spacing:.22em;
-  text-transform:uppercase;color:#888;
+  text-transform:uppercase;color:var(--mute);
   margin-bottom:clamp(16px,3vw,32px);
 }
 .dt-h{
@@ -394,22 +404,22 @@ html.dark .brand-mark img{filter:invert(1)}
   font-weight:600;
   font-size:clamp(40px,7vw,104px);
   letter-spacing:-0.04em;line-height:.95;
-  color:#000;
+  color:var(--ink);
   margin-bottom:clamp(14px,2vw,24px);
 }
 .dt-byline{
-  font-size:clamp(14px,1.4vw,18px);color:#444;
+  font-size:clamp(14px,1.4vw,18px);color:var(--sub);
   font-family:"Space Grotesk","Inter",sans-serif;
 }
 .dt-byline em{
-  font-style:normal;font-weight:600;color:#000;
+  font-style:normal;font-weight:600;color:var(--ink);
   letter-spacing:.02em;
 }
 
 /* ---------- Slider ---------- */
 .dt-slider{
   position:relative;
-  background:#f5f4ee;
+  background:var(--card-bg);
   user-select:none;
   -webkit-user-select:none;
   cursor:pointer;
@@ -418,10 +428,12 @@ html.dark .brand-mark img{filter:invert(1)}
 }
 .dt-counter{
   position:absolute;top:16px;right:16px;
-  background:rgba(255,255,255,.9);
+  background:rgba(0,0,0,.55);
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
   padding:6px 12px;border-radius:999px;
   font-family:"JetBrains Mono",monospace;
-  font-size:11px;letter-spacing:.06em;color:#000;
+  font-size:11px;letter-spacing:.06em;color:#fff;
   z-index:3;
 }
 .dt-slides{
@@ -438,7 +450,7 @@ html.dark .brand-mark img{filter:invert(1)}
   width:100%;height:auto;
   display:block;
   pointer-events:none;
-  background:#f5f4ee;
+  background:var(--card-bg);
 }
 .dt-dots{
   position:absolute;
@@ -451,12 +463,12 @@ html.dark .brand-mark img{filter:invert(1)}
 .dt-dots button{
   width:6px;height:6px;
   border-radius:50%;
-  background:rgba(0,0,0,.25);
+  background:var(--mute);
   border:0;padding:0;cursor:pointer;
   transition:background .2s, transform .2s;
 }
-.dt-dots button:hover{background:rgba(0,0,0,.5)}
-.dt-dots button.on{background:#000;transform:scale(1.25)}
+.dt-dots button:hover{background:var(--sub)}
+.dt-dots button.on{background:var(--ink);transform:scale(1.25)}
 .dt-dots.scrub{
   transform:translateX(-50%) scale(1.3);
   background:rgba(255,255,255,.95);
@@ -481,20 +493,20 @@ html.dark .brand-mark img{filter:invert(1)}
 }
 .dt-label{
   font-family:"JetBrains Mono",monospace;
-  font-size:10px;letter-spacing:.2em;color:#888;
+  font-size:10px;letter-spacing:.2em;color:var(--mute);
   margin-bottom:16px;
   padding-bottom:10px;
-  border-bottom:1px solid #000;
+  border-bottom:1px solid var(--ink);
 }
 .dt-desc-col .dt-desc{
   font-size:clamp(15px,1.4vw,18px);
-  line-height:1.7;color:#1a1a1a;
+  line-height:1.7;color:var(--ink);
   margin-bottom:16px;
   max-width:560px;
 }
 .dt-desc-col .dt-desc em{
   font-style:normal;font-weight:600;
-  border-bottom:2px solid #000;
+  border-bottom:2px solid var(--ink);
   padding-bottom:1px;
 }
 
@@ -506,13 +518,13 @@ html.dark .brand-mark img{filter:invert(1)}
   font-size:12px;
 }
 .dt-spec-list dt{
-  color:#888;letter-spacing:.02em;
+  color:var(--mute);letter-spacing:.02em;
   padding-top:3px;
 }
 .dt-spec-list dd{
-  color:#000;
+  color:var(--ink);
   padding-bottom:10px;
-  border-bottom:1px dotted #ccc;
+  border-bottom:1px dotted var(--line);
 }
 
 /* ---------- Sticky buy bar ---------- */
@@ -521,30 +533,30 @@ html.dark .brand-mark img{filter:invert(1)}
   display:flex;justify-content:space-between;align-items:center;
   gap:20px;
   padding:14px clamp(20px,3vw,40px);
-  background:#000;color:#fff;
+  background:var(--ink);color:var(--bg);
   z-index:5;
 }
 .dt-buy-info{display:flex;flex-direction:column;gap:2px}
 .dt-buy-title{
   font-family:"Space Grotesk","Inter",sans-serif;
   font-size:12px;font-weight:500;
-  color:#fff;
+  color:var(--bg);
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:60vw;
 }
 .dt-buy-meta{
   font-family:"JetBrains Mono",monospace;
-  font-size:10px;color:#aaa;letter-spacing:.06em;
+  font-size:10px;color:var(--mute);letter-spacing:.06em;
 }
 .dt-cta{
   display:inline-block;
   padding:10px 18px;
-  background:#fff;color:#000;
+  background:var(--bg);color:var(--ink);
   font-family:"Space Grotesk","Inter",sans-serif;
   font-weight:600;font-size:11px;letter-spacing:.12em;
   border-radius:999px;
   white-space:nowrap;
 }
-.dt-cta:hover{background:#ddd}
+.dt-cta:hover{background:var(--line)}
 
 @media (max-width:520px){
   .dt-buy-title{max-width:50vw;font-size:11px}
@@ -570,15 +582,15 @@ html.dark .brand-mark img{filter:invert(1)}
 .ftr-brand{
   font-family:"Space Grotesk","Inter",sans-serif;
   font-size:28px;font-weight:700;letter-spacing:-0.03em;
-  color:#000;line-height:1;
+  color:var(--ink);line-height:1;
 }
 .ftr-tag{
-  font-size:12px;color:#888;margin-top:6px;letter-spacing:.04em;
+  font-size:12px;color:var(--mute);margin-top:6px;letter-spacing:.04em;
 }
 .ftr-label{
   font-family:"Space Grotesk","Inter",sans-serif;
   font-size:10px;font-weight:600;letter-spacing:.14em;
-  color:#888;text-transform:uppercase;
+  color:var(--mute);text-transform:uppercase;
   margin-bottom:8px;
 }
 .ftr-col p{line-height:1.6;color:var(--sub)}
@@ -606,7 +618,7 @@ html.dark .brand-mark img{filter:invert(1)}
     display:flex;align-items:center;justify-content:center;
     position:absolute;top:14px;right:14px;
     width:32px;height:32px;
-    font-size:18px;color:#000;
+    font-size:18px;color:var(--ink);
     background:transparent;
   }
   .side-mascot{display:none}
