@@ -802,6 +802,10 @@
   slider.addEventListener('pointercancel', () => { hideMag(); });
   slider.addEventListener('contextmenu', e => e.preventDefault());
   slider.addEventListener('dragstart', e => e.preventDefault());
+  // block scroll while magnifier active (must be non-passive to preventDefault)
+  document.addEventListener('touchmove', e => {
+    if (magActive) e.preventDefault();
+  }, {passive:false});
 
   // ===== DOT SCRUBBING (long press + drag on dots) =====
   let dotScrubbing = false, dotLongTimer = null;
