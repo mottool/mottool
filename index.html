@@ -528,12 +528,23 @@
       return;
     }
     const visible = mCards.filter(c => c.style.display !== 'none');
+    // find the topmost visible (current) card index
+    let currentIdx = 0;
+    for (let i = visible.length - 1; i >= 0; i--){
+      if (visible[i].getBoundingClientRect().top <= 80){
+        currentIdx = i; break;
+      }
+    }
     for (let i = 0; i < visible.length; i++){
       const card = visible[i];
       const next = visible[i + 1];
+      const cv = card.querySelector('.cv');
+      const behind = currentIdx - i; // how many cards behind current
       if (!next){
-        card.style.setProperty('transform', 'none');
-        card.style.setProperty('opacity', '1');
+        card.style.setProperty('transform', 'none', 'important');
+        card.style.setProperty('opacity', '1', 'important');
+        card.style.zIndex = '2';
+        if (cv) cv.style.boxShadow = '';
         continue;
       }
       const nextTop = next.getBoundingClientRect().top;
@@ -541,13 +552,21 @@
       if (nextTop < h && nextTop >= 0){
         const ratio = (h - nextTop) / h;
         card.style.setProperty('transform', `scale(${1 - ratio * 0.3})`, 'important');
+        // fully covered cards behind 2+ become invisible
         card.style.setProperty('opacity', '1', 'important');
+        card.style.zIndex = '1';
+        if (cv) cv.style.boxShadow = 'none';
       } else if (nextTop < 0){
+        // fully covered — hide completely (prevents shadow stacking)
         card.style.setProperty('transform', 'scale(0.7)', 'important');
-        card.style.setProperty('opacity', '1', 'important');
+        card.style.setProperty('opacity', behind > 1 ? '0' : '1', 'important');
+        card.style.zIndex = '0';
+        if (cv) cv.style.boxShadow = 'none';
       } else {
         card.style.setProperty('transform', 'none', 'important');
         card.style.setProperty('opacity', '1', 'important');
+        card.style.zIndex = '2';
+        if (cv) cv.style.boxShadow = '';
       }
     }
   }

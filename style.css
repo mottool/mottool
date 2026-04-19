@@ -224,6 +224,7 @@ html.dark .brand-mark img{filter:invert(1)}
     animation:none;
     opacity:1;
     transform:none;
+    z-index:1;
   }
   .card .cv{
     margin-bottom:4px;
