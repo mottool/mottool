@@ -34,6 +34,14 @@ a{color:inherit;text-decoration:none}
 img{max-width:100%;display:block}
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;outline:0}
 
+/* focus visible (keyboard only, not mouse) */
+:focus-visible{
+  outline:2px solid var(--ink);
+  outline-offset:3px;
+  border-radius:3px;
+}
+:focus:not(:focus-visible){outline:none}
+
 /* ============ INTRO SPLASH (mobile) ============ */
 .intro{
   position:fixed;inset:0;
@@ -120,6 +128,26 @@ html.dark .intro-logo{filter:invert(1)}
   height:auto;display:block;
 }
 html.dark .side-mascot img{filter:invert(1)}
+
+/* Easter egg: dance */
+.side-mascot img.dance{
+  animation:eggDance 0.4s ease 5;
+}
+@keyframes eggDance{
+  0%,100%{transform:rotate(0) scale(1)}
+  25%{transform:rotate(-12deg) scale(1.1)}
+  50%{transform:rotate(12deg) scaleX(-1)}
+  75%{transform:rotate(-8deg) scale(1.15)}
+}
+
+/* Easter egg: wave */
+.side-mascot img.wave{
+  animation:eggWave 0.3s ease 3;
+}
+@keyframes eggWave{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-8px) rotate(5deg)}
+}
 
 .side-search{margin-bottom:24px}
 .side-search input{
@@ -302,7 +330,11 @@ html.dark .brand-mark img{filter:invert(1)}
   width:100%;height:auto;
   display:block;
   background:var(--bg);
-  transition:background .4s;
+  transition:background .4s, filter .6s ease;
+  filter:blur(12px);
+}
+.cv img.loaded{
+  filter:blur(0);
 }
 /* Placeholder cards keep a book-like ratio */
 .ph{
