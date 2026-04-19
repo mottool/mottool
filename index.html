@@ -584,12 +584,13 @@
     localStorage.setItem('mottool-dark', dark ? '1' : '0');
   }
   darkToggle.addEventListener('click', () => {
-    applyTheme(!document.documentElement.classList.contains('dark'));
+    const isDark = !document.documentElement.classList.contains('dark');
+    applyTheme(isDark);
     darkToggle.classList.add('flash');
     clearTimeout(flashTimer);
     flashTimer = setTimeout(() => darkToggle.classList.remove('flash'), 2000);
-    // update mascot inversion after theme change settles
-    setTimeout(checkContrast, 50);
+    // force mascot inversion immediately
+    trigger.classList.toggle('inverted', isDark);
   });
   if (localStorage.getItem('mottool-dark') === '1') applyTheme(true);
 
