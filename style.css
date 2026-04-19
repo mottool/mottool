@@ -216,17 +216,21 @@ html.dark .brand-mark img{filter:invert(1)}
   }
   .card{
     position:sticky;
-    top:0;
-    background:transparent;
+    top:70px;
+    background:var(--bg);
     padding:0;
-    margin-bottom:6px;
+    margin-bottom:0;
+    transform-origin:center top;
+    animation:none;
+    opacity:1;
+    transform:none;
   }
   .card .cv{
     margin-bottom:4px;
   }
   .card .meta{
     background:var(--bg);
-    padding:4px 0 12px;
+    padding:4px 0 16px;
   }
 }
 
@@ -262,6 +266,7 @@ html.dark .brand-mark img{filter:invert(1)}
   position:relative;overflow:hidden;
   margin-bottom:6px;
   transition:background .4s;
+  box-shadow:0 4px 16px rgba(0,0,0,.1);
 }
 .cv img{
   width:100%;height:auto;

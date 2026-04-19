@@ -498,6 +498,45 @@
     if (window.innerWidth <= 760) closeSide();
   }));
 
+  // ===== Sticky card depth (shrink when covered) =====
+  const mCards = [...document.querySelectorAll('.grid .card')];
+  let depthRaf = false;
+  function updateDepth(){
+    depthRaf = false;
+    const isMobile = getComputedStyle(document.querySelector('.grid')).display === 'block';
+    if (!isMobile){
+      mCards.forEach(c => { c.style.cssText = ''; });
+      return;
+    }
+    for (let i = 0; i < mCards.length; i++){
+      const card = mCards[i];
+      const next = mCards[i + 1];
+      if (!next){
+        card.style.setProperty('transform', 'none');
+        card.style.setProperty('opacity', '1');
+        continue;
+      }
+      const nextTop = next.getBoundingClientRect().top;
+      const h = card.offsetHeight;
+      if (nextTop < h && nextTop >= 0){
+        const ratio = (h - nextTop) / h;
+        card.style.setProperty('transform', `scale(${1 - ratio * 0.3})`, 'important');
+        card.style.setProperty('opacity', `${1 - ratio * 0.7}`, 'important');
+      } else if (nextTop < 0){
+        card.style.setProperty('transform', 'scale(0.7)', 'important');
+        card.style.setProperty('opacity', '0.3', 'important');
+      } else {
+        card.style.setProperty('transform', 'none', 'important');
+        card.style.setProperty('opacity', '1', 'important');
+      }
+    }
+  }
+  document.addEventListener('scroll', () => {
+    if (!depthRaf){ requestAnimationFrame(updateDepth); depthRaf = true; }
+  }, {passive:true});
+  window.addEventListener('resize', () => { requestAnimationFrame(updateDepth); });
+  setTimeout(updateDepth, 500);
+
   // ===== Dark mode =====
   const darkToggle = document.getElementById('darkToggle');
   let flashTimer = null;
