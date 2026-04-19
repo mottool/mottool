@@ -615,20 +615,12 @@
   // prevent background scroll when keyboard opens on mobile
   searchInput.addEventListener('focus', () => {
     if (window.innerWidth <= 760) {
-      document.body.dataset.searchY = window.scrollY;
       document.body.style.overflow = 'hidden';
-      document.body.style.position = 'fixed';
-      document.body.style.width = '100%';
-      document.body.style.top = `-${window.scrollY}px`;
     }
   });
   searchInput.addEventListener('blur', () => {
     if (window.innerWidth <= 760) {
       document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
-      document.body.style.top = '';
-      window.scrollTo(0, parseInt(document.body.dataset.searchY || '0'));
     }
   });
 
