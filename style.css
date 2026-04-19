@@ -459,6 +459,9 @@ html.dark .dt-back:hover{background:var(--ink);color:var(--bg)}
   -webkit-touch-callout:none;
   -webkit-user-select:none;
   user-select:none;
+  -webkit-user-drag:none;
+  user-drag:none;
+  pointer-events:none;
 }
 .dt-dots{
   position:absolute;

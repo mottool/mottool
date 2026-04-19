@@ -795,6 +795,7 @@
   slider.addEventListener('pointerup', () => { if (magActive) hideMag(); else { clearTimeout(magTimer); magTimer = null; } });
   slider.addEventListener('pointercancel', () => { hideMag(); });
   slider.addEventListener('contextmenu', e => e.preventDefault());
+  slider.addEventListener('dragstart', e => e.preventDefault());
 
   // ===== DOT SCRUBBING (long press + drag on dots) =====
   let dotScrubbing = false, dotLongTimer = null;
