@@ -3,9 +3,20 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>mottool — collect</title>
+<title>mottool — artbook · lifestyle</title>
 <base href="/" />
 <link rel="icon" type="image/png" href="/assets/book.png" />
+
+<!-- OG / Social -->
+<meta property="og:title" content="mottool — artbook · lifestyle" />
+<meta property="og:description" content="a small bookshop collecting quiet books, one piece at a time. 대전 둔산." />
+<meta property="og:image" content="https://mottool.art/assets/mascot.png" />
+<meta property="og:url" content="https://mottool.art" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="mottool — artbook · lifestyle" />
+<meta name="twitter:description" content="a small bookshop collecting quiet books, one piece at a time." />
+<meta name="twitter:image" content="https://mottool.art/assets/mascot.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
@@ -35,6 +46,9 @@
   <a href="/" class="side-mascot">
     <img src="/assets/mascot.png" alt="mottool"/>
   </a>
+  <div class="side-search">
+    <input type="text" id="searchInput" placeholder="search..." aria-label="Search books"/>
+  </div>
   <nav class="side-nav">
     <a href="#cart">CART</a>
     <a href="#about">ABOUT</a>
@@ -337,6 +351,37 @@
 
 </main>
 
+<!-- ============ DARK MODE TOGGLE (fixed bottom-right) ============ -->
+<button class="dark-toggle" id="darkToggle" aria-label="Toggle dark mode">◐</button>
+
+<!-- ============ FOOTER ============ -->
+<footer class="ftr">
+  <div class="ftr-top">
+    <div class="ftr-col">
+      <p class="ftr-brand">mottool</p>
+      <p class="ftr-tag">artbook · lifestyle</p>
+    </div>
+    <div class="ftr-col">
+      <p class="ftr-label">CONTACT</p>
+      <p><a href="mailto:hello@mottool.art">hello@mottool.art</a></p>
+      <p>070-0000-0000</p>
+    </div>
+    <div class="ftr-col">
+      <p class="ftr-label">VISIT</p>
+      <p>대전 서구 둔산동 00-00, 2F</p>
+      <p>TUE–SUN · 12:00–20:00</p>
+    </div>
+    <div class="ftr-col">
+      <p class="ftr-label">FOLLOW</p>
+      <p><a href="#">Instagram</a></p>
+      <p><a href="#">Newsletter</a></p>
+    </div>
+  </div>
+  <div class="ftr-bottom">
+    <p>© 2026 mottool. all rights reserved.</p>
+  </div>
+</footer>
+
 <script>
 (() => {
   // ===== Intro splash (mobile only) =====
@@ -453,29 +498,61 @@
     if (window.innerWidth <= 760) closeSide();
   }));
 
+  // ===== Dark mode =====
+  const darkToggle = document.getElementById('darkToggle');
+  let flashTimer = null;
+  function applyTheme(dark){
+    document.documentElement.classList.toggle('dark', dark);
+    localStorage.setItem('mottool-dark', dark ? '1' : '0');
+  }
+  darkToggle.addEventListener('click', () => {
+    applyTheme(!document.documentElement.classList.contains('dark'));
+    darkToggle.classList.add('flash');
+    clearTimeout(flashTimer);
+    flashTimer = setTimeout(() => darkToggle.classList.remove('flash'), 2000);
+  });
+  if (localStorage.getItem('mottool-dark') === '1') applyTheme(true);
+
+  // ===== Search filter =====
+  const searchInput = document.getElementById('searchInput');
+  const allCards = document.querySelectorAll('.card');
+  searchInput.addEventListener('input', () => {
+    const q = searchInput.value.toLowerCase().trim();
+    allCards.forEach(card => {
+      const text = card.textContent.toLowerCase();
+      card.style.display = q === '' || text.includes(q) ? '' : 'none';
+    });
+  });
+
   const detail = document.getElementById('detail');
   const close = document.getElementById('dtClose');
   document.querySelectorAll('.card[data-book="knight"] a').forEach(a => {
     a.addEventListener('click', e => {
       e.preventDefault();
-      detail.classList.add('on');
-      document.body.style.overflow = 'hidden';
-      startAuto();
+      openDetail();
     });
   });
-  function shut(){
-    detail.classList.remove('on');
-    document.body.style.overflow = '';
-    stopAuto();
+  function openDetail(){
+    detail.scrollTop = 0;
+    detail.classList.add('on');
+    document.body.style.overflow = 'hidden';
+    history.pushState({detail:true}, '', '#book');
+    startAuto();
   }
-  close.addEventListener('click', shut);
-  detail.addEventListener('click', e => { if (e.target === detail) shut(); });
+  function shut(){
+    if (!detail.classList.contains('on')) return;
+    detail.classList.remove('on');
+    stopAuto();
+    setTimeout(() => { document.body.style.overflow = ''; }, 450);
+  }
+  close.addEventListener('click', () => { history.back(); });
   document.addEventListener('keydown', e => {
     if (!detail.classList.contains('on')) return;
-    if (e.key === 'Escape') shut();
+    if (e.key === 'Escape') history.back();
     if (e.key === 'ArrowRight') goTo(idx + 1);
     if (e.key === 'ArrowLeft')  goTo(idx - 1);
   });
+  window.addEventListener('popstate', () => { shut(); });
 
   // ===== SLIDER =====
   const slider = document.getElementById('dtSlider');
@@ -520,35 +597,104 @@
     if (detail.classList.contains('on')) autoTimer = setInterval(next, AUTO_MS);
   });
 
-  // touch swipe
-  let sx = 0, sxLast = 0, swiping = false;
-  slider.addEventListener('touchstart', e => {
-    sx = e.touches[0].clientX; sxLast = sx; swiping = true;
+  // ===== DRAG / SWIPE on slider (pointer events — works for touch + mouse) =====
+  let dragStartX = 0, dragDelta = 0, dragging = false, dragMoved = false;
+  const sliderW = () => slider.offsetWidth;
+
+  function onDragStart(e){
+    if (e.target.closest('.dt-dots')) return;
+    dragging = true; dragMoved = false;
+    dragStartX = e.clientX || e.touches?.[0]?.clientX || 0;
+    dragDelta = 0;
+    slides.style.transition = 'none';
     stopAuto();
-  }, {passive:true});
-  slider.addEventListener('touchmove', e => {
-    if (swiping) sxLast = e.touches[0].clientX;
-  }, {passive:true});
-  slider.addEventListener('touchend', () => {
-    if (!swiping) return;
-    swiping = false;
-    const dx = sxLast - sx;
-    if (Math.abs(dx) > 40){
-      goTo(dx < 0 ? idx + 1 : idx - 1);
+  }
+  function onDragMove(e){
+    if (!dragging) return;
+    const cx = e.clientX || e.touches?.[0]?.clientX || 0;
+    dragDelta = cx - dragStartX;
+    if (Math.abs(dragDelta) > 5) dragMoved = true;
+    const offset = -idx * 100 + (dragDelta / sliderW() * 100);
+    slides.style.transform = `translateX(${offset}%)`;
+  }
+  function onDragEnd(){
+    if (!dragging) return;
+    dragging = false;
+    slides.style.transition = '';
+    const threshold = sliderW() * 0.15;
+    if (Math.abs(dragDelta) > threshold){
+      goTo(dragDelta < 0 ? idx + 1 : idx - 1);
+    } else {
+      goTo(idx);
     }
     resetAuto();
     if (detail.classList.contains('on') && !autoTimer) autoTimer = setInterval(next, AUTO_MS);
-  }, {passive:true});
+  }
 
-  // click left/right halves on slide area
+  slider.addEventListener('pointerdown', e => {
+    if (e.target.closest('.dt-dots')) return;
+    slider.setPointerCapture(e.pointerId);
+    onDragStart(e);
+  });
+  slider.addEventListener('pointermove', onDragMove);
+  slider.addEventListener('pointerup', onDragEnd);
+  slider.addEventListener('pointercancel', onDragEnd);
+  slider.style.touchAction = 'pan-y';
+  slider.style.userSelect = 'none';
+
+  // click left/right halves (only if not dragged)
   slider.addEventListener('click', e => {
+    if (dragMoved) return;
+    if (e.target.closest('.dt-dots')) return;
     const r = slider.getBoundingClientRect();
     const x = e.clientX - r.left;
-    if (e.target.tagName === 'BUTTON') return; // dots handled
     if (x > r.width / 2) goTo(idx + 1);
     else goTo(idx - 1);
     resetAuto();
   });
+
+  // ===== DOT SCRUBBING (long press + drag on dots) =====
+  let dotScrubbing = false, dotLongTimer = null;
+
+  dotsBox.addEventListener('pointerdown', e => {
+    e.preventDefault();
+    dotsBox.setPointerCapture(e.pointerId);
+    dotLongTimer = setTimeout(() => {
+      dotScrubbing = true;
+      dotsBox.classList.add('scrub');
+      if (navigator.vibrate) navigator.vibrate(15);
+      scrubAtX(e.clientX);
+    }, 300);
+  });
+  dotsBox.addEventListener('pointermove', e => {
+    if (!dotScrubbing) return;
+    scrubAtX(e.clientX);
+  });
+  dotsBox.addEventListener('pointerup', () => {
+    clearTimeout(dotLongTimer);
+    if (dotScrubbing){
+      dotScrubbing = false;
+      dotsBox.classList.remove('scrub');
+      resetAuto();
+    }
+  });
+  dotsBox.addEventListener('pointercancel', () => {
+    clearTimeout(dotLongTimer);
+    dotScrubbing = false;
+    dotsBox.classList.remove('scrub');
+  });
+
+  let lastScrubIdx = -1;
+  function scrubAtX(clientX){
+    const rect = dotsBox.getBoundingClientRect();
+    const ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+    const newIdx = Math.round(ratio * (total - 1));
+    if (newIdx !== lastScrubIdx){
+      lastScrubIdx = newIdx;
+      goTo(newIdx);
+      if (navigator.vibrate) navigator.vibrate(8);
+    }
+  }
 })();
 </script>
 
