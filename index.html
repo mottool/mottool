@@ -521,10 +521,10 @@
       if (nextTop < h && nextTop >= 0){
         const ratio = (h - nextTop) / h;
         card.style.setProperty('transform', `scale(${1 - ratio * 0.3})`, 'important');
-        card.style.setProperty('opacity', `${1 - ratio * 0.7}`, 'important');
+        card.style.setProperty('opacity', '1', 'important');
       } else if (nextTop < 0){
         card.style.setProperty('transform', 'scale(0.7)', 'important');
-        card.style.setProperty('opacity', '0.3', 'important');
+        card.style.setProperty('opacity', '1', 'important');
       } else {
         card.style.setProperty('transform', 'none', 'important');
         card.style.setProperty('opacity', '1', 'important');
@@ -733,7 +733,10 @@
     if (newIdx !== lastScrubIdx){
       lastScrubIdx = newIdx;
       goTo(newIdx);
+      // haptic: vibrate on Android, visual pulse on iOS
       if (navigator.vibrate) navigator.vibrate(8);
+      dotsBox.classList.add('tick');
+      setTimeout(() => dotsBox.classList.remove('tick'), 80);
     }
   }
 })();

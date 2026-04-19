@@ -482,6 +482,8 @@ html.dark .dt-back:hover{background:var(--ink);color:var(--bg)}
 }
 .dt-dots.scrub button{width:8px;height:8px}
 .dt-dots.scrub button.on{transform:scale(1.5)}
+.dt-dots.tick{transform:translateX(-50%) scale(1.35)}
+.dt-dots.tick button.on{transform:scale(1.8)}
 .dt-slider{cursor:grab}
 .dt-slider:active{cursor:grabbing}
 
