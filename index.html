@@ -710,13 +710,14 @@
     if (autoTimer){ clearInterval(autoTimer); autoTimer = null; }
   }
   function resetAuto(){
-    if (autoTimer){ stopAuto(); autoTimer = setInterval(next, AUTO_MS); }
+    stopAuto();
+    autoTimer = setInterval(next, AUTO_MS);
   }
 
   // pause on hover (desktop)
   slider.addEventListener('mouseenter', stopAuto);
   slider.addEventListener('mouseleave', () => {
-    if (detail.classList.contains('on')) autoTimer = setInterval(next, AUTO_MS);
+    if (detail.classList.contains('on')) resetAuto();
   });
 
   // ===== DRAG / SWIPE on slider (pointer events — works for touch + mouse) =====
@@ -750,7 +751,6 @@
       goTo(idx);
     }
     resetAuto();
-    if (detail.classList.contains('on') && !autoTimer) autoTimer = setInterval(next, AUTO_MS);
   }
 
   slider.addEventListener('pointerdown', e => {
