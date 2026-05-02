@@ -294,18 +294,31 @@
 
   /* rich text editor */
   .rich-editor{border:1px solid var(--line);border-radius:2px;background:rgba(255,255,255,.4)}
-  .rich-toolbar{display:flex;gap:2px;align-items:center;padding:6px 8px;border-bottom:1px solid var(--line);background:var(--card);flex-wrap:wrap}
-  .rich-toolbar button{width:30px;height:28px;font-size:13px;color:var(--sub);border-radius:2px;display:inline-flex;align-items:center;justify-content:center;background:transparent;transition:background .12s, color .12s}
-  .rich-toolbar button[data-cmd="emHighlight"]{width:auto;padding:0 8px;font-size:11px;letter-spacing:.04em;font-weight:600}
+  .rich-toolbar{display:flex;gap:2px;align-items:center;padding:6px 8px;border-bottom:1px solid var(--line);background:var(--card);flex-wrap:wrap;position:sticky;top:0;z-index:5}
+  .rich-toolbar button{min-width:30px;height:28px;padding:0 6px;font-size:12px;color:var(--sub);border-radius:2px;display:inline-flex;align-items:center;justify-content:center;background:transparent;transition:background .12s, color .12s;line-height:1}
   .rich-toolbar button:hover{background:var(--hover);color:var(--ink)}
   .rich-toolbar button.on{background:var(--ink);color:var(--bg)}
-  .rich-sep{width:1px;height:18px;background:var(--line);margin:0 4px}
-  .rich-area{min-height:140px;padding:12px 14px;font-size:14px;line-height:1.7;color:var(--ink);outline:0}
+  .rich-sep{width:1px;height:18px;background:var(--line);margin:0 3px;flex-shrink:0}
+  .rich-select{height:26px;border:1px solid var(--line);background:transparent;border-radius:2px;font-size:11px;color:var(--sub);padding:0 4px;font-family:inherit}
+  .rich-select:focus{outline:0;border-color:var(--ink)}
+  .rich-color{position:relative;width:30px;height:28px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;border-radius:2px}
+  .rich-color:hover{background:var(--hover)}
+  .rich-color-swatch{width:14px;height:14px;border-radius:50%;border:1px solid var(--line);display:block}
+  .rich-color input[type=color]{position:absolute;inset:0;opacity:0;cursor:pointer;border:0;padding:0}
+  .rich-area{min-height:160px;max-height:480px;overflow:auto;padding:14px 16px;font-size:14px;line-height:1.7;color:var(--ink);outline:0}
   .rich-area:focus{outline:0}
   .rich-area p{margin:0 0 .7em}
   .rich-area p:last-child{margin-bottom:0}
   .rich-area em, .rich-area i{font-style:italic;font-weight:500}
   .rich-area strong, .rich-area b{font-weight:700}
+  .rich-area u{text-decoration:underline}
+  .rich-area s{text-decoration:line-through;opacity:.7}
+  .rich-area h3{font-size:17px;font-weight:700;letter-spacing:-.01em;margin:1em 0 .4em;color:var(--ink)}
+  .rich-area blockquote{border-left:3px solid var(--ink);padding:6px 0 6px 14px;margin:.7em 0;color:var(--sub);font-style:italic}
+  .rich-area hr{border:0;border-top:1px solid var(--line);margin:1em 0}
+  .rich-area ul, .rich-area ol{margin:0 0 .7em;padding-left:1.6em}
+  .rich-area ul li, .rich-area ol li{margin-bottom:.2em}
+  .rich-area a{color:var(--ink);text-decoration:underline;text-underline-offset:2px}
   .rich-area:empty::before, .rich-area[data-empty="true"]::before{
     content:attr(data-placeholder);
     color:var(--mute);font-size:13px;line-height:1.6;pointer-events:none;
@@ -839,15 +852,59 @@
         <label>책 소개글</label>
         <div class="rich-editor">
           <div class="rich-toolbar" id="richToolbar">
+            <!-- 텍스트 스타일 -->
             <button type="button" data-cmd="bold" title="굵게 (Ctrl+B)"><strong>B</strong></button>
             <button type="button" data-cmd="italic" title="기울임 (Ctrl+I)"><em>I</em></button>
             <button type="button" data-cmd="underline" title="밑줄 (Ctrl+U)"><u>U</u></button>
-            <span class="rich-sep"></span>
             <button type="button" data-cmd="strikeThrough" title="취소선"><s>S</s></button>
-            <button type="button" data-cmd="emHighlight" title="강조 (이탤릭으로 표시)">강조</button>
             <span class="rich-sep"></span>
-            <button type="button" data-cmd="insertParagraph" title="단락 나누기">¶</button>
-            <button type="button" data-cmd="removeFormat" title="서식 제거">⊘</button>
+
+            <!-- 글자 크기 -->
+            <select class="rich-select" id="richFontSize" title="글자 크기">
+              <option value="">크기</option>
+              <option value="2">작게</option>
+              <option value="3" selected>보통</option>
+              <option value="4">크게</option>
+              <option value="5">아주 크게</option>
+            </select>
+            <span class="rich-sep"></span>
+
+            <!-- 단락 / 블록 -->
+            <button type="button" data-cmd="formatBlockH3" title="소제목"><span style="font-weight:700;font-size:13px">H</span></button>
+            <button type="button" data-cmd="formatBlockBlockquote" title="인용구">&ldquo; &rdquo;</button>
+            <button type="button" data-cmd="insertHorizontalRule" title="구분선">─</button>
+            <span class="rich-sep"></span>
+
+            <!-- 목록 -->
+            <button type="button" data-cmd="insertUnorderedList" title="글머리 기호">• ─</button>
+            <button type="button" data-cmd="insertOrderedList" title="번호 매기기">1. ─</button>
+            <span class="rich-sep"></span>
+
+            <!-- 정렬 -->
+            <button type="button" data-cmd="justifyLeft" title="왼쪽 정렬">⯇</button>
+            <button type="button" data-cmd="justifyCenter" title="가운데 정렬">⯀</button>
+            <button type="button" data-cmd="justifyRight" title="오른쪽 정렬">⯈</button>
+            <span class="rich-sep"></span>
+
+            <!-- 색상 -->
+            <label class="rich-color" title="글자 색">
+              <span class="rich-color-swatch" style="background:#1a1a18"></span>
+              <input type="color" id="richColor" value="#1a1a18"/>
+            </label>
+            <span class="rich-sep"></span>
+
+            <!-- 링크 -->
+            <button type="button" data-cmd="createLink" title="링크 삽입">🔗</button>
+            <button type="button" data-cmd="unlink" title="링크 해제">⛔</button>
+            <span class="rich-sep"></span>
+
+            <!-- 기타 -->
+            <button type="button" data-cmd="removeFormat" title="서식 모두 지우기">⊘</button>
+            <span class="rich-sep"></span>
+
+            <!-- 실행 취소 / 다시 실행 -->
+            <button type="button" data-cmd="undo" title="실행 취소 (Ctrl+Z)">↶</button>
+            <button type="button" data-cmd="redo" title="다시 실행 (Ctrl+Y)">↷</button>
           </div>
           <div class="rich-area" id="f_dt_description" contenteditable="true"
                data-placeholder="책 소개글을 입력해주세요. Enter 키로 새 단락을 추가하실 수 있고, 위쪽 버튼으로 굵게/기울임 등을 적용하실 수 있습니다."></div>
@@ -1575,24 +1632,63 @@ function readSpec(){
 
 // ── Rich text editor (description) ──
 const richArea = $('f_dt_description');
-const ALLOWED_TAGS = ['EM','I','STRONG','B','U','S','BR'];
+const ALLOWED_TAGS = ['EM','I','STRONG','B','U','S','BR','H3','BLOCKQUOTE','UL','OL','LI','HR','A','SPAN','FONT','DIV'];
+// span/font/div 는 정렬·색상·크기 적용 시 만들어지는 wrapper. 내부 속성만 안전한 것 유지.
+const SAFE_ATTRS = {
+  A:    ['href','target','rel'],
+  SPAN: ['style'],
+  FONT: ['color','size','face'],
+  DIV:  ['style'],
+  P:    ['style'],
+  H3:   ['style']
+};
+const SAFE_STYLE_PROPS = ['color','background-color','text-align','font-weight','font-style','text-decoration'];
+
+function sanitizeStyle(styleStr){
+  if (!styleStr) return '';
+  return styleStr.split(';')
+    .map(s => s.trim())
+    .filter(Boolean)
+    .filter(s => {
+      const prop = s.split(':')[0].trim().toLowerCase();
+      return SAFE_STYLE_PROPS.includes(prop);
+    })
+    .join(';');
+}
 
 function sanitizeHTML(html){
   const tmp = document.createElement('div');
   tmp.innerHTML = html || '';
-  // 허용된 태그만 남기고 평문화
   const walk = (node) => {
     [...node.childNodes].forEach(child => {
       if (child.nodeType === 1) {
-        if (!ALLOWED_TAGS.includes(child.tagName)) {
-          // 태그는 풀고 자식은 유지
+        const tag = child.tagName;
+        if (!ALLOWED_TAGS.includes(tag)) {
           while (child.firstChild) node.insertBefore(child.firstChild, child);
           node.removeChild(child);
-        } else {
-          // 속성 제거
-          while (child.attributes.length) child.removeAttribute(child.attributes[0].name);
-          walk(child);
+          return;
         }
+        // 안전 속성만 유지
+        const allowed = SAFE_ATTRS[tag] || [];
+        [...child.attributes].forEach(attr => {
+          if (!allowed.includes(attr.name)) {
+            child.removeAttribute(attr.name);
+          } else if (attr.name === 'style') {
+            const safe = sanitizeStyle(attr.value);
+            if (safe) child.setAttribute('style', safe);
+            else child.removeAttribute('style');
+          } else if (attr.name === 'href') {
+            // javascript: 차단
+            const v = attr.value || '';
+            if (/^\s*javascript:/i.test(v)) child.removeAttribute('href');
+          }
+        });
+        // 외부 링크엔 안전 옵션 자동
+        if (tag === 'A' && child.getAttribute('href') && !child.getAttribute('target')) {
+          child.setAttribute('target', '_blank');
+          child.setAttribute('rel', 'noopener noreferrer');
+        }
+        walk(child);
       } else if (child.nodeType !== 3) {
         node.removeChild(child);
       }
@@ -1647,35 +1743,87 @@ richArea.addEventListener('blur', () => {
 // 단락 구분자를 <p> 로
 try { document.execCommand('defaultParagraphSeparator', false, 'p'); } catch(e){}
 
-// 툴바
+// 툴바 — 버튼
 $('richToolbar').addEventListener('mousedown', e => {
   const b = e.target.closest('button[data-cmd]'); if (!b) return;
-  e.preventDefault(); // selection 유지
+  e.preventDefault();
   const cmd = b.dataset.cmd;
   richArea.focus();
-  if (cmd === 'emHighlight') {
-    document.execCommand('italic', false, null);
-  } else if (cmd === 'insertParagraph') {
-    document.execCommand('insertParagraph', false, null);
+  // formatBlock 별칭 처리
+  if (cmd === 'formatBlockH3') {
+    // 이미 H3 면 P 로 토글
+    const cur = (document.queryCommandValue('formatBlock') || '').toUpperCase();
+    document.execCommand('formatBlock', false, cur === 'H3' ? '<P>' : '<H3>');
+  } else if (cmd === 'formatBlockBlockquote') {
+    const cur = (document.queryCommandValue('formatBlock') || '').toUpperCase();
+    document.execCommand('formatBlock', false, cur === 'BLOCKQUOTE' ? '<P>' : '<BLOCKQUOTE>');
+  } else if (cmd === 'createLink') {
+    const sel = window.getSelection();
+    if (!sel || sel.toString().trim() === '') {
+      toast('링크를 걸 텍스트를 먼저 선택해주세요', true); return;
+    }
+    const url = prompt('연결할 URL 을 입력해주세요 (http:// 포함)');
+    if (!url) return;
+    const safe = /^(https?:|mailto:|tel:)/i.test(url) ? url : 'https://' + url;
+    document.execCommand('createLink', false, safe);
   } else {
     document.execCommand(cmd, false, null);
   }
   updateToolbarState();
 });
 
+// 글자 크기
+$('richFontSize').addEventListener('change', () => {
+  richArea.focus();
+  const v = $('richFontSize').value;
+  if (v) document.execCommand('fontSize', false, v);
+  $('richFontSize').value = '';
+});
+$('richFontSize').addEventListener('mousedown', e => e.preventDefault()); // selection 유지
+
+// 글자 색
+$('richColor').addEventListener('input', e => {
+  richArea.focus();
+  const c = e.target.value;
+  document.execCommand('foreColor', false, c);
+  document.querySelector('.rich-color-swatch').style.background = c;
+});
+$('richColor').addEventListener('mousedown', e => {
+  // selection 유지를 위해 약간의 트릭 — 빈 클릭이면 막기 (아래 click 만 작동)
+});
+
 function updateToolbarState(){
   document.querySelectorAll('#richToolbar button[data-cmd]').forEach(b => {
     const cmd = b.dataset.cmd;
-    if (['bold','italic','underline','strikeThrough'].includes(cmd)) {
-      try { b.classList.toggle('on', document.queryCommandState(cmd)); } catch(e){}
-    }
-    if (cmd === 'emHighlight') {
-      try { b.classList.toggle('on', document.queryCommandState('italic')); } catch(e){}
-    }
+    try {
+      if (['bold','italic','underline','strikeThrough','justifyLeft','justifyCenter','justifyRight','insertUnorderedList','insertOrderedList'].includes(cmd)) {
+        b.classList.toggle('on', document.queryCommandState(cmd));
+      } else if (cmd === 'formatBlockH3') {
+        const cur = (document.queryCommandValue('formatBlock') || '').toUpperCase();
+        b.classList.toggle('on', cur === 'H3');
+      } else if (cmd === 'formatBlockBlockquote') {
+        const cur = (document.queryCommandValue('formatBlock') || '').toUpperCase();
+        b.classList.toggle('on', cur === 'BLOCKQUOTE');
+      }
+    } catch(e){}
   });
+  // 색상 swatch 동기화
+  try {
+    const c = document.queryCommandValue('foreColor');
+    if (c && c !== '') {
+      const sw = document.querySelector('.rich-color-swatch');
+      if (sw) sw.style.background = c;
+    }
+  } catch(e){}
 }
 document.addEventListener('selectionchange', () => {
   if (document.activeElement === richArea) updateToolbarState();
+});
+
+// 키보드 단축키
+richArea.addEventListener('keydown', e => {
+  // Ctrl/Cmd + B/I/U 는 브라우저 기본으로 처리됨. Tab 만 막아 들여쓰기 의도와 충돌 방지.
+  if (e.key === 'Tab') e.preventDefault();
 });
 
 // 붙여넣기 — plain text 만 허용 (서식 깨짐 방지)
