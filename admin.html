@@ -294,17 +294,34 @@
 
   /* rich text editor */
   .rich-editor{border:1px solid var(--line);border-radius:2px;background:rgba(255,255,255,.4)}
-  .rich-toolbar{display:flex;gap:2px;align-items:center;padding:6px 8px;border-bottom:1px solid var(--line);background:var(--card);flex-wrap:wrap;position:sticky;top:0;z-index:5}
-  .rich-toolbar button{min-width:30px;height:28px;padding:0 6px;font-size:12px;color:var(--sub);border-radius:2px;display:inline-flex;align-items:center;justify-content:center;background:transparent;transition:background .12s, color .12s;line-height:1}
+  .rich-toolbar{display:flex;gap:1px;align-items:center;padding:6px 8px;border-bottom:1px solid var(--line);background:var(--card);flex-wrap:wrap;position:sticky;top:0;z-index:5}
+  .rich-toolbar button{
+    width:32px;height:30px;padding:0;font-size:13px;color:var(--sub);
+    border-radius:3px;display:inline-flex;align-items:center;justify-content:center;
+    background:transparent;transition:background .12s, color .12s;line-height:1;flex-shrink:0;
+  }
+  .rich-toolbar button svg{
+    width:16px;height:16px;display:block;
+    fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;
+  }
   .rich-toolbar button:hover{background:var(--hover);color:var(--ink)}
   .rich-toolbar button.on{background:var(--ink);color:var(--bg)}
-  .rich-sep{width:1px;height:18px;background:var(--line);margin:0 3px;flex-shrink:0}
-  .rich-select{height:26px;border:1px solid var(--line);background:transparent;border-radius:2px;font-size:11px;color:var(--sub);padding:0 4px;font-family:inherit}
+  .rich-sep{width:1px;height:18px;background:var(--line);margin:0 4px;flex-shrink:0}
+  .rich-select{
+    width:78px;height:28px;border:1px solid var(--line);background:transparent;border-radius:3px;
+    font-size:11px;color:var(--sub);padding:0 6px;font-family:inherit;flex-shrink:0;
+    appearance:auto;-webkit-appearance:auto;
+  }
   .rich-select:focus{outline:0;border-color:var(--ink)}
-  .rich-color{position:relative;width:30px;height:28px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;border-radius:2px}
-  .rich-color:hover{background:var(--hover)}
-  .rich-color-swatch{width:14px;height:14px;border-radius:50%;border:1px solid var(--line);display:block}
-  .rich-color input[type=color]{position:absolute;inset:0;opacity:0;cursor:pointer;border:0;padding:0}
+
+  .rich-color{
+    position:relative;width:32px;height:30px;display:inline-flex;flex-direction:column;
+    align-items:center;justify-content:center;cursor:pointer;border-radius:3px;flex-shrink:0;color:var(--sub)
+  }
+  .rich-color:hover{background:var(--hover);color:var(--ink)}
+  .rich-color-icon{width:14px;height:14px;display:block;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+  .rich-color-bar{display:block;width:18px;height:3px;border-radius:1px;background:#1a1a18;margin-top:2px}
+  .rich-color input[type=color]{position:absolute;inset:0;opacity:0;cursor:pointer;border:0;padding:0;width:100%;height:100%}
   .rich-area{min-height:160px;max-height:480px;overflow:auto;padding:14px 16px;font-size:14px;line-height:1.7;color:var(--ink);outline:0}
   .rich-area:focus{outline:0}
   .rich-area p{margin:0 0 .7em}
@@ -853,8 +870,8 @@
         <div class="rich-editor">
           <div class="rich-toolbar" id="richToolbar">
             <!-- 텍스트 스타일 -->
-            <button type="button" data-cmd="bold" title="굵게 (Ctrl+B)"><strong>B</strong></button>
-            <button type="button" data-cmd="italic" title="기울임 (Ctrl+I)"><em>I</em></button>
+            <button type="button" data-cmd="bold" title="굵게 (Ctrl+B)"><b>B</b></button>
+            <button type="button" data-cmd="italic" title="기울임 (Ctrl+I)"><i>I</i></button>
             <button type="button" data-cmd="underline" title="밑줄 (Ctrl+U)"><u>U</u></button>
             <button type="button" data-cmd="strikeThrough" title="취소선"><s>S</s></button>
             <span class="rich-sep"></span>
@@ -863,48 +880,75 @@
             <select class="rich-select" id="richFontSize" title="글자 크기">
               <option value="">크기</option>
               <option value="2">작게</option>
-              <option value="3" selected>보통</option>
+              <option value="3">보통</option>
               <option value="4">크게</option>
               <option value="5">아주 크게</option>
             </select>
             <span class="rich-sep"></span>
 
             <!-- 단락 / 블록 -->
-            <button type="button" data-cmd="formatBlockH3" title="소제목"><span style="font-weight:700;font-size:13px">H</span></button>
-            <button type="button" data-cmd="formatBlockBlockquote" title="인용구">&ldquo; &rdquo;</button>
-            <button type="button" data-cmd="insertHorizontalRule" title="구분선">─</button>
+            <button type="button" data-cmd="formatBlockH3" title="소제목">
+              <svg viewBox="0 0 24 24"><path d="M5 5v14M5 12h9M14 5v14M19 19h-4l4-7h-4"/></svg>
+            </button>
+            <button type="button" data-cmd="formatBlockBlockquote" title="인용구">
+              <svg viewBox="0 0 24 24"><path d="M5 8c0-1 .5-2 2-2v3H5v3h4V8H5zm9 0c0-1 .5-2 2-2v3h-2v3h4V8h-4z"/></svg>
+            </button>
+            <button type="button" data-cmd="insertHorizontalRule" title="구분선">
+              <svg viewBox="0 0 24 24"><path d="M4 12h16"/></svg>
+            </button>
             <span class="rich-sep"></span>
 
             <!-- 목록 -->
-            <button type="button" data-cmd="insertUnorderedList" title="글머리 기호">• ─</button>
-            <button type="button" data-cmd="insertOrderedList" title="번호 매기기">1. ─</button>
+            <button type="button" data-cmd="insertUnorderedList" title="글머리 기호">
+              <svg viewBox="0 0 24 24"><circle cx="5" cy="7" r="1.4" fill="currentColor"/><circle cx="5" cy="12" r="1.4" fill="currentColor"/><circle cx="5" cy="17" r="1.4" fill="currentColor"/><path d="M10 7h10M10 12h10M10 17h10"/></svg>
+            </button>
+            <button type="button" data-cmd="insertOrderedList" title="번호 매기기">
+              <svg viewBox="0 0 24 24"><path d="M10 7h10M10 12h10M10 17h10M4 6.5h2v3M4 9.5h3M4 13h3l-3 3h3M4 18h3"/></svg>
+            </button>
             <span class="rich-sep"></span>
 
             <!-- 정렬 -->
-            <button type="button" data-cmd="justifyLeft" title="왼쪽 정렬">⯇</button>
-            <button type="button" data-cmd="justifyCenter" title="가운데 정렬">⯀</button>
-            <button type="button" data-cmd="justifyRight" title="오른쪽 정렬">⯈</button>
+            <button type="button" data-cmd="justifyLeft" title="왼쪽 정렬">
+              <svg viewBox="0 0 24 24"><path d="M4 6h16M4 10h10M4 14h16M4 18h10"/></svg>
+            </button>
+            <button type="button" data-cmd="justifyCenter" title="가운데 정렬">
+              <svg viewBox="0 0 24 24"><path d="M4 6h16M7 10h10M4 14h16M7 18h10"/></svg>
+            </button>
+            <button type="button" data-cmd="justifyRight" title="오른쪽 정렬">
+              <svg viewBox="0 0 24 24"><path d="M4 6h16M10 10h10M4 14h16M10 18h10"/></svg>
+            </button>
             <span class="rich-sep"></span>
 
             <!-- 색상 -->
             <label class="rich-color" title="글자 색">
-              <span class="rich-color-swatch" style="background:#1a1a18"></span>
+              <svg viewBox="0 0 24 24" class="rich-color-icon"><path d="M5 19h14M7 16l5-11 5 11M9.5 12h5"/></svg>
+              <span class="rich-color-bar" id="richColorBar"></span>
               <input type="color" id="richColor" value="#1a1a18"/>
             </label>
             <span class="rich-sep"></span>
 
             <!-- 링크 -->
-            <button type="button" data-cmd="createLink" title="링크 삽입">🔗</button>
-            <button type="button" data-cmd="unlink" title="링크 해제">⛔</button>
+            <button type="button" data-cmd="createLink" title="링크 삽입">
+              <svg viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1.5 1.5"/><path d="M14 10a4 4 0 0 0-5.66 0l-3 3a4 4 0 0 0 5.66 5.66l1.5-1.5"/></svg>
+            </button>
+            <button type="button" data-cmd="unlink" title="링크 해제">
+              <svg viewBox="0 0 24 24"><path d="M18 9l3-3M3 21l3-3M10 14a4 4 0 0 0 5.66 0l1.5-1.5"/><path d="M14 10a4 4 0 0 0-5.66 0l-1.5 1.5"/></svg>
+            </button>
             <span class="rich-sep"></span>
 
-            <!-- 기타 -->
-            <button type="button" data-cmd="removeFormat" title="서식 모두 지우기">⊘</button>
+            <!-- 서식 지우기 -->
+            <button type="button" data-cmd="removeFormat" title="서식 모두 지우기">
+              <svg viewBox="0 0 24 24"><path d="M6 4h13M11 4l-4 16M9 12h7M16 16l5 5M21 16l-5 5"/></svg>
+            </button>
             <span class="rich-sep"></span>
 
             <!-- 실행 취소 / 다시 실행 -->
-            <button type="button" data-cmd="undo" title="실행 취소 (Ctrl+Z)">↶</button>
-            <button type="button" data-cmd="redo" title="다시 실행 (Ctrl+Y)">↷</button>
+            <button type="button" data-cmd="undo" title="실행 취소 (Ctrl+Z)">
+              <svg viewBox="0 0 24 24"><path d="M9 14l-4-4 4-4"/><path d="M5 10h9a5 5 0 0 1 0 10h-3"/></svg>
+            </button>
+            <button type="button" data-cmd="redo" title="다시 실행 (Ctrl+Y)">
+              <svg viewBox="0 0 24 24"><path d="M15 14l4-4-4-4"/><path d="M19 10h-9a5 5 0 0 0 0 10h3"/></svg>
+            </button>
           </div>
           <div class="rich-area" id="f_dt_description" contenteditable="true"
                data-placeholder="책 소개글을 입력해주세요. Enter 키로 새 단락을 추가하실 수 있고, 위쪽 버튼으로 굵게/기울임 등을 적용하실 수 있습니다."></div>
@@ -1786,7 +1830,8 @@ $('richColor').addEventListener('input', e => {
   richArea.focus();
   const c = e.target.value;
   document.execCommand('foreColor', false, c);
-  document.querySelector('.rich-color-swatch').style.background = c;
+  const bar = document.getElementById('richColorBar');
+  if (bar) bar.style.background = c;
 });
 $('richColor').addEventListener('mousedown', e => {
   // selection 유지를 위해 약간의 트릭 — 빈 클릭이면 막기 (아래 click 만 작동)
@@ -1807,12 +1852,12 @@ function updateToolbarState(){
       }
     } catch(e){}
   });
-  // 색상 swatch 동기화
+  // 색상 bar 동기화
   try {
     const c = document.queryCommandValue('foreColor');
     if (c && c !== '') {
-      const sw = document.querySelector('.rich-color-swatch');
-      if (sw) sw.style.background = c;
+      const bar = document.getElementById('richColorBar');
+      if (bar) bar.style.background = c;
     }
   } catch(e){}
 }
