@@ -342,29 +342,40 @@
   .rich-toolbar button:hover{background:var(--hover);color:var(--ink)}
   .rich-toolbar button.on{background:var(--ink);color:var(--bg)}
   .rich-sep{width:1px;height:18px;background:var(--line);margin:0 4px;flex-shrink:0}
-  .rich-toolbar .rich-select{
-    width:84px !important;height:28px;border:1px solid var(--line);background:#fff;border-radius:3px;
-    font-size:11px;color:var(--sub);padding:0 6px;font-family:inherit;flex-shrink:0;
-    appearance:auto;-webkit-appearance:auto;line-height:1;
+  .rich-num{display:inline-flex;align-items:center;gap:3px;border:1px solid var(--line);border-radius:3px;background:#fff;height:28px;padding:0 6px 0 8px;flex-shrink:0}
+  .rich-num:focus-within{border-color:var(--ink)}
+  .rich-toolbar .rich-num input{
+    width:38px;border:0;background:transparent;font-size:12px;color:var(--ink);
+    font-family:inherit;padding:0;margin:0;text-align:right;
+    -moz-appearance:textfield;appearance:textfield;
   }
-  .rich-toolbar .rich-select:focus{outline:0;border-color:var(--ink)}
+  .rich-toolbar .rich-num input::-webkit-outer-spin-button,
+  .rich-toolbar .rich-num input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+  .rich-toolbar .rich-num input:focus{outline:0}
+  .rich-toolbar .rich-num input::placeholder{color:var(--mute);font-size:11px}
+  .rich-num-unit{font-size:10px;color:var(--mute);letter-spacing:.04em;font-weight:600}
 
   .rich-color{
     position:relative;width:32px;height:30px;
-    display:inline-flex;align-items:center;justify-content:center;
-    cursor:pointer;border-radius:3px;flex-shrink:0;color:var(--sub);
+    display:inline-block;cursor:pointer;border-radius:3px;flex-shrink:0;color:var(--sub);
   }
   .rich-color:hover{background:var(--hover);color:var(--ink)}
   .rich-color-icon{
-    width:18px;height:18px;display:block;
+    position:absolute;top:50%;left:50%;
+    transform:translate(-50%, calc(-50% - 3px));   /* 바 공간만큼 위로 */
+    width:18px;height:18px;
     fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
-    margin-top:-2px;                 /* 색상 바 공간만큼 위로 살짝 보정 */
+    pointer-events:none;
   }
   .rich-color-bar{
-    position:absolute;bottom:4px;left:50%;transform:translateX(-50%);
+    position:absolute;bottom:5px;left:50%;transform:translateX(-50%);
     width:16px;height:3px;border-radius:1px;background:#1a1a18;
+    pointer-events:none;
   }
-  .rich-color input[type=color]{position:absolute;inset:0;opacity:0;cursor:pointer;border:0;padding:0;width:100%;height:100%}
+  .rich-color input[type=color]{
+    position:absolute;inset:0;opacity:0;cursor:pointer;
+    border:0;padding:0;width:100%;height:100%;
+  }
   .rich-area{min-height:160px;max-height:480px;overflow:auto;padding:14px 16px;font-size:14px;line-height:1.7;color:var(--ink);outline:0}
   .rich-area:focus{outline:0}
   .rich-area p{margin:0 0 .7em}
@@ -920,13 +931,10 @@
             <span class="rich-sep"></span>
 
             <!-- 글자 크기 -->
-            <select class="rich-select" id="richFontSize" title="글자 크기">
-              <option value="">크기</option>
-              <option value="2">작게</option>
-              <option value="3">보통</option>
-              <option value="4">크게</option>
-              <option value="5">아주 크게</option>
-            </select>
+            <span class="rich-num" title="글자 크기 (px)">
+              <input type="number" id="richFontSize" min="10" max="72" step="1" placeholder="크기"/>
+              <span class="rich-num-unit">px</span>
+            </span>
             <span class="rich-sep"></span>
 
             <!-- 단락 / 블록 -->
@@ -1730,7 +1738,7 @@ const SAFE_ATTRS = {
   P:    ['style'],
   H3:   ['style']
 };
-const SAFE_STYLE_PROPS = ['color','background-color','text-align','font-weight','font-style','text-decoration'];
+const SAFE_STYLE_PROPS = ['color','background-color','text-align','font-weight','font-style','text-decoration','font-size'];
 
 function sanitizeStyle(styleStr){
   if (!styleStr) return '';
@@ -1879,16 +1887,41 @@ richArea.addEventListener('mouseup', saveSel);
 richArea.addEventListener('keyup', saveSel);
 richArea.addEventListener('blur', saveSel);
 
-// 글자 크기
-$('richFontSize').addEventListener('change', () => {
-  const v = $('richFontSize').value;
-  if (v) {
-    restoreSel();
-    document.execCommand('fontSize', false, v);
+// 글자 크기 — 사용자가 직접 px 입력
+function applyFontSize(px){
+  if (!px || px < 6 || px > 200) return;
+  restoreSel();
+  const sel = window.getSelection();
+  if (!sel.rangeCount) return;
+  const range = sel.getRangeAt(0);
+  if (range.collapsed) return;
+  const span = document.createElement('span');
+  span.style.fontSize = px + 'px';
+  try { range.surroundContents(span); }
+  catch(e) {
+    span.appendChild(range.extractContents());
+    range.insertNode(span);
   }
-  $('richFontSize').value = '';
+  // 새 span 다시 선택
+  sel.removeAllRanges();
+  const r2 = document.createRange();
+  r2.selectNodeContents(span);
+  sel.addRange(r2);
   saveSel();
+}
+$('richFontSize').addEventListener('change', () => {
+  const px = parseInt($('richFontSize').value, 10);
+  applyFontSize(px);
 });
+$('richFontSize').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    const px = parseInt($('richFontSize').value, 10);
+    applyFontSize(px);
+  }
+});
+// 포커스 시 selection 자동 저장 보장
+$('richFontSize').addEventListener('focus', saveSel);
 
 // 글자 색
 $('richColor').addEventListener('input', e => {
