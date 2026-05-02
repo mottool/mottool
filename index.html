@@ -729,23 +729,50 @@
   let magTimer = null, magActive = false, magImgSrc = '';
   const ZOOM = 2.8;
 
+  // 커서 주위를 자석처럼 회전. 기본은 바로 위, 위가 좁으면 옆/아래로 부드럽게 돈다.
+  function placeMag(cx, cy){
+    const h = mag.offsetHeight || 200;
+    const r = h * 0.55 + 14;                  // 커서 ↔ 돋보기 중심 거리
+    const margin = 8;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+
+    // 위쪽 충분하면 그대로 위 (-π/2). 부족할수록 옆 → 아래로 회전.
+    const minCy = h * 1.05 + margin;
+    let t = 0;
+    if (cy < minCy) t = Math.max(0, Math.min(1, 1 - (cy - margin) / (minCy - margin)));
+
+    // 화면 어느 쪽에 더 여유있나 — 그쪽으로 돌게
+    const goRight = cx < vw / 2;
+    const sweep = Math.PI;                    // -π/2 → π/2
+    const theta = goRight
+      ? -Math.PI/2 + t * sweep                // 위 → 오른쪽 → 아래
+      : -Math.PI/2 - t * sweep;               // 위 → 왼쪽 → 아래
+
+    let mx = cx + r * Math.cos(theta);
+    let my = cy + r * Math.sin(theta);
+
+    // 가장자리 잘림 방지
+    const halfW = h / 2 + 4;
+    mx = Math.max(halfW, Math.min(vw - halfW, mx));
+    my = Math.max(halfW, Math.min(vh - halfW, my));
+
+    mag.style.left = mx + 'px';
+    mag.style.top  = my + 'px';
+  }
   function showMag(cx, cy){
-    mag.style.left = cx + 'px';
-    mag.style.top = cy + 'px';
+    placeMag(cx, cy);
     const curSlide = slides.children[idx];
     const img = curSlide?.querySelector('img');
     if (!img) return;
     magImgSrc = img.src;
     const imgRect = img.getBoundingClientRect();
-    const px = (cx - imgRect.left) / imgRect.width * 100;
-    const py = (cy - imgRect.top) / imgRect.height * 100;
     magLens.style.backgroundImage = `url(${magImgSrc})`;
     magLens.style.backgroundSize = `${imgRect.width * ZOOM}px ${imgRect.height * ZOOM}px`;
     magLens.style.backgroundPosition = `${-((cx - imgRect.left) * ZOOM - 100)}px ${-((cy - imgRect.top) * ZOOM - 100)}px`;
   }
   function moveMag(cx, cy){
-    mag.style.left = cx + 'px';
-    mag.style.top = cy + 'px';
+    placeMag(cx, cy);
     const curSlide = slides.children[idx];
     const img = curSlide?.querySelector('img');
     if (!img) return;
