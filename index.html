@@ -729,39 +729,59 @@
   let magTimer = null, magActive = false, magImgSrc = '';
   const ZOOM = 2.8;
 
-  // 커서 주위를 자석처럼 회전. 기본은 바로 위, 위가 좁으면 옆/아래로 부드럽게 돈다.
+  // 커서 주위를 자석처럼 회전. 각도를 lerp 으로 부드럽게 따라감.
+  let _curTheta = -Math.PI / 2;
+  let _tgtTheta = -Math.PI / 2;
+  let _curX = 0, _curY = 0;
+  let _magRaf = null;
+
   function placeMag(cx, cy){
+    _curX = cx; _curY = cy;
     const h = mag.offsetHeight || 200;
-    const r = h * 0.55 + 14;                  // 커서 ↔ 돋보기 중심 거리
     const margin = 8;
     const vw = window.innerWidth;
-    const vh = window.innerHeight;
 
-    // 위쪽 충분하면 그대로 위 (-π/2). 부족할수록 옆 → 아래로 회전.
     const minCy = h * 1.05 + margin;
     let t = 0;
     if (cy < minCy) t = Math.max(0, Math.min(1, 1 - (cy - margin) / (minCy - margin)));
 
-    // 화면 어느 쪽에 더 여유있나 — 그쪽으로 돌게
     const goRight = cx < vw / 2;
-    const sweep = Math.PI;                    // -π/2 → π/2
-    const theta = goRight
-      ? -Math.PI/2 + t * sweep                // 위 → 오른쪽 → 아래
-      : -Math.PI/2 - t * sweep;               // 위 → 왼쪽 → 아래
+    const sweep = Math.PI;
+    _tgtTheta = goRight
+      ? -Math.PI / 2 + t * sweep
+      : -Math.PI / 2 - t * sweep;
 
-    let mx = cx + r * Math.cos(theta);
-    let my = cy + r * Math.sin(theta);
+    if (!_magRaf) _magRaf = requestAnimationFrame(_magTick);
+  }
 
-    // 가장자리 잘림 방지
+  function _magTick(){
+    _magRaf = null;
+    // 짧은 호로 보간 (-π~π 정규화)
+    const diff = ((_tgtTheta - _curTheta + Math.PI * 3) % (Math.PI * 2)) - Math.PI;
+    _curTheta += diff * 0.22;                 // smoothing factor: 클수록 빨리 따라옴
+
+    const h = mag.offsetHeight || 200;
+    const r = h * 0.55 + 14;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+
+    let mx = _curX + r * Math.cos(_curTheta);
+    let my = _curY + r * Math.sin(_curTheta);
     const halfW = h / 2 + 4;
     mx = Math.max(halfW, Math.min(vw - halfW, mx));
     my = Math.max(halfW, Math.min(vh - halfW, my));
 
     mag.style.left = mx + 'px';
     mag.style.top  = my + 'px';
+
+    // 활성 중이면 계속 — 커서 정지해도 각도 수렴 보장
+    if (magActive) _magRaf = requestAnimationFrame(_magTick);
   }
   function showMag(cx, cy){
+    // 첫 등장 시 현재 각도를 타겟으로 즉시 맞춤 (애니메이션 없이)
+    _curTheta = _tgtTheta = -Math.PI / 2;
     placeMag(cx, cy);
+    _curTheta = _tgtTheta;                  // 첫 프레임 보간 없이 정확한 타겟에 위치
     const curSlide = slides.children[idx];
     const img = curSlide?.querySelector('img');
     if (!img) return;
@@ -784,6 +804,7 @@
     mag.classList.remove('on');
     clearTimeout(magTimer);
     magTimer = null;
+    if (_magRaf) { cancelAnimationFrame(_magRaf); _magRaf = null; }
     // restore scroll
     document.body.style.overflow = '';
     document.body.style.touchAction = '';
