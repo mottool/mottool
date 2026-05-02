@@ -258,10 +258,27 @@
 
     // ── Storage (book-images 버킷) ─────────────────
     async uploadImage(file, path) {
-      const key = path || `${Date.now()}-${file.name.replace(/\s+/g, '_')}`;
-      const { error } = await sb.storage.from('book-images').upload(key, file, { upsert: true });
-      if (error) throw error;
-      const { data } = sb.storage.from('book-images').getPublicUrl(key);
+      // 파일명에서 한글/특수문자 제거 (Storage 호환성)
+      const safeName = (file.name || 'image')
+        .normalize('NFD').replace(/[̀-ͯ]/g, '')   // 악센트 제거
+        .replace(/[^a-zA-Z0-9._-]/g, '_')                   // 영숫자·점·언더바·하이픈만 허용
+        .replace(/_+/g, '_')
+        .toLowerCase();
+      const ext = safeName.includes('.') ? safeName.split('.').pop() : 'jpg';
+      const base = safeName.replace(/\.[^.]+$/, '').slice(0, 40) || 'img';
+      const key = path
+        ? path.replace(/[^a-zA-Z0-9._/-]/g, '_').replace(/_+/g, '_')
+        : `${Date.now()}-${base}.${ext}`;
+      const { data: up, error } = await sb.storage.from('book-images').upload(key, file, {
+        upsert: true,
+        contentType: file.type || `image/${ext}`,
+        cacheControl: '3600'
+      });
+      if (error) {
+        console.error('[uploadImage] error', error);
+        throw new Error(error.message || '업로드 실패');
+      }
+      const { data } = sb.storage.from('book-images').getPublicUrl(up?.path || key);
       return data.publicUrl;
     },
     async deleteImage(path) {

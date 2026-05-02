@@ -281,6 +281,17 @@
   .cc-row input[type=text]:focus{outline:0;border-bottom-color:var(--ink)}
   .color-preview{aspect-ratio:3/4;max-width:120px;border-radius:2px;background:#eee}
 
+  /* cover type segmented control */
+  .cover-type-seg{display:flex;gap:0;border:1px solid var(--line);border-radius:2px;overflow:hidden;margin-bottom:18px;background:transparent}
+  .cover-type-seg button{flex:1;padding:11px 14px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute);font-weight:600;background:transparent;border:0;transition:all .12s}
+  .cover-type-seg button:hover{color:var(--sub)}
+  .cover-type-seg button.on{background:var(--ink);color:var(--bg)}
+  .cov-mode{margin-bottom:8px}
+  .cov-mode[hidden]{display:none}
+
+  /* drawer section divider */
+  .section-divider{margin:28px 0 16px;padding-bottom:8px;border-bottom:1px solid var(--line);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--mute);font-weight:600}
+
   /* spec list */
   .spec-row{display:grid;grid-template-columns:140px 1fr 28px;gap:6px;align-items:center;margin-bottom:6px}
   .spec-row input{padding:7px 10px;border:1px solid var(--line);border-radius:6px;background:#fff;font-size:13px}
@@ -554,7 +565,7 @@
   <main class="wrap hide" id="pgOrders">
     <div class="books-toolbar">
       <h1 class="h1">orders</h1>
-      <span class="stats">사업자 등록 후 본격 사용</span>
+      <span class="stats">사업자 등록 후 본격 사용 예정</span>
       <span class="grow"></span>
       <select id="orderFilter" class="btn-line">
         <option value="">전체 상태</option>
@@ -610,7 +621,7 @@
         <div class="cfg-row">
           <div class="cfg-info">
             <h3>판매 모드</h3>
-            <p>지금은 사업자 등록 전이라 Instagram DM 으로 문의를 받고 있어. 통신판매업 신고 후 직접 결제로 바꾸면 사이트의 모든 책에 결제 버튼이 나옴.</p>
+            <p>지금은 사업자 등록 전이라 Instagram DM 으로 문의를 받고 있습니다. 통신판매업 신고 후 직접 결제로 변경하시면 사이트의 모든 책에 결제 버튼이 표시됩니다.</p>
           </div>
           <div class="cfg-control">
             <label class="switch">
@@ -627,18 +638,18 @@
         <div class="cfg-row stack">
           <div class="cfg-info">
             <h3>연락처</h3>
-            <p>사이트 푸터와 책 상세 페이지의 “구매 문의” 링크에 사용돼. Instagram 은 필수, 이메일은 선택.</p>
+            <p>사이트 푸터와 책 상세 페이지의 “구매 문의” 링크에 사용됩니다. Instagram 은 필수이며, 이메일은 선택 사항입니다.</p>
           </div>
           <div class="cfg-fields">
             <div class="fld">
               <label>Instagram URL</label>
               <input type="text" id="cfg_instagram_url" placeholder="https://instagram.com/mottool.art"/>
-              <small class="hint">전체 URL 을 입력해줘.</small>
+              <small class="hint">전체 URL 을 입력해주세요.</small>
             </div>
             <div class="fld">
               <label>이메일 (선택)</label>
               <input type="text" id="cfg_contact_email" placeholder="hello@mottool.art"/>
-              <small class="hint">비워두면 푸터에서 안 보임.</small>
+              <small class="hint">비워두시면 푸터에 표시되지 않습니다.</small>
             </div>
           </div>
         </div>
@@ -649,7 +660,7 @@
         <div class="cfg-row stack">
           <div class="cfg-info">
             <h3>매장 정보</h3>
-            <p>방문자에게 보여줄 매장 위치와 영업 시간이야. 푸터의 “VISIT” 섹션에 표시돼.</p>
+            <p>방문자에게 보여드릴 매장 위치와 영업 시간입니다. 푸터의 “VISIT” 섹션에 표시됩니다.</p>
           </div>
           <div class="cfg-fields">
             <div class="fld">
@@ -673,7 +684,7 @@
         <div class="cfg-row stack">
           <div class="cfg-info">
             <h3>사이트 텍스트</h3>
-            <p>메인 화면과 SEO 에 쓰이는 짧은 한 줄들. 비워두면 기본값이 사용돼.</p>
+            <p>메인 화면과 SEO 에 사용되는 짧은 문구입니다. 비워두시면 기본값이 사용됩니다.</p>
           </div>
           <div class="cfg-fields">
             <div class="fld">
@@ -698,27 +709,27 @@
         <div class="cfg-row stack">
           <div class="cfg-info">
             <h3>앱 · 알림</h3>
-            <p>홈 화면에 추가하면 앱처럼 사용할 수 있어. 알림을 켜면 새 주문 / 대기 신청이 들어왔을 때 (앱이 열려있을 때) 푸시 알림과 진동으로 알려줘.</p>
+            <p>홈 화면에 추가하시면 앱처럼 사용하실 수 있습니다. 알림을 켜시면 새 주문 / 대기 신청이 들어왔을 때 (앱이 열려있는 동안) 푸시 알림과 진동으로 알려드립니다.</p>
           </div>
           <div class="cfg-fields">
             <div class="app-row">
               <div class="app-info">
                 <strong>홈 화면에 추가</strong>
-                <span id="installStatus">기기에서 설치 가능 여부 확인 중...</span>
+                <span id="installStatus">기기에서 설치 가능 여부를 확인 중입니다…</span>
               </div>
               <button class="btn-line" id="installBtn" disabled>설치</button>
             </div>
             <div class="app-row">
               <div class="app-info">
                 <strong>알림</strong>
-                <span id="notifStatus">권한 확인 중...</span>
+                <span id="notifStatus">권한을 확인 중입니다…</span>
               </div>
               <button class="btn-line" id="notifBtn">알림 켜기</button>
             </div>
             <div class="app-row" style="border:0;padding-top:0">
               <div class="app-info">
                 <strong>알림 테스트</strong>
-                <span>지금 한 번 알림을 보내봐.</span>
+                <span>알림이 정상적으로 작동하는지 확인하실 수 있습니다.</span>
               </div>
               <button class="btn-line" id="notifTestBtn">테스트</button>
             </div>
@@ -741,7 +752,6 @@
   <nav class="drw-tabs" id="drwTabs">
     <button data-pane="basic" class="on">기본</button>
     <button data-pane="images">이미지</button>
-    <button data-pane="detail">상세</button>
   </nav>
   <div class="drw-body">
 
@@ -784,65 +794,75 @@
           <button class="qtog" id="t_featured" type="button">추천</button>
         </div>
       </div>
-    </section>
 
-    <!-- detail -->
-    <section data-pane="detail">
+      <!-- ── 책 상세 페이지 ────────────────────── -->
+      <div class="section-divider">책 상세 페이지</div>
+
       <div class="fld-row">
-        <div class="fld"><label>kicker</label><input type="text" id="f_dt_kicker" placeholder="KERMESSE — EDITION · 2025"/></div>
-        <div class="fld"><label>byline</label><input type="text" id="f_dt_byline" placeholder="VICTOR UNWIN"/></div>
+        <div class="fld"><label>kicker (소개 라벨)</label><input type="text" id="f_dt_kicker" placeholder="예: KERMESSE — EDITION · 2025"/></div>
+        <div class="fld"><label>byline (저자 표시)</label><input type="text" id="f_dt_byline" placeholder="예: VICTOR UNWIN"/></div>
       </div>
       <div class="fld">
-        <label>display title (HTML 가능, &lt;br/&gt;)</label>
-        <input type="text" id="f_dt_displayTitle" placeholder="The Knight,&lt;br/&gt;the Princess"/>
+        <label>display title</label>
+        <input type="text" id="f_dt_displayTitle" placeholder="상세 페이지 큰 제목 (HTML 가능, &lt;br/&gt; 줄바꿈)"/>
       </div>
       <div class="fld">
         <label>description (한 줄에 한 단락)</label>
-        <textarea id="f_dt_description"></textarea>
+        <textarea id="f_dt_description" placeholder="책 소개글을 입력해주세요. 줄바꿈 시 새 단락이 됩니다."></textarea>
       </div>
       <div class="fld">
         <label>spec (사양)</label>
         <div id="specList"></div>
-        <button class="btn-line" id="specAddBtn" type="button" style="margin-top:6px">+ spec 추가</button>
+        <button class="btn-line" id="specAddBtn" type="button" style="margin-top:8px">+ spec 추가</button>
       </div>
     </section>
 
-    <!-- images (cover + gallery 통합) -->
+    <!-- images (cover + 색상 + 갤러리 통합) -->
     <section data-pane="images">
-      <!-- 현재 표지 미리보기 -->
+      <!-- 표지 미리보기 -->
       <div class="cover-hero" id="coverHero">
         <div class="cover-hero-pv" id="coverHeroPv"></div>
         <div class="cover-hero-meta">
           <p class="cover-hero-label">현재 표지</p>
-          <p class="cover-hero-hint" id="coverHeroHint">아래 이미지의 ★ 를 눌러 표지를 바꿔.</p>
+          <p class="cover-hero-hint" id="coverHeroHint">아래에서 이미지 또는 색상을 선택해 표지를 설정해주세요.</p>
         </div>
       </div>
 
-      <!-- 갤러리 -->
-      <div class="fld" style="margin-top:8px">
-        <label>이미지 — 드래그하여 순서 변경 · ★ 로 표지 지정</label>
-        <div class="img-gallery" id="imgGallery"></div>
-        <input type="file" id="imgFile" accept="image/*" multiple style="display:none"/>
+      <!-- 표지 종류 선택 (segmented) -->
+      <div class="cover-type-seg" id="covSeg">
+        <button type="button" data-mode="image" class="on">이미지 표지</button>
+        <button type="button" data-mode="color">색상 표지</button>
       </div>
 
-      <!-- 색상 표지 fallback -->
-      <div class="color-cover-box">
-        <label class="color-cover-toggle">
-          <input type="checkbox" id="useColorCover"/>
-          <span class="switch-mini"><span class="thumb"></span></span>
-          <span>이미지 대신 색상 표지 사용</span>
-        </label>
-        <div class="color-cover-fields" id="colorCoverFields">
+      <!-- 이미지 모드 -->
+      <div class="cov-mode" data-mode="image">
+        <div class="fld">
+          <label>이미지 갤러리 — 드래그 정렬 · ★ 로 표지 지정</label>
+          <div class="img-gallery" id="imgGallery"></div>
+          <input type="file" id="imgFile" accept="image/*" multiple style="display:none"/>
+          <small class="hint">첫 업로드 이미지는 자동으로 표지가 됩니다. 다른 이미지를 표지로 사용하시려면 ★ 버튼을 눌러주세요.</small>
+        </div>
+      </div>
+
+      <!-- 색상 모드 -->
+      <div class="cov-mode" data-mode="color" hidden>
+        <div class="fld">
+          <label>책 배경 색상</label>
           <div class="cc-row">
             <input type="color" id="f_covPicker"/>
             <input type="text" id="f_covValue" placeholder="#d9d4c7"/>
-            <input type="text" id="f_covBorder" placeholder="border (선택, 예: 1px solid #ddd)"/>
           </div>
-          <div id="colorPreview" class="color-preview"></div>
+          <small class="hint">사진이 없는 책의 경우 단색 배경을 표지로 사용합니다.</small>
         </div>
+        <div class="fld">
+          <label>테두리 (선택)</label>
+          <input type="text" id="f_covBorder" placeholder="예: 1px solid #ddd"/>
+        </div>
+        <div id="colorPreview" class="color-preview"></div>
       </div>
 
       <input type="hidden" id="f_covSrc"/>
+      <input type="checkbox" id="useColorCover" style="display:none"/>
     </section>
 
   </div>
@@ -1361,7 +1381,17 @@ function fillForm(b){
   $('f_dt_byline').value = d.byline || '';
   $('f_dt_displayTitle').value = d.displayTitle || '';
   $('f_dt_description').value = Array.isArray(d.description) ? d.description.join('\n') : (d.description||'');
-  renderSpec(d.spec || {});
+  // 새 책일 때는 KNIGHT 기준 기본 스펙 키들 미리 제공 (값은 비움)
+  const DEFAULT_SPEC_KEYS = ['publisher','printed by','paper','size','pages','binding','edition','date'];
+  if (b && d.spec && Object.keys(d.spec).length) {
+    renderSpec(d.spec);
+  } else if (!b) {
+    const seed = {};
+    DEFAULT_SPEC_KEYS.forEach(k => seed[k] = '');
+    renderSpec(seed);
+  } else {
+    renderSpec({});
+  }
   renderImgGallery(d.images || []);
 }
 
@@ -1374,10 +1404,26 @@ function isHexColor(v){ return /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(String(v||''
 function getCovType(){ return $('useColorCover').checked ? 'color' : 'image'; }
 
 function toggleColorCoverFields(){
-  $('colorCoverFields').classList.toggle('on', $('useColorCover').checked);
+  const isColor = $('useColorCover').checked;
+  // 모드 패널 표시/숨김
+  document.querySelectorAll('.cov-mode').forEach(el => {
+    el.hidden = (el.dataset.mode === 'color') !== isColor;
+  });
+  // segmented 활성 상태
+  document.querySelectorAll('#covSeg button').forEach(b => {
+    b.classList.toggle('on', (b.dataset.mode === 'color') === isColor);
+  });
   updateCoverHero();
 }
 $('useColorCover').addEventListener('change', toggleColorCoverFields);
+
+// segmented 클릭 시 모드 전환
+$('covSeg')?.addEventListener('click', e => {
+  const b = e.target.closest('button[data-mode]');
+  if (!b) return;
+  $('useColorCover').checked = (b.dataset.mode === 'color');
+  toggleColorCoverFields();
+});
 
 // 색상 picker ↔ 텍스트 동기화
 $('f_covPicker').addEventListener('input', () => {
@@ -1407,17 +1453,17 @@ function updateCoverHero(){
     pv.style.background = $('f_covValue').value.trim() || '#eee';
     pv.style.backgroundImage = '';
     pv.style.border = $('f_covBorder').value.trim() || 'none';
-    hint.textContent = '색상 표지가 사용됩니다. 아래에서 색상을 변경하거나 토글을 끄면 이미지 표지로 돌아갑니다.';
+    hint.textContent = '색상 표지가 사용됩니다. 아래에서 색상을 변경하시거나, 표지 종류를 다시 이미지로 전환하실 수 있습니다.';
   } else {
     pv.style.border = '';
     pv.style.background = '#ddd';
     const src = $('f_covSrc').value.trim();
     if (src) {
       pv.style.backgroundImage = `url('${src}')`;
-      hint.textContent = '아래 갤러리에서 이미지의 ★ 를 눌러 표지를 변경할 수 있어.';
+      hint.textContent = '아래 갤러리에서 이미지의 ★ 를 눌러 표지를 변경하실 수 있습니다.';
     } else {
       pv.style.backgroundImage = '';
-      hint.textContent = '아직 표지가 없어. 아래 갤러리에 이미지를 추가하면 자동으로 첫 이미지가 표지가 돼.';
+      hint.textContent = '아직 표지가 설정되지 않았습니다. 아래 갤러리에 이미지를 추가하시면 자동으로 첫 이미지가 표지로 설정됩니다.';
     }
   }
 }
