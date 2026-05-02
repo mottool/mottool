@@ -239,9 +239,19 @@
   .seg button.on{background:var(--ink);color:var(--bg)}
 
   .quick-toggles{display:flex;gap:6px;flex-wrap:wrap}
-  .qtog{padding:8px 14px;border:1px solid var(--line);border-radius:2px;font-size:10px;letter-spacing:.18em;text-transform:uppercase;background:transparent;color:var(--mute);font-weight:600}
+  .qtog{
+    display:inline-flex;align-items:center;gap:7px;
+    padding:8px 14px;border:1px solid var(--line);border-radius:2px;
+    font-size:11px;letter-spacing:.06em;background:transparent;color:var(--mute);
+    font-weight:600;line-height:1;
+  }
+  .qtog .qtog-ic{
+    width:14px;height:14px;display:block;
+    fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;
+  }
+  .qtog .qtog-ic.qtog-ic-fill{fill:currentColor;stroke:none}
   .qtog.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
-  .qtog.warn.on{background:var(--warn);border-color:var(--warn)}
+  .qtog.warn.on{background:var(--warn);border-color:var(--warn);color:#fff}
 
   /* ── Image gallery ──────────────────── */
   .img-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}
@@ -909,9 +919,18 @@
       <div class="fld">
         <label>상태</label>
         <div class="quick-toggles">
-          <button class="qtog warn" id="t_sold" type="button">품절</button>
-          <button class="qtog on" id="t_visible" type="button">사이트 노출</button>
-          <button class="qtog" id="t_featured" type="button">추천</button>
+          <button class="qtog on" id="t_visible" type="button">
+            <svg viewBox="0 0 24 24" class="qtog-ic"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+            <span>사이트 노출</span>
+          </button>
+          <button class="qtog warn" id="t_sold" type="button">
+            <svg viewBox="0 0 24 24" class="qtog-ic"><circle cx="12" cy="12" r="9"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            <span>품절</span>
+          </button>
+          <button class="qtog" id="t_featured" type="button">
+            <svg viewBox="0 0 24 24" class="qtog-ic qtog-ic-fill"><path d="M12 2l3 7h7l-5.5 4 2 7-6.5-4-6.5 4 2-7L2 9h7z"/></svg>
+            <span>추천</span>
+          </button>
         </div>
         <small class="hint">‘사이트 노출’을 끄면 손님 페이지에서 보이지 않습니다. ‘추천’은 메인에서 강조 표시됩니다.</small>
       </div>
