@@ -563,6 +563,11 @@ html.dark .dt-back:hover{background:var(--ink);color:var(--bg)}
   background-repeat:no-repeat;
 }
 
+/* PC — 돋보기 크게 */
+@media (min-width: 880px){
+  .mag{ width:380px; height:380px; }
+}
+
 /* ---------- Body: description + specs ---------- */
 .dt-body{
   max-width:1200px;margin:0 auto;

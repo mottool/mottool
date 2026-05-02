@@ -711,8 +711,10 @@
   slider.style.userSelect = 'none';
 
   // click left/right halves (only if not dragged)
+  let suppressNextClick = false;
   slider.addEventListener('click', e => {
     if (dragMoved) return;
+    if (suppressNextClick) { suppressNextClick = false; return; }
     if (e.target.closest('.dt-dots')) return;
     const r = slider.getBoundingClientRect();
     const x = e.clientX - r.left;
@@ -786,8 +788,18 @@
       clearTimeout(magTimer); magTimer = null;
     }
   });
-  slider.addEventListener('pointerup', () => { if (magActive) hideMag(); else { clearTimeout(magTimer); magTimer = null; } });
-  slider.addEventListener('pointercancel', () => { hideMag(); });
+  slider.addEventListener('pointerup', () => {
+    if (magActive) {
+      suppressNextClick = true;          // 떼면서 발생할 click 한 번 무시
+      hideMag();
+    } else {
+      clearTimeout(magTimer); magTimer = null;
+    }
+  });
+  slider.addEventListener('pointercancel', () => {
+    if (magActive) suppressNextClick = true;
+    hideMag();
+  });
   slider.addEventListener('contextmenu', e => e.preventDefault());
   slider.addEventListener('dragstart', e => e.preventDefault());
   // block scroll while magnifier active (must be non-passive to preventDefault)
