@@ -1852,25 +1852,44 @@ $('richToolbar').addEventListener('mousedown', e => {
   updateToolbarState();
 });
 
+// 마지막 selection 보존 (드롭다운/컬러피커 열 때 selection 사라지는 거 복원용)
+let savedRange = null;
+function saveSel(){
+  const s = window.getSelection();
+  if (s.rangeCount && richArea.contains(s.anchorNode)) {
+    savedRange = s.getRangeAt(0).cloneRange();
+  }
+}
+function restoreSel(){
+  if (!savedRange) return;
+  richArea.focus();
+  const s = window.getSelection();
+  s.removeAllRanges();
+  s.addRange(savedRange);
+}
+richArea.addEventListener('mouseup', saveSel);
+richArea.addEventListener('keyup', saveSel);
+richArea.addEventListener('blur', saveSel);
+
 // 글자 크기
 $('richFontSize').addEventListener('change', () => {
-  richArea.focus();
   const v = $('richFontSize').value;
-  if (v) document.execCommand('fontSize', false, v);
+  if (v) {
+    restoreSel();
+    document.execCommand('fontSize', false, v);
+  }
   $('richFontSize').value = '';
+  saveSel();
 });
-$('richFontSize').addEventListener('mousedown', e => e.preventDefault()); // selection 유지
 
 // 글자 색
 $('richColor').addEventListener('input', e => {
-  richArea.focus();
+  restoreSel();
   const c = e.target.value;
   document.execCommand('foreColor', false, c);
   const bar = document.getElementById('richColorBar');
   if (bar) bar.style.background = c;
-});
-$('richColor').addEventListener('mousedown', e => {
-  // selection 유지를 위해 약간의 트릭 — 빈 클릭이면 막기 (아래 click 만 작동)
+  saveSel();
 });
 
 function updateToolbarState(){
@@ -1901,10 +1920,65 @@ document.addEventListener('selectionchange', () => {
   if (document.activeElement === richArea) updateToolbarState();
 });
 
-// 키보드 단축키
+// 키보드 단축키 + HR 등 블록 삭제 처리
 richArea.addEventListener('keydown', e => {
-  // Ctrl/Cmd + B/I/U 는 브라우저 기본으로 처리됨. Tab 만 막아 들여쓰기 의도와 충돌 방지.
-  if (e.key === 'Tab') e.preventDefault();
+  if (e.key === 'Tab') { e.preventDefault(); return; }
+
+  // Backspace/Delete 시 인접 HR (또는 빈 블록) 삭제
+  if (e.key !== 'Backspace' && e.key !== 'Delete') return;
+  const sel = window.getSelection();
+  if (!sel.rangeCount || !sel.isCollapsed) return;
+  const range = sel.getRangeAt(0);
+
+  // 현재 커서가 들어있는 가장 가까운 블록 노드
+  let block = range.startContainer;
+  if (block.nodeType === 3) block = block.parentNode;
+  while (block && block !== richArea && !/^(P|DIV|H[1-6]|BLOCKQUOTE|LI)$/.test(block.tagName || '')) {
+    block = block.parentNode;
+  }
+  if (!block || block === richArea) return;
+
+  const atBlockStart = isAtStart(range, block);
+  const atBlockEnd   = isAtEnd(range, block);
+
+  if (e.key === 'Backspace' && atBlockStart) {
+    const prev = block.previousElementSibling;
+    if (prev && prev.tagName === 'HR') {
+      e.preventDefault(); prev.remove(); return;
+    }
+  }
+  if (e.key === 'Delete' && atBlockEnd) {
+    const next = block.nextElementSibling;
+    if (next && next.tagName === 'HR') {
+      e.preventDefault(); next.remove(); return;
+    }
+  }
+});
+
+function isAtStart(range, block){
+  const r = document.createRange();
+  r.selectNodeContents(block);
+  r.setEnd(range.startContainer, range.startOffset);
+  return r.toString().length === 0;
+}
+function isAtEnd(range, block){
+  const r = document.createRange();
+  r.selectNodeContents(block);
+  r.setStart(range.endContainer, range.endOffset);
+  return r.toString().length === 0;
+}
+
+// HR 클릭하면 선택 → 키보드로 삭제 가능
+richArea.addEventListener('click', e => {
+  if (e.target.tagName === 'HR') {
+    const range = document.createRange();
+    range.selectNode(e.target);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+    e.target.style.outline = '2px solid var(--ink)';
+    setTimeout(() => { e.target.style.outline = ''; }, 1500);
+  }
 });
 
 // 툴팁: title → data-tip + aria-label (네이티브 툴팁 중복 방지)
