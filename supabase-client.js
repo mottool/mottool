@@ -269,6 +269,24 @@
       if (error) throw error;
     },
 
+    // ── Web Push 구독 ───────────────────────────────
+    async savePushSubscription(sub, userEmail) {
+      const json = sub.toJSON();
+      const row = {
+        endpoint: json.endpoint,
+        p256dh: json.keys.p256dh,
+        auth: json.keys.auth,
+        user_email: userEmail || null,
+        device_info: navigator.userAgent.slice(0, 200)
+      };
+      const { error } = await sb.from('push_subscriptions').upsert(row, { onConflict: 'endpoint' });
+      if (error) throw error;
+    },
+    async deletePushSubscription(endpoint) {
+      const { error } = await sb.from('push_subscriptions').delete().eq('endpoint', endpoint);
+      if (error) throw error;
+    },
+
     // ── 인증 ────────────────────────────────────────
     async signIn(email, password) {
       const { data, error } = await sb.auth.signInWithPassword({ email, password });

@@ -7,5 +7,7 @@
 
 window.SUPABASE_CONFIG = {
   url:     'https://jxtzdhfbuvvrfrxunsfg.supabase.co',
-  anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4dHpkaGZidXZ2cmZyeHVuc2ZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0MjMzMTIsImV4cCI6MjA5Mjk5OTMxMn0.dOXNVja6ZjOkcm4jtZmG1kbPrMhffrviAps5-XnT8CE'
+  anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4dHpkaGZidXZ2cmZyeHVuc2ZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0MjMzMTIsImV4cCI6MjA5Mjk5OTMxMn0.dOXNVja6ZjOkcm4jtZmG1kbPrMhffrviAps5-XnT8CE',
+  // VAPID 공개키 — 브라우저 push 구독용. 공개되어도 안전.
+  vapidPublicKey: 'BNQAoeoaNtQaD9X66FgTMZb-70k_ks7o9HT0di4ZmWUDabp07Ee6JnPjSuJSrYTuPrx7qpif_YwYJOHO2X1nMBE'
 };

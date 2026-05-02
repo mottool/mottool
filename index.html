@@ -162,7 +162,7 @@
         <p class="dt-buy-title">『 THE KNIGHT, THE PRINCESS AND THE GOOD 』</p>
         <p class="dt-buy-meta"><span>piece 4</span> · <span>price soon</span></p>
       </div>
-      <a href="https://instagram.com/mottool.art" target="_blank" rel="noopener" class="dt-cta">@mottool.art</a>
+      <a href="https://instagram.com/mottool.art" target="_blank" rel="noopener" class="dt-cta" id="dtCta">@mottool.art</a>
     </div>
 
   </section>
@@ -180,22 +180,21 @@
   <div class="ftr-top">
     <div class="ftr-col">
       <p class="ftr-brand">mottool</p>
-      <p class="ftr-tag">artbook · lifestyle</p>
+      <p class="ftr-tag" id="ftrTagline">artbook · lifestyle</p>
     </div>
     <div class="ftr-col">
       <p class="ftr-label">CONTACT</p>
-      <p><a href="mailto:hello@mottool.art">hello@mottool.art</a></p>
-      <p>070-0000-0000</p>
+      <p id="ftrEmailWrap"><a id="ftrEmail" href="mailto:hello@mottool.art">hello@mottool.art</a></p>
+      <p id="ftrPhone"></p>
     </div>
     <div class="ftr-col">
       <p class="ftr-label">VISIT</p>
-      <p>대전 서구 둔산동 00-00, 2F</p>
-      <p>TUE–SUN · 12:00–20:00</p>
+      <p id="ftrAddress">대전 서구 둔산동 00-00, 2F</p>
+      <p id="ftrHours">TUE–SUN · 12:00–20:00</p>
     </div>
     <div class="ftr-col">
       <p class="ftr-label">FOLLOW</p>
-      <p><a href="#">Instagram</a></p>
-      <p><a href="#">Newsletter</a></p>
+      <p><a id="ftrInstagram" href="https://instagram.com/mottool.art" target="_blank" rel="noopener">Instagram</a></p>
     </div>
   </div>
   <div class="ftr-bottom">
@@ -207,10 +206,15 @@
 (async () => {
   // ===== Load books data (Supabase first, fallback to books.json) =====
   let booksData = {books:[]};
+  let siteConfig = {};
   if (window.MOTTOOL_DB) {
     try {
-      const list = await window.MOTTOOL_DB.listBooks();
+      const [list, cfg] = await Promise.all([
+        window.MOTTOOL_DB.listBooks(),
+        window.MOTTOOL_DB.listConfig().catch(() => ({}))
+      ]);
       booksData = { books: list };
+      siteConfig = cfg || {};
     } catch(e){
       console.warn('Supabase load failed, fallback to books.json', e);
     }
@@ -223,6 +227,44 @@
       console.warn('books.json load failed', e);
     }
   }
+
+  // ── Site config 적용 ─────────────────────────────
+  function applySiteConfig(){
+    const ig = (siteConfig.instagram_url || '').trim();
+    const email = (siteConfig.contact_email || '').trim();
+    const addr = (siteConfig.address || '').trim();
+    const hours = (siteConfig.hours || '').trim();
+    const phone = (siteConfig.phone || '').trim();
+    const tagline = (siteConfig.tagline || '').trim();
+
+    // Buy CTA — Instagram link
+    const cta = document.getElementById('dtCta');
+    if (cta && ig) {
+      cta.href = ig;
+      // URL 에서 핸들 추출: instagram.com/<handle>
+      const m = ig.match(/instagram\.com\/([^\/?#]+)/i);
+      cta.textContent = m ? '@' + m[1].replace(/\/$/, '') : ig;
+    }
+
+    // Footer
+    const setText = (id, val) => { const el = document.getElementById(id); if (el && val) el.textContent = val; };
+    const setHide = (id, val) => { const el = document.getElementById(id); if (!el) return; if (val) el.style.display = ''; else el.style.display = 'none'; };
+
+    if (tagline) setText('ftrTagline', tagline);
+    setHide('ftrEmailWrap', !!email);
+    if (email) {
+      const a = document.getElementById('ftrEmail');
+      if (a) { a.href = 'mailto:' + email; a.textContent = email; }
+    }
+    setHide('ftrPhone', !!phone);
+    if (phone) setText('ftrPhone', phone);
+    if (addr) setText('ftrAddress', addr);
+    if (hours) setText('ftrHours', hours);
+
+    const igLink = document.getElementById('ftrInstagram');
+    if (igLink && ig) igLink.href = ig;
+  }
+  applySiteConfig();
 
   function renderGrid(){
     const grid = document.getElementById('grid');
