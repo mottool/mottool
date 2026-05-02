@@ -565,7 +565,7 @@ html.dark .dt-back:hover{background:var(--ink);color:var(--bg)}
 
 /* PC — 돋보기 크게 */
 @media (min-width: 880px){
-  .mag{ width:380px; height:380px; }
+  .mag{ width:500px; height:500px; }
 }
 
 /* ---------- Body: description + specs ---------- */
