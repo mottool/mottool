@@ -1,15 +1,14 @@
 {
-  "name": "mottool — artbook · lifestyle",
-  "short_name": "mottool",
-  "description": "대전 둔산동의 작은 아트북 책방",
-  "start_url": "/",
+  "name": "mottool admin",
+  "short_name": "admin",
+  "description": "mottool 관리자",
+  "start_url": "/admin.html",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#f7f5ee",
   "theme_color": "#1a1a18",
   "lang": "ko",
-  "categories": ["books", "shopping", "lifestyle"],
   "icons": [
     {
       "src": "/assets/icon-192.png",
@@ -21,13 +20,7 @@
       "src": "/assets/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/assets/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     }
   ]
 }

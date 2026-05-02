@@ -4,12 +4,26 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>mottool — admin</title>
-<link rel="icon" type="image/png" href="/assets/mascot.png" />
+<link rel="icon" type="image/png" href="/assets/icon-192.png" />
+<link rel="manifest" href="/manifest-admin.json" />
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/icon-apple.png" />
+<meta name="theme-color" content="#f7f5ee" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="mottool admin" />
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
 <script src="supabase-client.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').catch(err => console.warn('SW 등록 실패', err));
+    });
+  }
+</script>
 <style>
   :root{
     --bg:#f7f5ee; --ink:#1a1a18; --sub:#3a3a36; --mute:#9a9890; --line:#e6e1d3;
@@ -312,6 +326,12 @@
   .cfg-actions{display:flex;align-items:center;justify-content:flex-end;gap:14px;padding:18px 0 8px;position:sticky;bottom:0;background:linear-gradient(to top, var(--bg) 60%, transparent)}
   .cfg-saved{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ok);font-weight:600;opacity:0;transition:opacity .25s}
   .cfg-saved.show{opacity:1}
+
+  .app-row{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--line)}
+  .app-row:last-child{border-bottom:0}
+  .app-info{flex:1;display:flex;flex-direction:column;gap:3px}
+  .app-info strong{font-size:13px;font-weight:600;letter-spacing:-.005em}
+  .app-info span{font-size:11px;color:var(--mute);letter-spacing:.02em}
 
   /* ── Toast ──────────────────────────── */
   .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--bg);padding:12px 22px;border-radius:2px;font-size:11px;opacity:0;pointer-events:none;transition:.25s;z-index:200;letter-spacing:.12em;text-transform:uppercase;font-weight:600;box-shadow:0 8px 28px rgba(0,0,0,.16)}
@@ -672,6 +692,39 @@
         <span class="cfg-saved" id="cfgSaved"></span>
         <button class="btn-pri" id="cfgSaveBtn">변경사항 저장</button>
       </div>
+
+      <!-- App / 알림 -->
+      <section class="cfg-card">
+        <div class="cfg-row stack">
+          <div class="cfg-info">
+            <h3>앱 · 알림</h3>
+            <p>홈 화면에 추가하면 앱처럼 사용할 수 있어. 알림을 켜면 새 주문 / 대기 신청이 들어왔을 때 (앱이 열려있을 때) 푸시 알림과 진동으로 알려줘.</p>
+          </div>
+          <div class="cfg-fields">
+            <div class="app-row">
+              <div class="app-info">
+                <strong>홈 화면에 추가</strong>
+                <span id="installStatus">기기에서 설치 가능 여부 확인 중...</span>
+              </div>
+              <button class="btn-line" id="installBtn" disabled>설치</button>
+            </div>
+            <div class="app-row">
+              <div class="app-info">
+                <strong>알림</strong>
+                <span id="notifStatus">권한 확인 중...</span>
+              </div>
+              <button class="btn-line" id="notifBtn">알림 켜기</button>
+            </div>
+            <div class="app-row" style="border:0;padding-top:0">
+              <div class="app-info">
+                <strong>알림 테스트</strong>
+                <span>지금 한 번 알림을 보내봐.</span>
+              </div>
+              <button class="btn-line" id="notifTestBtn">테스트</button>
+            </div>
+          </div>
+        </div>
+      </section>
 
     </div>
   </main>
@@ -1657,7 +1710,131 @@ async function updateBadges(){
 
 async function init(){
   await loadBooks();
+  setupRealtime();
 }
+
+// ============ PWA Install ============
+let deferredInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  const btn = $('installBtn'); const st = $('installStatus');
+  if (btn) { btn.disabled = false; btn.textContent = '설치'; }
+  if (st) st.textContent = '홈 화면에 추가할 수 있어.';
+});
+window.addEventListener('appinstalled', () => {
+  const btn = $('installBtn'); const st = $('installStatus');
+  if (btn) { btn.disabled = true; btn.textContent = '설치됨'; }
+  if (st) st.textContent = '✓ 설치 완료';
+  toast('설치됨');
+});
+
+function detectPwaState(){
+  const installed = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  const btn = $('installBtn'); const st = $('installStatus');
+  if (!btn) return;
+  if (installed) {
+    btn.disabled = true; btn.textContent = '설치됨';
+    st.textContent = '✓ 이미 앱으로 실행 중';
+  } else if (isIOS) {
+    btn.disabled = true; btn.textContent = 'iOS 안내';
+    st.textContent = 'iOS Safari → 공유 → "홈 화면에 추가" 로 설치';
+  } else if (!deferredInstallPrompt) {
+    btn.disabled = true;
+    st.textContent = '브라우저 메뉴 → "홈 화면에 추가" 또는 "앱 설치"';
+  }
+}
+$('installBtn')?.addEventListener('click', async () => {
+  if (!deferredInstallPrompt) return;
+  deferredInstallPrompt.prompt();
+  const { outcome } = await deferredInstallPrompt.userChoice;
+  if (outcome === 'accepted') toast('설치 진행 중...');
+  deferredInstallPrompt = null;
+  $('installBtn').disabled = true;
+});
+
+// ============ Notifications ============
+function detectNotifState(){
+  const btn = $('notifBtn'); const st = $('notifStatus');
+  if (!btn) return;
+  if (!('Notification' in window)) {
+    btn.disabled = true; btn.textContent = '미지원';
+    st.textContent = '이 브라우저는 알림을 지원하지 않아.';
+    return;
+  }
+  const p = Notification.permission;
+  if (p === 'granted') {
+    btn.textContent = '✓ 허용됨'; btn.disabled = true;
+    st.textContent = '새 주문 / 대기 신청 시 알림이 울려.';
+  } else if (p === 'denied') {
+    btn.disabled = true; btn.textContent = '차단됨';
+    st.textContent = '브라우저 설정에서 알림 권한을 허용으로 변경해야 해.';
+  } else {
+    btn.textContent = '알림 켜기'; btn.disabled = false;
+    st.textContent = '알림 켜면 새 주문이 들어왔을 때 푸시로 알려줘.';
+  }
+}
+$('notifBtn')?.addEventListener('click', async () => {
+  if (!('Notification' in window)) return;
+  const result = await Notification.requestPermission();
+  detectNotifState();
+  if (result === 'granted') notify('알림 활성화', '이제 새 이벤트가 생기면 알림으로 알려줄게.');
+});
+$('notifTestBtn')?.addEventListener('click', () => {
+  if (Notification.permission !== 'granted') {
+    toast('먼저 알림을 켜줘', true); return;
+  }
+  notify('테스트 알림', '잘 작동해! 🔔');
+});
+
+function notify(title, body, url = '/admin.html'){
+  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+  if (navigator.vibrate) navigator.vibrate([120, 50, 120]);
+  // SW 가 있으면 SW 통해 (모바일에서 더 잘 작동)
+  if (navigator.serviceWorker?.controller) {
+    navigator.serviceWorker.ready.then(reg => {
+      reg.showNotification(title, {
+        body, icon:'/assets/icon-192.png', badge:'/assets/icon-192.png',
+        vibrate:[120,50,120], tag:'mottool-realtime', data:{url}
+      });
+    });
+  } else {
+    new Notification(title, { body, icon:'/assets/icon-192.png' });
+  }
+}
+
+// ============ Realtime (포그라운드 알림) ============
+let realtimeChannels = [];
+function setupRealtime(){
+  if (!DB || !DB.sb) return;
+  // 중복 구독 방지
+  realtimeChannels.forEach(c => DB.sb.removeChannel(c));
+  realtimeChannels = [];
+
+  const orderCh = DB.sb.channel('admin-orders')
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'orders' }, (payload) => {
+      const o = payload.new;
+      notify('새 주문 들어왔어', `${o.book_title || '상품'} · ${o.customer_name || ''}`);
+      updateBadges();
+    })
+    .subscribe();
+  realtimeChannels.push(orderCh);
+
+  const waitCh = DB.sb.channel('admin-waitlist')
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'waitlist' }, (payload) => {
+      const w = payload.new;
+      notify('대기 신청', `${w.customer || '익명'} 님이 대기 신청했어`);
+    })
+    .subscribe();
+  realtimeChannels.push(waitCh);
+}
+
+// 페이지 로드 시 상태 감지
+window.addEventListener('load', () => {
+  detectPwaState();
+  detectNotifState();
+});
 
 checkAuth();
 </script>

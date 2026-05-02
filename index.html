@@ -5,12 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>mottool — artbook · lifestyle</title>
 <base href="/" />
-<link rel="icon" type="image/png" href="/assets/book.png" />
+<link rel="icon" type="image/png" href="/assets/icon-192.png" />
 <link rel="manifest" href="/manifest.json" />
-<link rel="apple-touch-icon" href="/assets/book.png" />
-<meta name="theme-color" content="#ffffff" />
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/icon-apple.png" />
+<meta name="theme-color" content="#f7f5ee" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="mottool" />
 
 <!-- OG / Social -->
 <meta property="og:title" content="mottool — artbook · lifestyle" />
@@ -30,6 +32,14 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
 <script src="supabase-client.js"></script>
+<script>
+  // PWA service worker 등록
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').catch(err => console.warn('SW 등록 실패', err));
+    });
+  }
+</script>
 </head>
 <body>
 
