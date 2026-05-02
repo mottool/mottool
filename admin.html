@@ -294,7 +294,42 @@
 
   /* rich text editor */
   .rich-editor{border:1px solid var(--line);border-radius:2px;background:rgba(255,255,255,.4)}
-  .rich-toolbar{display:flex;gap:1px;align-items:center;padding:6px 8px;border-bottom:1px solid var(--line);background:var(--card);flex-wrap:wrap;position:sticky;top:0;z-index:5}
+  .rich-toolbar{display:flex;gap:1px;align-items:center;padding:6px 8px;border-bottom:1px solid var(--line);background:var(--card);flex-wrap:wrap;position:sticky;top:0;z-index:5;overflow:visible}
+
+  /* 호버 툴팁 (data-tip 기반) */
+  [data-tip]{position:relative}
+  [data-tip]:hover::after{
+    content:attr(data-tip);
+    position:absolute;
+    top:calc(100% + 6px);
+    left:50%;
+    transform:translateX(-50%);
+    background:var(--ink);
+    color:var(--bg);
+    padding:5px 9px;
+    border-radius:3px;
+    font-size:10px;
+    letter-spacing:.06em;
+    font-weight:500;
+    white-space:nowrap;
+    pointer-events:none;
+    z-index:300;
+    box-shadow:0 4px 12px rgba(0,0,0,.18);
+    animation:ttFade .15s ease both;
+  }
+  [data-tip]:hover::before{
+    content:'';
+    position:absolute;
+    top:calc(100% + 1px);
+    left:50%;
+    transform:translateX(-50%);
+    border:5px solid transparent;
+    border-bottom-color:var(--ink);
+    pointer-events:none;
+    z-index:300;
+    animation:ttFade .15s ease both;
+  }
+  @keyframes ttFade{from{opacity:0;transform:translate(-50%,-3px)}to{opacity:1;transform:translate(-50%,0)}}
   .rich-toolbar button{
     width:32px;height:30px;padding:0;font-size:13px;color:var(--sub);
     border-radius:3px;display:inline-flex;align-items:center;justify-content:center;
@@ -307,12 +342,12 @@
   .rich-toolbar button:hover{background:var(--hover);color:var(--ink)}
   .rich-toolbar button.on{background:var(--ink);color:var(--bg)}
   .rich-sep{width:1px;height:18px;background:var(--line);margin:0 4px;flex-shrink:0}
-  .rich-select{
-    width:78px;height:28px;border:1px solid var(--line);background:transparent;border-radius:3px;
+  .rich-toolbar .rich-select{
+    width:84px !important;height:28px;border:1px solid var(--line);background:#fff;border-radius:3px;
     font-size:11px;color:var(--sub);padding:0 6px;font-family:inherit;flex-shrink:0;
-    appearance:auto;-webkit-appearance:auto;
+    appearance:auto;-webkit-appearance:auto;line-height:1;
   }
-  .rich-select:focus{outline:0;border-color:var(--ink)}
+  .rich-toolbar .rich-select:focus{outline:0;border-color:var(--ink)}
 
   .rich-color{
     position:relative;width:32px;height:30px;display:inline-flex;flex-direction:column;
@@ -1190,6 +1225,7 @@ function renderCategorySections(){
   if (!books.length) {
     root.innerHTML = '<div class="empty">아직 책이 없습니다. <strong>+ 새 책</strong> 으로 추가하세요.</div>';
   }
+  if (typeof applyTooltips === 'function') applyTooltips(root);
 }
 
 function makeCategorySection(cat, list){
@@ -1870,6 +1906,20 @@ richArea.addEventListener('keydown', e => {
   // Ctrl/Cmd + B/I/U 는 브라우저 기본으로 처리됨. Tab 만 막아 들여쓰기 의도와 충돌 방지.
   if (e.key === 'Tab') e.preventDefault();
 });
+
+// 툴팁: title → data-tip + aria-label (네이티브 툴팁 중복 방지)
+function applyTooltips(root){
+  (root || document).querySelectorAll('[title]').forEach(el => {
+    const t = el.getAttribute('title');
+    if (!t) return;
+    el.dataset.tip = t;
+    if (!el.hasAttribute('aria-label')) el.setAttribute('aria-label', t);
+    el.removeAttribute('title');
+  });
+}
+applyTooltips($('richToolbar'));
+applyTooltips(document.querySelector('.hd'));
+applyTooltips(document.querySelector('.tabs'));
 
 // 붙여넣기 — plain text 만 허용 (서식 깨짐 방지)
 richArea.addEventListener('paste', e => {
