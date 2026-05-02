@@ -292,6 +292,25 @@
   /* drawer section divider */
   .section-divider{margin:28px 0 16px;padding-bottom:8px;border-bottom:1px solid var(--line);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--mute);font-weight:600}
 
+  /* rich text editor */
+  .rich-editor{border:1px solid var(--line);border-radius:2px;background:rgba(255,255,255,.4)}
+  .rich-toolbar{display:flex;gap:2px;align-items:center;padding:6px 8px;border-bottom:1px solid var(--line);background:var(--card);flex-wrap:wrap}
+  .rich-toolbar button{width:30px;height:28px;font-size:13px;color:var(--sub);border-radius:2px;display:inline-flex;align-items:center;justify-content:center;background:transparent;transition:background .12s, color .12s}
+  .rich-toolbar button[data-cmd="emHighlight"]{width:auto;padding:0 8px;font-size:11px;letter-spacing:.04em;font-weight:600}
+  .rich-toolbar button:hover{background:var(--hover);color:var(--ink)}
+  .rich-toolbar button.on{background:var(--ink);color:var(--bg)}
+  .rich-sep{width:1px;height:18px;background:var(--line);margin:0 4px}
+  .rich-area{min-height:140px;padding:12px 14px;font-size:14px;line-height:1.7;color:var(--ink);outline:0}
+  .rich-area:focus{outline:0}
+  .rich-area p{margin:0 0 .7em}
+  .rich-area p:last-child{margin-bottom:0}
+  .rich-area em, .rich-area i{font-style:italic;font-weight:500}
+  .rich-area strong, .rich-area b{font-weight:700}
+  .rich-area:empty::before, .rich-area[data-empty="true"]::before{
+    content:attr(data-placeholder);
+    color:var(--mute);font-size:13px;line-height:1.6;pointer-events:none;
+  }
+
   /* spec list */
   .spec-row{display:grid;grid-template-columns:140px 1fr 28px;gap:6px;align-items:center;margin-bottom:6px}
   .spec-row input{padding:7px 10px;border:1px solid var(--line);border-radius:6px;background:#fff;font-size:13px}
@@ -757,35 +776,52 @@
 
     <!-- basic -->
     <section class="on" data-pane="basic">
+
+      <!-- ── 필수 정보 ────────────────────────── -->
       <div class="fld">
-        <label>title</label>
-        <input type="text" id="f_title" placeholder="책 제목"/>
+        <label>제목 <span class="req">*</span></label>
+        <input type="text" id="f_title" placeholder="책의 제목을 입력해주세요"/>
         <small class="hint" id="slugHint" style="margin-top:4px"></small>
       </div>
       <input type="hidden" id="f_id"/>
       <input type="hidden" id="f_position"/>
+
       <div class="fld-row">
-        <div class="fld"><label>author</label><input type="text" id="f_author"/></div>
-        <div class="fld"><label>author meta</label><input type="text" id="f_authorMeta" placeholder="VICTOR UNWIN · PHOTO"/></div>
+        <div class="fld">
+          <label>저자</label>
+          <input type="text" id="f_author" placeholder="예: VICTOR UNWIN"/>
+        </div>
+        <div class="fld">
+          <label>출판사</label>
+          <input type="text" id="f_publisher" placeholder="예: KERMESSE"/>
+        </div>
       </div>
+
       <div class="fld-row">
-        <div class="fld"><label>publisher</label><input type="text" id="f_publisher"/></div>
-        <div class="fld"><label>category</label>
+        <div class="fld">
+          <label>카테고리</label>
           <select id="f_categorySlug"><option value="">(미분류)</option></select>
         </div>
-      </div>
-      <div class="fld-row three">
         <div class="fld">
-          <label>date</label>
-          <input type="text" id="f_date" placeholder="2025 or 2025-04-30"/>
+          <label>출간일</label>
+          <input type="text" id="f_date" placeholder="예: 2025  또는  2025-04-30"/>
+          <small class="hint">연도만 적어도 되고, 월·일까지 자세히 적어도 됩니다.</small>
         </div>
-        <div class="fld"><label>piece</label><input type="number" id="f_piece" min="0"/></div>
-        <div class="fld"><label>price krw</label><input type="number" id="f_priceKrw" placeholder="38000"/></div>
       </div>
-      <div class="fld">
-        <label>price (표시)</label>
-        <input type="text" id="f_price" placeholder="₩38,000 · price soon · 품절"/>
+
+      <div class="fld-row">
+        <div class="fld">
+          <label>재고 수량</label>
+          <input type="number" id="f_piece" min="0" placeholder="0"/>
+          <small class="hint">남은 책의 권 수입니다. 0이면 자동으로 ‘품절’ 표시됩니다.</small>
+        </div>
+        <div class="fld">
+          <label>판매가 (원)</label>
+          <input type="number" id="f_priceKrw" placeholder="예: 38000"/>
+          <small class="hint">가격이 정해지지 않았다면 비워두세요.</small>
+        </div>
       </div>
+
       <div class="fld">
         <label>상태</label>
         <div class="quick-toggles">
@@ -793,28 +829,75 @@
           <button class="qtog on" id="t_visible" type="button">사이트 노출</button>
           <button class="qtog" id="t_featured" type="button">추천</button>
         </div>
+        <small class="hint">‘사이트 노출’을 끄면 손님 페이지에서 보이지 않습니다. ‘추천’은 메인에서 강조 표시됩니다.</small>
       </div>
 
-      <!-- ── 책 상세 페이지 ────────────────────── -->
-      <div class="section-divider">책 상세 페이지</div>
+      <!-- ── 책 소개 ──────────────────────────── -->
+      <div class="section-divider">책 소개</div>
 
-      <div class="fld-row">
-        <div class="fld"><label>kicker (소개 라벨)</label><input type="text" id="f_dt_kicker" placeholder="예: KERMESSE — EDITION · 2025"/></div>
-        <div class="fld"><label>byline (저자 표시)</label><input type="text" id="f_dt_byline" placeholder="예: VICTOR UNWIN"/></div>
-      </div>
       <div class="fld">
-        <label>display title</label>
-        <input type="text" id="f_dt_displayTitle" placeholder="상세 페이지 큰 제목 (HTML 가능, &lt;br/&gt; 줄바꿈)"/>
+        <label>책 소개글</label>
+        <div class="rich-editor">
+          <div class="rich-toolbar" id="richToolbar">
+            <button type="button" data-cmd="bold" title="굵게 (Ctrl+B)"><strong>B</strong></button>
+            <button type="button" data-cmd="italic" title="기울임 (Ctrl+I)"><em>I</em></button>
+            <button type="button" data-cmd="underline" title="밑줄 (Ctrl+U)"><u>U</u></button>
+            <span class="rich-sep"></span>
+            <button type="button" data-cmd="strikeThrough" title="취소선"><s>S</s></button>
+            <button type="button" data-cmd="emHighlight" title="강조 (이탤릭으로 표시)">강조</button>
+            <span class="rich-sep"></span>
+            <button type="button" data-cmd="insertParagraph" title="단락 나누기">¶</button>
+            <button type="button" data-cmd="removeFormat" title="서식 제거">⊘</button>
+          </div>
+          <div class="rich-area" id="f_dt_description" contenteditable="true"
+               data-placeholder="책 소개글을 입력해주세요. Enter 키로 새 단락을 추가하실 수 있고, 위쪽 버튼으로 굵게/기울임 등을 적용하실 수 있습니다."></div>
+        </div>
       </div>
+
       <div class="fld">
-        <label>description (한 줄에 한 단락)</label>
-        <textarea id="f_dt_description" placeholder="책 소개글을 입력해주세요. 줄바꿈 시 새 단락이 됩니다."></textarea>
-      </div>
-      <div class="fld">
-        <label>spec (사양)</label>
+        <label>책 정보 (사양)</label>
+        <small class="hint" style="margin:0 0 8px">출판사 · 페이지 수 · 책 크기 등 책의 기본 정보입니다. 비워두신 항목은 손님 페이지에서 표시되지 않습니다. 필요하면 항목을 추가/삭제하실 수 있어요.</small>
         <div id="specList"></div>
-        <button class="btn-line" id="specAddBtn" type="button" style="margin-top:8px">+ spec 추가</button>
+        <button class="btn-line" id="specAddBtn" type="button" style="margin-top:8px">+ 항목 추가</button>
       </div>
+
+      <!-- ── 고급 표시 옵션 (접힘) ────────────── -->
+      <details class="adv-section">
+        <summary>상세 페이지 표시 옵션 <span class="adv-hint">(필요할 때만)</span></summary>
+        <div class="adv-body">
+          <p class="adv-note">아래 항목들은 비워두면 위에 입력하신 ‘제목’ ‘저자’가 그대로 사용됩니다. 상세 페이지에서 더 멋지게 표현하고 싶을 때만 채워주세요.</p>
+
+          <div class="fld">
+            <label>큰 제목 (줄바꿈 가능)</label>
+            <input type="text" id="f_dt_displayTitle" placeholder="비우면 위 제목 그대로 사용"/>
+            <small class="hint">줄바꿈하려면 <code>&lt;br/&gt;</code> 입력. 예: <code>The Knight,&lt;br/&gt;the Princess</code></small>
+          </div>
+
+          <div class="fld">
+            <label>제목 위 작은 문구</label>
+            <input type="text" id="f_dt_kicker" placeholder="예: KERMESSE — EDITION · 2025"/>
+            <small class="hint">출판사 + 연도 같은 한 줄 부제. 큰 제목 위에 작게 들어갑니다.</small>
+          </div>
+
+          <div class="fld">
+            <label>저자 강조 표기</label>
+            <input type="text" id="f_dt_byline" placeholder="비우면 위 저자 그대로 사용"/>
+            <small class="hint">상세 페이지의 저자 표기를 다르게 하고 싶을 때.</small>
+          </div>
+
+          <div class="fld">
+            <label>카드 보조 라벨</label>
+            <input type="text" id="f_authorMeta" placeholder="예: VICTOR UNWIN · PHOTO"/>
+            <small class="hint">목록 카드에 저자 대신 더 자세히 보여주고 싶을 때.</small>
+          </div>
+
+          <div class="fld">
+            <label>가격 표시 텍스트 (수동)</label>
+            <input type="text" id="f_price" placeholder="예: ₩38,000 · 가격 문의 · 품절 등"/>
+            <small class="hint">위 ‘판매가(원)’ 대신 직접 적은 텍스트가 손님 페이지에 표시됩니다. 비우면 자동으로 처리됩니다.</small>
+          </div>
+        </div>
+      </details>
     </section>
 
     <!-- images (cover + 색상 + 갤러리 통합) -->
@@ -1380,7 +1463,7 @@ function fillForm(b){
   $('f_dt_kicker').value = d.kicker || '';
   $('f_dt_byline').value = d.byline || '';
   $('f_dt_displayTitle').value = d.displayTitle || '';
-  $('f_dt_description').value = Array.isArray(d.description) ? d.description.join('\n') : (d.description||'');
+  setRichDesc(d.description);
   // 새 책일 때는 KNIGHT 기준 기본 스펙 키들 미리 제공 (값은 비움)
   const DEFAULT_SPEC_KEYS = ['publisher','printed by','paper','size','pages','binding','edition','date'];
   if (b && d.spec && Object.keys(d.spec).length) {
@@ -1489,6 +1572,118 @@ function readSpec(){
   });
   return out;
 }
+
+// ── Rich text editor (description) ──
+const richArea = $('f_dt_description');
+const ALLOWED_TAGS = ['EM','I','STRONG','B','U','S','BR'];
+
+function sanitizeHTML(html){
+  const tmp = document.createElement('div');
+  tmp.innerHTML = html || '';
+  // 허용된 태그만 남기고 평문화
+  const walk = (node) => {
+    [...node.childNodes].forEach(child => {
+      if (child.nodeType === 1) {
+        if (!ALLOWED_TAGS.includes(child.tagName)) {
+          // 태그는 풀고 자식은 유지
+          while (child.firstChild) node.insertBefore(child.firstChild, child);
+          node.removeChild(child);
+        } else {
+          // 속성 제거
+          while (child.attributes.length) child.removeAttribute(child.attributes[0].name);
+          walk(child);
+        }
+      } else if (child.nodeType !== 3) {
+        node.removeChild(child);
+      }
+    });
+  };
+  walk(tmp);
+  return tmp.innerHTML;
+}
+
+function setRichDesc(arr){
+  const paras = Array.isArray(arr) ? arr : (arr ? [arr] : []);
+  if (!paras.length) {
+    richArea.innerHTML = '';
+    richArea.dataset.empty = 'true';
+    return;
+  }
+  richArea.innerHTML = paras.map(p => `<p>${sanitizeHTML(p)}</p>`).join('');
+  richArea.dataset.empty = '';
+}
+
+function getRichDesc(){
+  // 각 <p> 를 한 단락으로
+  const ps = richArea.querySelectorAll('p');
+  if (ps.length) {
+    return [...ps]
+      .map(p => sanitizeHTML(p.innerHTML.trim()))
+      .filter(Boolean);
+  }
+  // <p> 없는 경우 → <br> 기준으로 분리
+  const html = richArea.innerHTML.trim();
+  if (!html) return [];
+  return html.split(/<br\s*\/?>(?:\s*<br\s*\/?>)*/i)
+    .map(s => sanitizeHTML(s.trim()))
+    .filter(Boolean);
+}
+
+// 빈 상태일 때 placeholder 보이게
+richArea.addEventListener('input', () => {
+  richArea.dataset.empty = (richArea.textContent.trim() === '') ? 'true' : '';
+  updateToolbarState();
+});
+richArea.addEventListener('focus', () => {
+  // 비어있으면 자동으로 첫 <p> 만들어서 입력 시작
+  if (!richArea.querySelector('p') && !richArea.textContent.trim()) {
+    document.execCommand('formatBlock', false, '<p>');
+  }
+});
+richArea.addEventListener('blur', () => {
+  richArea.dataset.empty = (richArea.textContent.trim() === '') ? 'true' : '';
+});
+
+// 단락 구분자를 <p> 로
+try { document.execCommand('defaultParagraphSeparator', false, 'p'); } catch(e){}
+
+// 툴바
+$('richToolbar').addEventListener('mousedown', e => {
+  const b = e.target.closest('button[data-cmd]'); if (!b) return;
+  e.preventDefault(); // selection 유지
+  const cmd = b.dataset.cmd;
+  richArea.focus();
+  if (cmd === 'emHighlight') {
+    document.execCommand('italic', false, null);
+  } else if (cmd === 'insertParagraph') {
+    document.execCommand('insertParagraph', false, null);
+  } else {
+    document.execCommand(cmd, false, null);
+  }
+  updateToolbarState();
+});
+
+function updateToolbarState(){
+  document.querySelectorAll('#richToolbar button[data-cmd]').forEach(b => {
+    const cmd = b.dataset.cmd;
+    if (['bold','italic','underline','strikeThrough'].includes(cmd)) {
+      try { b.classList.toggle('on', document.queryCommandState(cmd)); } catch(e){}
+    }
+    if (cmd === 'emHighlight') {
+      try { b.classList.toggle('on', document.queryCommandState('italic')); } catch(e){}
+    }
+  });
+}
+document.addEventListener('selectionchange', () => {
+  if (document.activeElement === richArea) updateToolbarState();
+});
+
+// 붙여넣기 — plain text 만 허용 (서식 깨짐 방지)
+richArea.addEventListener('paste', e => {
+  e.preventDefault();
+  const text = (e.clipboardData || window.clipboardData).getData('text');
+  document.execCommand('insertText', false, text);
+});
 
 // ── Image gallery (drag-reorder + click to set cover) ──
 let imgs = [];
@@ -1611,7 +1806,7 @@ $('saveBtn').addEventListener('click', async () => {
       kicker: $('f_dt_kicker').value.trim(),
       byline: $('f_dt_byline').value.trim(),
       displayTitle: $('f_dt_displayTitle').value.trim(),
-      description: $('f_dt_description').value.split('\n').map(s=>s.trim()).filter(Boolean),
+      description: getRichDesc(),
       spec: readSpec(),
       images: imgs,
       date: $('f_date').value.trim() || null
