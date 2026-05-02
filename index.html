@@ -27,6 +27,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css" rel="stylesheet">
 <link rel="stylesheet" href="style.css" />
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="supabase-client.js"></script>
 </head>
 <body>
 
@@ -69,227 +72,7 @@
 <!-- ============ MAIN GRID ============ -->
 <main class="main">
 
-  <section class="grid">
-
-    <!-- REAL BOOK -->
-    <article class="card" data-book="knight">
-      <a href="#" class="cv">
-        <img src="/mottool%20img/book/THE%20KNIGHT%2C%20THE%20PRINCESS%20AND%20THE%20GOOD/main.jpg" alt="The Knight, The Princess and The Good" loading="lazy"/>
-      </a>
-      <div class="meta">
-        <p>『 THE KNIGHT, THE PRINCESS AND THE GOOD 』</p>
-        <p>VICTOR UNWIN</p>
-        <p>piece 4</p>
-        <p>price soon</p>
-      </div>
-    </article>
-
-    <!-- placeholders -->
-    <article class="card">
-      <a href="#" class="cv">
-        <span class="ph" style="background:#d9d4c7"></span>
-      </a>
-      <div class="meta">
-        <p>QUIET ROOMS</p>
-        <p>HANNA LEE · ESSAY</p>
-        <p>piece 7</p>
-        <p>₩38,000</p>
-      </div>
-    </article>
-
-    <article class="card">
-      <a href="#" class="cv">
-        <span class="ph" style="background:#1a1a1a"></span>
-      </a>
-      <div class="meta">
-        <p>INDEX 01 — GROUND</p>
-        <p>ED. MIN PARK · INDEX SERIES</p>
-        <p>piece 12</p>
-        <p>₩29,000</p>
-      </div>
-    </article>
-
-    <article class="card">
-      <a href="#" class="cv">
-        <span class="ph" style="background:#e7b7a6"></span>
-      </a>
-      <div class="meta">
-        <p>SOFT FIELD</p>
-        <p>YUJI NAKAMURA · PHOTO</p>
-        <p>piece 3</p>
-        <p>₩52,000</p>
-      </div>
-    </article>
-
-    <article class="card">
-      <a href="#" class="cv">
-        <span class="ph" style="background:#c8d3bd"></span>
-      </a>
-      <div class="meta">
-        <p>AFTER NOON</p>
-        <p>CLARA VOSS · ESSAY</p>
-        <p>piece 5</p>
-        <p>₩44,000</p>
-      </div>
-    </article>
-
-    <article class="card">
-      <a href="#" class="cv">
-        <span class="ph" style="background:#efe9df"></span>
-      </a>
-      <div class="meta">
-        <p>A GUIDE TO WEATHER</p>
-        <p>INES AURIOL · FIELD GUIDE</p>
-        <p>piece 2</p>
-        <p>₩62,000</p>
-      </div>
-    </article>
-
-    <article class="card">
-      <a href="#" class="cv">
-        <span class="ph" style="background:#2b3a52"></span>
-      </a>
-      <div class="meta">
-        <p>BLUE HOUR</p>
-        <p>TOMÁS AGUIRRE · POETRY</p>
-        <p>piece 6</p>
-        <p>₩48,000</p>
-      </div>
-    </article>
-
-    <article class="card">
-      <a href="#" class="cv">
-        <span class="ph" style="background:#b6643b"></span>
-      </a>
-      <div class="meta">
-        <p>BRICK &amp; MORTAR</p>
-        <p>STUDIO NOOR · ARCHITECTURE</p>
-        <p>piece 4</p>
-        <p>₩75,000</p>
-      </div>
-    </article>
-
-    <article class="card sold">
-      <a href="#" class="cv">
-        <span class="ph" style="background:#eaeaea"></span>
-      </a>
-      <div class="meta">
-        <p>OPEN DOOR</p>
-        <p>RAE OKAMOTO · FICTION</p>
-        <p>piece 0</p>
-        <p>품절</p>
-      </div>
-    </article>
-
-    <article class="card">
-      <a href="#" class="cv">
-        <span class="ph" style="background:#f2d24a"></span>
-      </a>
-      <div class="meta">
-        <p>CITRUS</p>
-        <p>HA-NEUL SEO · ZINE</p>
-        <p>piece 9</p>
-        <p>₩15,000</p>
-      </div>
-    </article>
-
-    <article class="card">
-      <a href="#" class="cv">
-        <span class="ph" style="background:#dcc7f0"></span>
-      </a>
-      <div class="meta">
-        <p>LILAC NOTES</p>
-        <p>JUNE ITO · NOTEBOOK</p>
-        <p>piece 6</p>
-        <p>₩25,000</p>
-      </div>
-    </article>
-
-    <article class="card">
-      <a href="#" class="cv">
-        <span class="ph" style="background:#c2d9e0"></span>
-      </a>
-      <div class="meta">
-        <p>TIDE</p>
-        <p>ANDERS VIK · POETRY</p>
-        <p>piece 4</p>
-        <p>₩22,000</p>
-      </div>
-    </article>
-
-    <article class="card">
-      <a href="#" class="cv">
-        <span class="ph" style="background:#1a1d3a"></span>
-      </a>
-      <div class="meta">
-        <p>NIGHT WALK</p>
-        <p>L. MOREAU · PHOTO</p>
-        <p>piece 3</p>
-        <p>₩33,000</p>
-      </div>
-    </article>
-
-    <article class="card">
-      <a href="#" class="cv">
-        <span class="ph" style="background:#9fb7a2"></span>
-      </a>
-      <div class="meta">
-        <p>SEA GRASS</p>
-        <p>N. OSHIRO · PHOTO</p>
-        <p>piece 5</p>
-        <p>₩28,000</p>
-      </div>
-    </article>
-
-    <article class="card">
-      <a href="#" class="cv">
-        <span class="ph" style="background:#e8c7b0"></span>
-      </a>
-      <div class="meta">
-        <p>KITCHEN PLANS</p>
-        <p>STUDIO ORDINARY · DESIGN</p>
-        <p>piece 4</p>
-        <p>₩26,000</p>
-      </div>
-    </article>
-
-    <article class="card">
-      <a href="#" class="cv">
-        <span class="ph" style="background:#fff;border:1px solid #ddd"></span>
-      </a>
-      <div class="meta">
-        <p>YEAR ONE</p>
-        <p>K. ANDERSEN · ESSAY</p>
-        <p>piece 8</p>
-        <p>₩19,000</p>
-      </div>
-    </article>
-
-    <article class="card">
-      <a href="#" class="cv">
-        <span class="ph" style="background:#a8b8a0"></span>
-      </a>
-      <div class="meta">
-        <p>FIELD STUDIES</p>
-        <p>J. PARK · NATURE</p>
-        <p>piece 5</p>
-        <p>₩27,000</p>
-      </div>
-    </article>
-
-    <article class="card sold">
-      <a href="#" class="cv">
-        <span class="ph" style="background:#3a3a3a"></span>
-      </a>
-      <div class="meta">
-        <p>NOISE</p>
-        <p>T. VOGEL · MUSIC</p>
-        <p>piece 0</p>
-        <p>품절</p>
-      </div>
-    </article>
-
-  </section>
+  <section class="grid" id="grid"></section>
 
   <!-- ============ DETAIL ============ -->
   <section class="detail" id="detail">
@@ -305,6 +88,7 @@
       <p class="dt-kicker">KERMESSE — EDITION · 2025</p>
       <h2 class="dt-h">The Knight,<br/>the Princess<br/>&amp; the Good.</h2>
       <p class="dt-byline">by <em>VICTOR UNWIN</em></p>
+      <p class="dt-date"></p>
     </div>
 
     <!-- big slider -->
@@ -357,7 +141,7 @@
           <dt>pages</dt><dd>276</dd>
           <dt>binding</dt><dd>softcover</dd>
           <dt>edition</dt><dd>1st · 250 copies</dd>
-          <dt>year</dt><dd>2025</dd>
+          <dt>date</dt><dd>2025</dd>
         </dl>
       </div>
     </div>
@@ -368,7 +152,7 @@
         <p class="dt-buy-title">『 THE KNIGHT, THE PRINCESS AND THE GOOD 』</p>
         <p class="dt-buy-meta"><span>piece 4</span> · <span>price soon</span></p>
       </div>
-      <a href="#" class="dt-cta">PRE-ORDER →</a>
+      <a href="https://instagram.com/mottool.art" target="_blank" rel="noopener" class="dt-cta">@mottool.art</a>
     </div>
 
   </section>
@@ -410,7 +194,113 @@
 </footer>
 
 <script>
-(() => {
+(async () => {
+  // ===== Load books data (Supabase first, fallback to books.json) =====
+  let booksData = {books:[]};
+  if (window.MOTTOOL_DB) {
+    try {
+      const list = await window.MOTTOOL_DB.listBooks();
+      booksData = { books: list };
+    } catch(e){
+      console.warn('Supabase load failed, fallback to books.json', e);
+    }
+  }
+  if (!booksData.books.length) {
+    try {
+      const res = await fetch('/books.json', {cache:'no-store'});
+      booksData = await res.json();
+    } catch(e){
+      console.warn('books.json load failed', e);
+    }
+  }
+
+  function renderGrid(){
+    const grid = document.getElementById('grid');
+    if (!grid) return;
+    grid.innerHTML = '';
+    booksData.books.forEach(b => {
+      const card = document.createElement('article');
+      card.className = 'card' + (b.sold ? ' sold' : '');
+      if (b.detail) card.dataset.book = b.id;
+      const cv = document.createElement('a');
+      cv.href = '#';
+      cv.className = 'cv';
+      if (b.cover.type === 'image'){
+        const img = document.createElement('img');
+        img.src = b.cover.src;
+        img.alt = b.title;
+        img.loading = 'lazy';
+        cv.appendChild(img);
+      } else {
+        const ph = document.createElement('span');
+        ph.className = 'ph';
+        ph.style.background = b.cover.value;
+        if (b.cover.border) ph.style.border = b.cover.border;
+        cv.appendChild(ph);
+      }
+      const meta = document.createElement('div');
+      meta.className = 'meta';
+      const titleHTML = '<p>' + b.title + '</p>';
+      const authorHTML = '<p>' + (b.authorMeta || b.author || '') + '</p>';
+      const pieceHTML = '<p>piece ' + b.piece + '</p>';
+      const priceHTML = '<p>' + b.price + '</p>';
+      meta.innerHTML = titleHTML + authorHTML + pieceHTML + priceHTML;
+      card.appendChild(cv);
+      card.appendChild(meta);
+      grid.appendChild(card);
+    });
+  }
+  renderGrid();
+
+  function formatDate(s){
+    if (!s) return '';
+    const t = String(s).trim();
+    if (/^\d{4}$/.test(t)) return t;
+    if (/^\d{4}-\d{1,2}$/.test(t)) { const [y,m]=t.split('-'); return y+'.'+String(+m).padStart(2,'0'); }
+    if (/^\d{4}-\d{1,2}-\d{1,2}$/.test(t)) { const [y,m,d]=t.split('-'); return y+'.'+String(+m).padStart(2,'0')+'.'+String(+d).padStart(2,'0'); }
+    return t;
+  }
+
+  // populate detail modal from a book object
+  function populateDetail(b){
+    if (!b || !b.detail) return;
+    const d = b.detail;
+    const kicker = document.querySelector('.dt-kicker');
+    const h = document.querySelector('.dt-h');
+    const byline = document.querySelector('.dt-byline');
+    const dateEl = document.querySelector('.dt-date');
+    const slidesEl = document.getElementById('dtSlides');
+    const desc = document.querySelector('.dt-desc-col');
+    const spec = document.querySelector('.dt-spec-list');
+    const buyTitle = document.querySelector('.dt-buy-title');
+    const buyMeta = document.querySelector('.dt-buy-meta');
+    if (kicker) kicker.textContent = d.kicker || '';
+    if (h) h.innerHTML = d.displayTitle || b.title;
+    if (byline) byline.innerHTML = 'by <em>' + (d.byline || b.author) + '</em>';
+    if (dateEl) {
+      const s = d.date || (b.year ? String(b.year) : '');
+      dateEl.textContent = formatDate(s);
+      dateEl.style.display = s ? '' : 'none';
+    }
+    if (slidesEl){
+      slidesEl.innerHTML = (d.images || []).map(src =>
+        '<div class="dt-slide"><img src="' + src + '" alt="" loading="lazy"/></div>'
+      ).join('');
+    }
+    if (desc){
+      const label = '<p class="dt-label">NOTE</p>';
+      const paras = (d.description || []).map(p => '<p class="dt-desc">' + p + '</p>').join('');
+      desc.innerHTML = label + paras;
+    }
+    if (spec){
+      spec.innerHTML = Object.entries(d.spec || {}).map(([k,v]) =>
+        '<dt>' + k + '</dt><dd>' + v + '</dd>'
+      ).join('');
+    }
+    if (buyTitle) buyTitle.textContent = b.title;
+    if (buyMeta) buyMeta.innerHTML = '<span>piece ' + b.piece + '</span> · <span>' + b.price + '</span>';
+  }
+
   // ===== Intro splash (mobile only) =====
   const intro = document.getElementById('intro');
   function hideIntro(){
@@ -622,10 +512,10 @@
 
   // ===== Search filter =====
   const searchInput = document.getElementById('searchInput');
-  const allCards = document.querySelectorAll('.card');
+  const allCards = () => document.querySelectorAll('.card');
   searchInput.addEventListener('input', () => {
     const q = searchInput.value.toLowerCase().trim();
-    allCards.forEach(card => {
+    allCards().forEach(card => {
       const text = card.textContent.toLowerCase();
       card.style.display = q === '' || text.includes(q) ? '' : 'none';
     });
@@ -644,9 +534,13 @@
 
   const detail = document.getElementById('detail');
   const close = document.getElementById('dtClose');
-  document.querySelectorAll('.card[data-book="knight"] a').forEach(a => {
+  document.querySelectorAll('.card[data-book] a').forEach(a => {
     a.addEventListener('click', e => {
       e.preventDefault();
+      const cardEl = a.closest('.card');
+      const id = cardEl?.dataset.book;
+      const book = booksData.books.find(b => b.id === id);
+      if (book) populateDetail(book);
       openDetail();
     });
   });

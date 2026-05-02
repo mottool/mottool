@@ -1,0 +1,218 @@
+{
+  "books": [
+    {
+      "id": "knight",
+      "slug": "the-knight-the-princess-and-the-good",
+      "title": "『 THE KNIGHT, THE PRINCESS AND THE GOOD 』",
+      "author": "VICTOR UNWIN",
+      "authorMeta": "VICTOR UNWIN",
+      "category": "PHOTOBOOK",
+      "publisher": "KERMESSE",
+      "year": 2025,
+      "piece": 4,
+      "price": "price soon",
+      "sold": false,
+      "cover": {
+        "type": "image",
+        "src": "/mottool%20img/book/THE%20KNIGHT%2C%20THE%20PRINCESS%20AND%20THE%20GOOD/main.jpg"
+      },
+      "detail": {
+        "kicker": "KERMESSE — EDITION · 2025",
+        "displayTitle": "The Knight,<br/>the Princess<br/>&amp; the Good.",
+        "byline": "VICTOR UNWIN",
+        "description": [
+          "2023년 비오는 날, 뉴욕에서 장갑 전투 모임 중 촬영된 비디오의 스틸을 담은 <em>KERMESSE</em> 출판물입니다.",
+          "250호 초판. 2025년에 <em>Die Keure</em>가 Symbol Freelife Gloss 150 및 300gsm으로 인쇄되었습니다."
+        ],
+        "spec": {
+          "publisher": "KERMESSE",
+          "printed by": "Die Keure",
+          "paper": "Symbol Freelife Gloss 150 / 300gsm",
+          "size": "210 × 148 mm",
+          "pages": "276",
+          "binding": "softcover",
+          "edition": "1st · 250 copies",
+          "year": "2025"
+        },
+        "images": [
+          "/mottool%20img/book/THE%20KNIGHT%2C%20THE%20PRINCESS%20AND%20THE%20GOOD/main.jpg",
+          "/mottool%20img/book/THE%20KNIGHT%2C%20THE%20PRINCESS%20AND%20THE%20GOOD/1.jpg",
+          "/mottool%20img/book/THE%20KNIGHT%2C%20THE%20PRINCESS%20AND%20THE%20GOOD/2.jpg",
+          "/mottool%20img/book/THE%20KNIGHT%2C%20THE%20PRINCESS%20AND%20THE%20GOOD/3.jpg",
+          "/mottool%20img/book/THE%20KNIGHT%2C%20THE%20PRINCESS%20AND%20THE%20GOOD/4.jpg",
+          "/mottool%20img/book/THE%20KNIGHT%2C%20THE%20PRINCESS%20AND%20THE%20GOOD/5.jpg"
+        ]
+      }
+    },
+    {
+      "id": "quiet-rooms",
+      "title": "QUIET ROOMS",
+      "author": "HANNA LEE",
+      "authorMeta": "HANNA LEE · ESSAY",
+      "piece": 7,
+      "price": "₩38,000",
+      "sold": false,
+      "cover": {"type": "color", "value": "#d9d4c7"}
+    },
+    {
+      "id": "index-01",
+      "title": "INDEX 01 — GROUND",
+      "author": "ED. MIN PARK",
+      "authorMeta": "ED. MIN PARK · INDEX SERIES",
+      "piece": 12,
+      "price": "₩29,000",
+      "sold": false,
+      "cover": {"type": "color", "value": "#1a1a1a"}
+    },
+    {
+      "id": "soft-field",
+      "title": "SOFT FIELD",
+      "author": "YUJI NAKAMURA",
+      "authorMeta": "YUJI NAKAMURA · PHOTO",
+      "piece": 3,
+      "price": "₩52,000",
+      "sold": false,
+      "cover": {"type": "color", "value": "#e7b7a6"}
+    },
+    {
+      "id": "after-noon",
+      "title": "AFTER NOON",
+      "author": "CLARA VOSS",
+      "authorMeta": "CLARA VOSS · ESSAY",
+      "piece": 5,
+      "price": "₩44,000",
+      "sold": false,
+      "cover": {"type": "color", "value": "#c8d3bd"}
+    },
+    {
+      "id": "weather",
+      "title": "A GUIDE TO WEATHER",
+      "author": "INES AURIOL",
+      "authorMeta": "INES AURIOL · FIELD GUIDE",
+      "piece": 2,
+      "price": "₩62,000",
+      "sold": false,
+      "cover": {"type": "color", "value": "#efe9df"}
+    },
+    {
+      "id": "blue-hour",
+      "title": "BLUE HOUR",
+      "author": "TOMÁS AGUIRRE",
+      "authorMeta": "TOMÁS AGUIRRE · POETRY",
+      "piece": 6,
+      "price": "₩48,000",
+      "sold": false,
+      "cover": {"type": "color", "value": "#2b3a52"}
+    },
+    {
+      "id": "brick-mortar",
+      "title": "BRICK & MORTAR",
+      "author": "STUDIO NOOR",
+      "authorMeta": "STUDIO NOOR · ARCHITECTURE",
+      "piece": 4,
+      "price": "₩75,000",
+      "sold": false,
+      "cover": {"type": "color", "value": "#b6643b"}
+    },
+    {
+      "id": "open-door",
+      "title": "OPEN DOOR",
+      "author": "RAE OKAMOTO",
+      "authorMeta": "RAE OKAMOTO · FICTION",
+      "piece": 0,
+      "price": "품절",
+      "sold": true,
+      "cover": {"type": "color", "value": "#eaeaea"}
+    },
+    {
+      "id": "citrus",
+      "title": "CITRUS",
+      "author": "HA-NEUL SEO",
+      "authorMeta": "HA-NEUL SEO · ZINE",
+      "piece": 9,
+      "price": "₩15,000",
+      "sold": false,
+      "cover": {"type": "color", "value": "#f2d24a"}
+    },
+    {
+      "id": "lilac-notes",
+      "title": "LILAC NOTES",
+      "author": "JUNE ITO",
+      "authorMeta": "JUNE ITO · NOTEBOOK",
+      "piece": 6,
+      "price": "₩25,000",
+      "sold": false,
+      "cover": {"type": "color", "value": "#dcc7f0"}
+    },
+    {
+      "id": "tide",
+      "title": "TIDE",
+      "author": "ANDERS VIK",
+      "authorMeta": "ANDERS VIK · POETRY",
+      "piece": 4,
+      "price": "₩22,000",
+      "sold": false,
+      "cover": {"type": "color", "value": "#c2d9e0"}
+    },
+    {
+      "id": "night-walk",
+      "title": "NIGHT WALK",
+      "author": "L. MOREAU",
+      "authorMeta": "L. MOREAU · PHOTO",
+      "piece": 3,
+      "price": "₩33,000",
+      "sold": false,
+      "cover": {"type": "color", "value": "#1a1d3a"}
+    },
+    {
+      "id": "sea-grass",
+      "title": "SEA GRASS",
+      "author": "N. OSHIRO",
+      "authorMeta": "N. OSHIRO · PHOTO",
+      "piece": 5,
+      "price": "₩28,000",
+      "sold": false,
+      "cover": {"type": "color", "value": "#9fb7a2"}
+    },
+    {
+      "id": "kitchen-plans",
+      "title": "KITCHEN PLANS",
+      "author": "STUDIO ORDINARY",
+      "authorMeta": "STUDIO ORDINARY · DESIGN",
+      "piece": 4,
+      "price": "₩26,000",
+      "sold": false,
+      "cover": {"type": "color", "value": "#e8c7b0"}
+    },
+    {
+      "id": "year-one",
+      "title": "YEAR ONE",
+      "author": "K. ANDERSEN",
+      "authorMeta": "K. ANDERSEN · ESSAY",
+      "piece": 8,
+      "price": "₩19,000",
+      "sold": false,
+      "cover": {"type": "color", "value": "#fff", "border": "1px solid #ddd"}
+    },
+    {
+      "id": "field-studies",
+      "title": "FIELD STUDIES",
+      "author": "J. PARK",
+      "authorMeta": "J. PARK · NATURE",
+      "piece": 5,
+      "price": "₩27,000",
+      "sold": false,
+      "cover": {"type": "color", "value": "#a8b8a0"}
+    },
+    {
+      "id": "noise",
+      "title": "NOISE",
+      "author": "T. VOGEL",
+      "authorMeta": "T. VOGEL · MUSIC",
+      "piece": 0,
+      "price": "품절",
+      "sold": true,
+      "cover": {"type": "color", "value": "#3a3a3a"}
+    }
+  ]
+}

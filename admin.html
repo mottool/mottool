@@ -1,0 +1,1665 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>mottool — admin</title>
+<link rel="icon" type="image/png" href="/assets/mascot.png" />
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="supabase-client.js"></script>
+<style>
+  :root{
+    --bg:#f7f5ee; --ink:#1a1a18; --sub:#3a3a36; --mute:#9a9890; --line:#e6e1d3;
+    --card:#fdfbf3; --hover:#f0ebdb; --warn:#b53b3b; --ok:#2e8b3a;
+    --accent:#1a1a18;
+    --display: 'Inter', 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+    --mono: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:'Pretendard Variable','Pretendard','Inter',-apple-system,BlinkMacSystemFont,sans-serif;font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased;font-feature-settings:'cv11','ss01'}
+  a{color:inherit}
+  button{font-family:inherit;cursor:pointer;background:none;border:0;color:inherit;padding:0}
+  input,textarea,select{font-family:inherit;font-size:14px;color:inherit}
+
+  /* ── Login ──────────────────────────── */
+  .login{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--bg);z-index:1000;flex-direction:column}
+  .login-card{padding:40px;width:min(360px,90vw);text-align:center}
+  .login-card img{width:72px;height:72px;object-fit:contain;margin-bottom:24px}
+  .login-card h1{margin:0 0 6px;font-family:var(--display);font-size:24px;letter-spacing:-.02em;font-weight:700}
+  .login-card p{margin:0 0 28px;color:var(--mute);font-size:10px;letter-spacing:.18em;text-transform:uppercase;font-weight:600}
+  .login-card input{width:100%;padding:11px 0;border:0;border-bottom:1px solid var(--line);border-radius:0;margin-bottom:14px;background:transparent;font-size:14px;letter-spacing:.02em;text-align:center}
+  .login-card input:focus{outline:0;border-bottom-color:var(--ink)}
+  .login-card input::placeholder{color:var(--mute);letter-spacing:.04em}
+  .login-card .btn-pri{width:100%;padding:13px;background:var(--ink);color:var(--bg);border-radius:2px;font-weight:600;letter-spacing:.18em;margin-top:14px;font-size:11px;text-transform:uppercase}
+  .login-card .err{color:var(--warn);font-size:11px;min-height:18px;margin-top:14px;letter-spacing:.04em}
+
+  /* ── Header ─────────────────────────── */
+  .hd{position:sticky;top:0;background:rgba(247,245,238,.92);backdrop-filter:saturate(180%) blur(10px);border-bottom:1px solid var(--line);z-index:50}
+  .hd-in{max-width:1320px;margin:0 auto;padding:18px 32px;display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+  .hd .brand{display:flex;align-items:center;gap:11px;font-family:var(--display);font-weight:700;font-size:16px;letter-spacing:-.01em;line-height:1}
+  .hd .brand img{width:32px;height:32px}
+  .hd .brand .sub{font-family:var(--display);font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--mute);margin-left:6px;padding-left:10px;border-left:1px solid var(--line)}
+  .hd .nav{display:flex;gap:24px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;margin-left:18px;font-weight:600}
+  .hd .nav button{color:var(--mute);padding:8px 0;position:relative}
+  .hd .nav button:hover{color:var(--sub)}
+  .hd .nav button.on{color:var(--ink)}
+  .hd .nav button.on::after{content:'';position:absolute;left:0;right:0;bottom:-19px;height:1.5px;background:var(--ink)}
+  .hd .nav .dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--warn);margin-left:4px;vertical-align:2px}
+  .hd .right{margin-left:auto;display:flex;align-items:center;gap:16px;font-size:11px}
+  .hd .who{color:var(--mute);letter-spacing:.04em}
+  .hd .ic{width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;color:var(--mute);font-size:16px}
+  .hd .ic:hover{background:var(--hover);color:var(--ink)}
+
+  /* ── Page wrap ──────────────────────── */
+  .wrap{max-width:1320px;margin:0 auto;padding:36px 32px 100px}
+  .wrap.hide{display:none}
+
+  /* ── Books page ─────────────────────── */
+  .books-toolbar{display:flex;align-items:flex-end;gap:14px;margin-bottom:26px;flex-wrap:wrap;padding-bottom:18px;border-bottom:1px solid var(--line)}
+  .books-toolbar .h1{font-family:var(--display);font-size:34px;letter-spacing:-.03em;font-weight:800;margin:0;line-height:1;padding-bottom:2px}
+  .books-toolbar .stats{color:var(--mute);font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding-bottom:8px}
+  .books-toolbar .grow{flex:1}
+  .search-box{position:relative;flex:1;max-width:280px;align-self:center}
+  .search-box input{width:100%;padding:8px 14px 8px 30px;border:0;border-bottom:1px solid var(--line);border-radius:0;background:transparent;font-size:13px;letter-spacing:.02em}
+  .search-box input:focus{outline:0;border-bottom-color:var(--ink)}
+  .search-box input::placeholder{color:var(--mute);letter-spacing:.04em}
+  .search-box::before{content:'⌕';position:absolute;left:8px;top:7px;color:var(--mute);font-size:13px}
+  .filter-chips{display:flex;gap:4px;align-self:center}
+  .chip{padding:6px 11px;border:0;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);font-weight:600;border-radius:2px;background:transparent}
+  .chip:hover{color:var(--sub)}
+  .chip.on{background:var(--ink);color:var(--bg)}
+  .btn-pri{padding:9px 18px;background:var(--ink);color:var(--bg);border-radius:2px;font-weight:600;font-size:10px;letter-spacing:.18em;text-transform:uppercase;align-self:center}
+  .btn-pri:hover{background:var(--sub)}
+  .btn-line{padding:8px 16px;border:1px solid var(--line);background:transparent;border-radius:2px;font-size:10px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;color:var(--sub);align-self:center}
+  .btn-line:hover{border-color:var(--ink);color:var(--ink)}
+  .btn-danger{color:var(--warn);border:1px solid #ecc6c6;padding:8px 16px;border-radius:2px;font-size:10px;background:transparent;letter-spacing:.18em;text-transform:uppercase;font-weight:600}
+  .btn-danger:hover{background:rgba(181,59,59,.06);border-color:var(--warn)}
+
+  /* ── Book card grid ─────────────────── */
+  .book-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(220px, 1fr));gap:22px}
+  .bk{background:transparent;border:0;overflow:visible;display:flex;flex-direction:column;transition:transform .2s}
+  .bk:hover{transform:translateY(-2px)}
+  .bk.sold{opacity:.5}
+  .bk.hidden{opacity:.35}
+  .bk-cover{aspect-ratio:3/4;position:relative;overflow:hidden;background:#eee;cursor:pointer;border-radius:2px;box-shadow:0 1px 3px rgba(0,0,0,.06), 0 8px 16px rgba(0,0,0,.04);transition:box-shadow .2s}
+  .bk:hover .bk-cover{box-shadow:0 2px 6px rgba(0,0,0,.1), 0 14px 28px rgba(0,0,0,.08)}
+  .bk-cover img{width:100%;height:100%;object-fit:cover;display:block}
+  .bk-cover .ph{width:100%;height:100%;display:block}
+  .bk-cover .badges{position:absolute;top:8px;left:8px;display:flex;gap:4px;flex-wrap:wrap;max-width:calc(100% - 16px)}
+  .badge{padding:3px 8px;background:rgba(255,255,255,.95);font-size:9px;letter-spacing:.1em;text-transform:uppercase;border-radius:0;font-weight:600;color:var(--ink);backdrop-filter:blur(4px)}
+  .badge.warn{background:var(--warn);color:#fff}
+  .badge.mute{background:rgba(0,0,0,.7);color:#fff}
+  .bk-body{padding:12px 2px 0;display:flex;flex-direction:column;gap:4px}
+  .bk-title{font-size:13px;font-weight:600;line-height:1.4;cursor:pointer;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;letter-spacing:-.005em}
+  .bk-title:hover{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+  .bk-author{font-size:10px;color:var(--mute);letter-spacing:.14em;text-transform:uppercase;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
+  .bk-row{display:flex;align-items:center;gap:6px;margin-top:8px;padding-top:8px}
+  .pcs-step{display:inline-flex;align-items:center;gap:0;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .pcs-step button{width:26px;height:26px;font-size:14px;font-weight:600;color:var(--sub);transition:background .12s}
+  .pcs-step button:hover{background:var(--hover);color:var(--ink)}
+  .pcs-step .v{padding:0 8px;font-size:12px;font-weight:600;min-width:30px;text-align:center;border-left:1px solid var(--line);border-right:1px solid var(--line);height:26px;display:inline-flex;align-items:center;justify-content:center}
+  .toggles{margin-left:auto;display:inline-flex;gap:3px}
+  .tg{width:28px;height:28px;border-radius:14px;color:var(--mute);display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--line);background:transparent;line-height:1;transition:all .12s}
+  .tg svg{width:13px;height:13px;display:block;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+  .tg.fill svg{fill:currentColor;stroke:none}
+  .tg.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  .tg.warn.on{background:var(--warn);border-color:var(--warn);color:#fff}
+  .tg:hover{border-color:var(--ink);color:var(--ink)}
+  .tg.on:hover{color:var(--bg)}
+  .bk-edit{display:none}
+  .bk-add{border:1px dashed var(--line);background:transparent;align-items:center;justify-content:center;display:flex;cursor:pointer;aspect-ratio:3/4;color:var(--mute);font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;border-radius:2px;transition:all .15s;width:100%}
+  .bk-add:hover{border-color:var(--ink);color:var(--ink);background:rgba(255,255,255,.5)}
+  .bk-add-wrap{display:flex;flex-direction:column}
+
+  /* ── Category sections ──────────────── */
+  .cat-section{margin-bottom:48px}
+  .cat-hd{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+  .cat-hd .swatch{width:12px;height:12px;border-radius:50%;background:#ccc;flex-shrink:0}
+  .cat-hd .name{font-family:var(--display);font-size:22px;font-weight:700;letter-spacing:-.02em;display:flex;align-items:center;gap:8px;line-height:1;color:var(--ink)}
+  .cat-hd .count{color:var(--mute);font-size:10px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;align-self:center}
+  .cat-hd .grow{flex:1}
+  .cat-hd .acts{display:flex;gap:6px}
+  .cat-hd .ic-btn{width:30px;height:30px;border-radius:15px;color:var(--mute);display:inline-flex;align-items:center;justify-content:center;font-size:14px;background:transparent;border:1px solid transparent}
+  .cat-hd .ic-btn:hover{background:var(--hover);color:var(--ink);border-color:var(--line)}
+  .cat-hd .ic-btn.danger:hover{color:var(--warn);border-color:#f3d0d0}
+  .cat-hd .toggle-fold{margin-left:-6px;font-size:14px;color:var(--mute);width:24px;height:24px}
+  .cat-hd .toggle-fold:hover{color:var(--ink)}
+  .cat-section.folded .book-grid{display:none}
+  .cat-section.drag-over{background:rgba(0,0,0,.02);border-radius:12px}
+  .cat-section.drag-over .cat-hd{border-bottom-color:var(--ink)}
+  .cat-empty{padding:40px;text-align:center;color:var(--mute);font-size:12px;letter-spacing:.04em;border:1.5px dashed var(--line);border-radius:12px}
+
+  /* ── Inline category settings panel ── */
+  .cat-settings{background:var(--card);border:1px solid var(--line);border-radius:2px;padding:18px 20px;margin-bottom:20px;display:none;animation:catSlide .18s ease}
+  .cat-settings.on{display:grid;grid-template-columns:36px 1fr 180px 1fr;gap:14px;align-items:center}
+  @keyframes catSlide{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+  .cat-settings input[type=color]{width:36px;height:36px;border:1px solid var(--line);border-radius:50%;padding:0;cursor:pointer;overflow:hidden}
+  .cat-settings input[type=color]::-webkit-color-swatch{border:0;border-radius:50%}
+  .cat-settings .ms{display:flex;flex-direction:column;gap:3px}
+  .cat-settings .ms label{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--mute);font-weight:600}
+  .cat-settings .ms input{padding:6px 0;border:0;border-bottom:1px solid var(--line);background:transparent;font-size:13px}
+  .cat-settings .ms input:focus{outline:0;border-bottom-color:var(--ink)}
+  .cat-settings .ms input:disabled{color:var(--mute);font-family:var(--mono);font-size:11px}
+  @media (max-width:760px){
+    .cat-settings.on{grid-template-columns:36px 1fr;}
+    .cat-settings .ms.slug{display:none}
+  }
+
+  .new-cat-row{display:flex;gap:10px;margin-bottom:36px;padding:18px;background:var(--card);border:1px dashed var(--line);border-radius:2px;align-items:center}
+  .new-cat-row input{flex:1;padding:8px 12px;border:0;border-bottom:1px solid var(--line);border-radius:0;background:transparent;font-size:14px}
+  .new-cat-row input:focus{outline:0;border-bottom-color:var(--ink)}
+
+  /* ── Category manager ───────────────── */
+  .cat-mgr-grid{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
+  .cat-mgr-row{display:grid;grid-template-columns:24px 28px 1fr 130px 1fr auto;gap:12px;align-items:center;padding:11px 14px;background:var(--bg);border:1px solid var(--line);border-radius:2px;transition:all .15s}
+  .cat-mgr-row:hover{border-color:#bfbab0;background:rgba(255,255,255,.5)}
+  .cat-mgr-row.dragging{opacity:.4}
+  .cat-mgr-row.drop-target{border-color:var(--ink);border-style:dashed}
+  .cat-mgr-row .grip{color:var(--mute);cursor:grab;user-select:none;font-size:14px;text-align:center}
+  .cat-mgr-row .grip:active{cursor:grabbing}
+  .cat-mgr-row input[type=color]{width:28px;height:28px;border:1px solid var(--line);border-radius:50%;background:transparent;cursor:pointer;padding:0;overflow:hidden}
+  .cat-mgr-row input[type=color]::-webkit-color-swatch{border:0;border-radius:50%}
+  .cat-mgr-row input[type=color]::-moz-color-swatch{border:0;border-radius:50%}
+  .cat-mgr-row .cm-name,.cat-mgr-row .cm-slug,.cat-mgr-row .cm-desc{padding:6px 8px;border:0;border-bottom:1px solid transparent;background:transparent;font-size:13px}
+  .cat-mgr-row .cm-name{font-family:var(--display);font-size:15px;font-weight:600;letter-spacing:-.01em}
+  .cat-mgr-row .cm-slug{font-family:var(--mono);font-size:11px;color:var(--mute);letter-spacing:0}
+  .cat-mgr-row .cm-desc{color:var(--sub);font-size:12px}
+  .cat-mgr-row input:focus{outline:0;border-bottom-color:var(--ink)}
+  .cat-mgr-row input:hover{border-bottom-color:var(--line)}
+  .cat-mgr-row .count-pill{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--mute);padding:0 8px;font-weight:600;white-space:nowrap}
+  .cat-mgr-row .del{width:28px;height:28px;border-radius:14px;color:var(--mute);font-size:14px}
+  .cat-mgr-row .del:hover{background:rgba(181,59,59,.08);color:var(--warn)}
+
+  .cat-add-form{display:grid;grid-template-columns:1fr 160px 32px 1fr auto;gap:10px;align-items:center;padding:14px;background:var(--bg);border:1px dashed var(--line);border-radius:2px}
+  .cat-add-form input{padding:7px 10px;border:0;border-bottom:1px solid var(--line);border-radius:0;background:transparent;font-size:13px}
+  .cat-add-form input:focus{outline:0;border-bottom-color:var(--ink)}
+  .cat-add-form input[type=color]{width:32px;height:32px;border:1px solid var(--line);border-radius:50%;padding:0;cursor:pointer;overflow:hidden;border-bottom:1px solid var(--line)}
+  .cat-add-form input[type=color]::-webkit-color-swatch{border:0;border-radius:50%}
+  @media (max-width:760px){
+    .cat-mgr-row{grid-template-columns:24px 28px 1fr auto;}
+    .cat-mgr-row .cm-slug,.cat-mgr-row .cm-desc{display:none}
+    .cat-add-form{grid-template-columns:1fr 1fr}
+    .cat-add-form input[type=color]{grid-column:1}
+    .cat-add-form button{grid-column:1/-1}
+  }
+
+  .bk[draggable=true]{cursor:grab}
+  .bk[draggable=true]:active{cursor:grabbing}
+  .bk.dragging{opacity:.4}
+
+  /* ── Drawer (book editor) ───────────── */
+  .drawer-bg{position:fixed;inset:0;background:rgba(26,26,24,.45);opacity:0;pointer-events:none;transition:opacity .25s;z-index:90;backdrop-filter:blur(3px)}
+  .drawer-bg.on{opacity:1;pointer-events:auto}
+  .drawer{position:fixed;top:0;right:0;bottom:0;width:min(640px,100%);background:var(--bg);border-left:1px solid var(--line);transform:translateX(100%);transition:transform .35s cubic-bezier(.2,.8,.2,1);z-index:91;display:flex;flex-direction:column;box-shadow:-12px 0 40px rgba(0,0,0,.06)}
+  .drawer.on{transform:translateX(0)}
+  .drw-hd{padding:24px 32px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:14px;background:transparent}
+  .drw-hd .t{font-family:var(--display);font-size:18px;font-weight:700;letter-spacing:-.02em;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.2}
+  .drw-hd .x{width:32px;height:32px;border-radius:0;font-size:18px;color:var(--mute)}
+  .drw-hd .x:hover{color:var(--ink)}
+  .drw-tabs{display:flex;gap:0;padding:0 32px;background:transparent;border-bottom:1px solid var(--line);overflow-x:auto}
+  .drw-tabs button{padding:12px 0;margin-right:24px;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--mute);position:relative;white-space:nowrap;font-weight:600}
+  .drw-tabs button:hover{color:var(--sub)}
+  .drw-tabs button.on{color:var(--ink)}
+  .drw-tabs button.on::after{content:'';position:absolute;left:0;right:0;bottom:-1px;height:1.5px;background:var(--ink)}
+  .drw-body{flex:1;overflow-y:auto;padding:28px 32px 100px}
+  .drw-body section{display:none}
+  .drw-body section.on{display:block}
+  .drw-foot{position:absolute;bottom:0;left:0;right:0;padding:16px 32px;background:rgba(247,245,238,.95);border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:8px;backdrop-filter:blur(8px)}
+
+  /* ── Form ────────────────────────────── */
+  .fld{margin-bottom:18px}
+  .fld label{display:block;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--mute);margin-bottom:8px;font-weight:600}
+  .fld input[type=text],.fld input[type=number],.fld input[type=email],.fld input[type=tel],.fld input[type=url],.fld textarea,.fld select{width:100%;padding:10px 0;border:0;border-bottom:1px solid var(--line);border-radius:0;background:transparent;transition:border-color .12s;font-size:14px;letter-spacing:.01em}
+  .fld textarea{min-height:96px;resize:vertical;line-height:1.6;border:1px solid var(--line);border-radius:2px;padding:10px 12px;background:rgba(255,255,255,.4)}
+  .fld select{padding:10px 4px}
+  .fld input:focus,.fld textarea:focus,.fld select:focus{outline:0;border-bottom-color:var(--ink);border-color:var(--ink)}
+  .fld-row{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .fld-row.three{grid-template-columns:1fr 1fr 1fr}
+  @media (max-width:560px){ .fld-row,.fld-row.three{grid-template-columns:1fr} }
+
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:2px;overflow:hidden;background:transparent}
+  .seg button{padding:8px 16px;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--mute);font-weight:600}
+  .seg button.on{background:var(--ink);color:var(--bg)}
+
+  .quick-toggles{display:flex;gap:6px;flex-wrap:wrap}
+  .qtog{padding:8px 14px;border:1px solid var(--line);border-radius:2px;font-size:10px;letter-spacing:.18em;text-transform:uppercase;background:transparent;color:var(--mute);font-weight:600}
+  .qtog.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  .qtog.warn.on{background:var(--warn);border-color:var(--warn)}
+
+  /* ── Image gallery ──────────────────── */
+  .img-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}
+  .img-tile{position:relative;aspect-ratio:1;background:#ddd;border-radius:8px;background-size:cover;background-position:center;cursor:grab;border:2px solid transparent;overflow:hidden}
+  .img-tile.cover{border-color:var(--ink)}
+  .img-tile.dragging{opacity:.5}
+  .img-tile.over{border-color:var(--mute);border-style:dashed}
+  .img-tile .label{position:absolute;top:5px;left:5px;background:rgba(0,0,0,.65);color:#fff;font-size:9px;padding:2px 6px;border-radius:4px;letter-spacing:.04em;text-transform:uppercase}
+  .img-tile .acts{position:absolute;top:4px;right:4px;display:flex;gap:3px;opacity:0;transition:opacity .12s}
+  .img-tile:hover .acts{opacity:1}
+  .img-tile .acts button{width:24px;height:24px;background:rgba(255,255,255,.94);border-radius:12px;font-size:11px;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.15)}
+  .img-tile .acts button.del:hover{background:var(--warn);color:#fff}
+  .img-tile.add{display:flex;align-items:center;justify-content:center;background:#fff;border:1.5px dashed var(--line);color:var(--mute);font-size:11px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+  .img-tile.add:hover{border-color:var(--ink);color:var(--ink)}
+
+  /* cover hero (이미지 탭 상단) */
+  .cover-hero{display:flex;gap:18px;align-items:center;padding:18px;background:var(--card);border:1px solid var(--line);border-radius:2px;margin-bottom:8px}
+  .cover-hero-pv{width:90px;aspect-ratio:3/4;background:#ddd;background-size:cover;background-position:center;border-radius:2px;flex-shrink:0;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+  .cover-hero-meta{flex:1;min-width:0}
+  .cover-hero-label{margin:0 0 4px;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--mute);font-weight:600}
+  .cover-hero-hint{margin:0;font-size:12px;color:var(--sub);line-height:1.5}
+
+  /* color cover fallback */
+  .color-cover-box{margin-top:14px;border-top:1px solid var(--line);padding-top:18px}
+  .color-cover-toggle{display:inline-flex;align-items:center;gap:10px;cursor:pointer;user-select:none;font-size:12px;color:var(--sub);font-weight:600;letter-spacing:.04em}
+  .color-cover-toggle input{position:absolute;opacity:0;pointer-events:none}
+  .switch-mini{width:36px;height:20px;background:var(--line);border-radius:10px;position:relative;transition:background .18s;flex-shrink:0}
+  .switch-mini .thumb{position:absolute;top:2px;left:2px;width:16px;height:16px;background:#fff;border-radius:50%;transition:transform .2s cubic-bezier(.2,.8,.2,1);box-shadow:0 1px 2px rgba(0,0,0,.18)}
+  .color-cover-toggle input:checked + .switch-mini{background:var(--ink)}
+  .color-cover-toggle input:checked + .switch-mini .thumb{transform:translateX(16px)}
+  .color-cover-fields{display:none;margin-top:14px}
+  .color-cover-fields.on{display:block}
+  .cc-row{display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap}
+  .cc-row input[type=color]{width:36px;height:36px;border:1px solid var(--line);border-radius:50%;padding:0;cursor:pointer;overflow:hidden;flex-shrink:0}
+  .cc-row input[type=color]::-webkit-color-swatch{border:0;border-radius:50%}
+  .cc-row input[type=text]{flex:1;padding:8px 10px;border:0;border-bottom:1px solid var(--line);background:transparent;font-size:13px;font-family:var(--mono)}
+  .cc-row input[type=text]:focus{outline:0;border-bottom-color:var(--ink)}
+  .color-preview{aspect-ratio:3/4;max-width:120px;border-radius:2px;background:#eee}
+
+  /* spec list */
+  .spec-row{display:grid;grid-template-columns:140px 1fr 28px;gap:6px;align-items:center;margin-bottom:6px}
+  .spec-row input{padding:7px 10px;border:1px solid var(--line);border-radius:6px;background:#fff;font-size:13px}
+  .spec-row input:focus{outline:0;border-color:var(--ink)}
+  .spec-row button{width:26px;height:26px;border-radius:13px;color:var(--mute);font-size:14px}
+  .spec-row button:hover{background:var(--hover);color:var(--warn)}
+
+  /* ── Tables ─────────────────────────── */
+  .panel-card{background:var(--card);border:1px solid var(--line);border-radius:2px;padding:24px}
+  .panel-card h3{margin:0 0 16px;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--mute);font-weight:600}
+  .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:2px;background:transparent;margin-top:12px}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--line);vertical-align:middle}
+  th{background:transparent;font-weight:600;font-size:9px;text-transform:uppercase;letter-spacing:.18em;color:var(--mute);position:sticky;top:0;border-bottom:1.5px solid var(--ink)}
+  tbody tr:hover{background:var(--hover)}
+  tr.done{opacity:.45}
+  td select{padding:5px 8px;border:1px solid var(--line);border-radius:2px;background:transparent;font-size:11px;letter-spacing:.04em}
+  .meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media (max-width:880px){ .meta-grid{grid-template-columns:1fr} }
+
+  /* ── Config page ────────────────────── */
+  .cfg-stack{display:flex;flex-direction:column;gap:18px;max-width:880px}
+  .cfg-card{background:var(--card);border:1px solid var(--line);border-radius:2px;padding:26px 28px}
+  .cfg-row{display:grid;grid-template-columns:280px 1fr;gap:32px;align-items:start}
+  .cfg-row.stack{align-items:start}
+  @media (max-width:760px){ .cfg-row{grid-template-columns:1fr;gap:18px} }
+  .cfg-info h3{margin:0 0 6px;font-family:var(--display);font-size:16px;font-weight:700;letter-spacing:-.01em;color:var(--ink);text-transform:none}
+  .cfg-info p{margin:0;color:var(--mute);font-size:12px;line-height:1.6;letter-spacing:.01em}
+  .cfg-control{display:flex;align-items:center;justify-content:flex-end}
+  .cfg-fields{display:flex;flex-direction:column;gap:18px}
+  .cfg-fields .fld{margin:0}
+  .hint{display:block;color:var(--mute);font-size:11px;margin-top:6px;letter-spacing:.02em}
+
+  /* switch */
+  .switch{display:inline-flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+  .switch input{position:absolute;opacity:0;pointer-events:none}
+  .switch .track{width:44px;height:24px;background:var(--line);border-radius:12px;position:relative;transition:background .18s}
+  .switch .thumb{position:absolute;top:2px;left:2px;width:20px;height:20px;background:#fff;border-radius:50%;transition:transform .2s cubic-bezier(.2,.8,.2,1);box-shadow:0 1px 3px rgba(0,0,0,.15)}
+  .switch input:checked + .track{background:var(--ink)}
+  .switch input:checked + .track .thumb{transform:translateX(20px)}
+  .switch-label{font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:var(--sub)}
+
+  .cfg-actions{display:flex;align-items:center;justify-content:flex-end;gap:14px;padding:18px 0 8px;position:sticky;bottom:0;background:linear-gradient(to top, var(--bg) 60%, transparent)}
+  .cfg-saved{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ok);font-weight:600;opacity:0;transition:opacity .25s}
+  .cfg-saved.show{opacity:1}
+
+  /* ── Toast ──────────────────────────── */
+  .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--bg);padding:12px 22px;border-radius:2px;font-size:11px;opacity:0;pointer-events:none;transition:.25s;z-index:200;letter-spacing:.12em;text-transform:uppercase;font-weight:600;box-shadow:0 8px 28px rgba(0,0,0,.16)}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .toast.err{background:var(--warn)}
+
+  /* ── Misc ───────────────────────────── */
+  .setup-warn{background:#fff8db;color:#7a5a00;padding:11px 24px;font-size:12px;border-bottom:1px solid #f0d97a;letter-spacing:.02em}
+  .setup-warn code{background:rgba(0,0,0,.08);padding:1px 5px;border-radius:3px;font-size:11px}
+  .empty{text-align:center;padding:60px 20px;color:var(--mute);font-size:13px;letter-spacing:.04em}
+
+  /* ════════════════════════════════════════
+     MOBILE — 760px and below
+     ════════════════════════════════════════ */
+  @media (max-width:760px){
+    /* Header — 한 줄 유지하되 로고+로그아웃만 표시 */
+    .hd-in{padding:12px 16px;gap:12px;flex-wrap:nowrap}
+    .hd .brand{font-size:14px;gap:8px}
+    .hd .brand img{width:24px;height:24px}
+    .hd .brand .sub{font-size:9px;letter-spacing:.16em;padding-left:8px;margin-left:4px}
+    .hd .nav{display:none}                /* 데스크탑 nav 감추고 모바일 바텀바로 대체 */
+    .hd .right{margin-left:auto;gap:6px}
+    .hd .who{display:none}
+    .hd .ic{width:36px;height:36px}
+
+    /* Bottom mobile nav */
+    .m-nav{display:flex !important}
+
+    .wrap{padding:24px 16px 60px}
+
+    /* Books toolbar — 두 줄로 재배치 */
+    .books-toolbar{gap:10px;margin-bottom:20px;padding-bottom:14px;flex-wrap:wrap;align-items:center}
+    .books-toolbar .h1{font-size:26px;width:100%}
+    .books-toolbar .stats{padding-bottom:0;font-size:10px;width:100%;margin-top:-4px}
+    .books-toolbar .grow{display:none}
+    .search-box{max-width:none;width:100%;order:1}
+    .filter-chips{order:2;width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:2px;flex-wrap:nowrap}
+    .filter-chips::-webkit-scrollbar{display:none}
+    .filter-chips .chip{flex-shrink:0}
+    #newCatBtn{order:3}
+    #newBookBtn{order:4;flex:1}
+
+    /* New cat row */
+    .new-cat-row{flex-wrap:wrap;gap:8px;padding:14px}
+    .new-cat-row input[style*="max-width"]{max-width:none !important}
+
+    /* Category sections */
+    .cat-section{margin-bottom:32px}
+    .cat-hd{flex-wrap:wrap;gap:8px;margin-bottom:14px}
+    .cat-hd .name{font-size:18px}
+    .cat-hd .grow{display:none}
+    .cat-hd .acts{margin-left:auto}
+    .cat-hd .ic-btn{width:32px;height:32px;font-size:14px}      /* touch target ≥32px */
+    .cat-hd .toggle-fold{width:28px;height:28px;font-size:14px}
+
+    .cat-settings.on{grid-template-columns:1fr;gap:14px;padding:16px}
+    .cat-settings .ms.slug{display:block}                        /* 모바일에서 slug 숨겼었는데 보이게 */
+
+    /* Book cards */
+    .book-grid{grid-template-columns:repeat(auto-fill, minmax(150px, 1fr));gap:14px}
+    .bk-cover{box-shadow:0 1px 2px rgba(0,0,0,.08), 0 4px 8px rgba(0,0,0,.04)}
+    .bk-title{font-size:12px}
+    .bk-author{font-size:9px}
+    .pcs-step button{width:28px;height:28px}                     /* touch target */
+    .pcs-step .v{height:28px;min-width:28px;padding:0 6px;font-size:11px}
+    .tg{width:30px;height:30px}                                  /* touch target */
+    .tg svg{width:12px;height:12px}
+    .badge{font-size:8px;padding:2px 6px}
+
+    /* Drawer — 전체 화면 */
+    .drawer{width:100%;border-left:0}
+    .drw-hd{padding:18px 20px 14px}
+    .drw-hd .t{font-size:16px}
+    .drw-tabs{padding:0 20px;gap:0}
+    .drw-tabs button{margin-right:18px;padding:11px 0;font-size:9px}
+    .drw-body{padding:22px 20px 110px}
+    .drw-foot{padding:14px 20px}
+    .fld-row,.fld-row.three{grid-template-columns:1fr;gap:0}
+    .fld{margin-bottom:16px}
+
+    .img-gallery{grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:6px}
+    .img-tile .acts{opacity:1}                                   /* 모바일에선 hover 없으니 항상 표시 */
+    .img-tile .acts button{width:26px;height:26px}
+
+    .spec-row{grid-template-columns:1fr 1.5fr 28px;gap:6px}
+    .spec-row input{font-size:13px}
+
+    /* Quick toggles */
+    .quick-toggles{gap:6px}
+    .qtog{padding:9px 12px;font-size:9px}
+
+    /* Tables — 가로 스크롤 + 폰트 살짝 */
+    .table-wrap table{font-size:12px;min-width:560px}
+    .table-wrap th,.table-wrap td{padding:10px 10px}
+
+    /* Config */
+    .cfg-card{padding:20px 18px}
+    .cfg-row,.cfg-row.stack{grid-template-columns:1fr;gap:16px}
+    .cfg-control{justify-content:flex-start}
+    .cfg-info h3{font-size:15px}
+
+    /* Login */
+    .login-card{padding:32px 20px}
+    .login-card h1{font-size:22px}
+
+    /* Toast */
+    .toast{font-size:10px;padding:10px 18px}
+  }
+
+  /* ── 작은 폰 (≤380px) 미세조정 ── */
+  @media (max-width:380px){
+    .hd .brand .sub{display:none}
+    .book-grid{grid-template-columns:repeat(2,1fr);gap:12px}
+    .bk-row{flex-wrap:wrap}
+    .toggles{margin-left:0}
+    .cat-add-form{grid-template-columns:1fr}
+  }
+
+  /* ── Mobile top nav (SVG icons under header) ── */
+  .m-nav{display:none;position:sticky;top:54px;z-index:49;background:rgba(247,245,238,.94);backdrop-filter:saturate(180%) blur(10px);border-bottom:1px solid var(--line);justify-content:space-around;align-items:stretch}
+  .m-nav button{flex:1;padding:9px 4px 10px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:9px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:var(--mute);position:relative}
+  .m-nav button.on{color:var(--ink)}
+  .m-nav button.on::after{content:'';position:absolute;bottom:-1px;left:30%;right:30%;height:1.5px;background:var(--ink)}
+  .m-nav button .ic-svg{width:18px;height:18px;display:block}
+  .m-nav .dot{position:absolute;top:6px;right:calc(50% - 14px);width:6px;height:6px;background:var(--warn);border-radius:50%;display:none}
+  .m-nav .dot.on{display:block}
+</style>
+</head>
+<body>
+
+<!-- ============ LOGIN ============ -->
+<div class="login" id="loginScreen">
+  <div class="login-card">
+    <img src="/assets/mascot.png" alt="mottool"/>
+    <h1>mottool admin</h1>
+    <p>관리자 로그인</p>
+    <input type="email" id="loginEmail" placeholder="email" autocomplete="username"/>
+    <input type="password" id="loginPw" placeholder="password" autocomplete="current-password"/>
+    <button class="btn-pri" id="loginBtn">로그인</button>
+    <div class="err" id="loginErr"></div>
+  </div>
+</div>
+
+<!-- ============ APP ============ -->
+<div id="app" style="display:none">
+
+  <div class="setup-warn" id="setupWarn" style="display:none">
+    <strong>Supabase 설정 필요:</strong>
+    <code>supabase-config.js</code> 에 프로젝트 URL/키를 입력하고 SQL 을 실행하세요.
+  </div>
+
+  <!-- header -->
+  <header class="hd">
+    <div class="hd-in">
+      <span class="brand"><img src="/assets/book.png" alt=""/> mottool<span class="sub">admin</span></span>
+      <nav class="nav" id="nav">
+        <button data-tab="books" class="on">books</button>
+        <button data-tab="orders">orders<span class="dot" id="dotOrd" style="display:none"></span></button>
+        <button data-tab="waitlist">waitlist</button>
+        <button data-tab="config">config</button>
+      </nav>
+      <div class="right">
+        <span class="who" id="who"></span>
+        <button class="ic" id="logoutBtn" title="로그아웃">⏻</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- mobile bottom nav -->
+  <nav class="m-nav" id="mNav">
+    <button data-tab="books" class="on">
+      <svg class="ic-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h12a3 3 0 013 3v13H7a3 3 0 01-3-3V4z"/><path d="M4 17a3 3 0 013-3h12"/></svg>
+      books
+    </button>
+    <button data-tab="orders">
+      <svg class="ic-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l3-3h12l3 3v13H3V7z"/><path d="M3 10h18"/><path d="M9 14h6"/></svg>
+      orders<span class="dot" id="dotOrdM"></span>
+    </button>
+    <button data-tab="waitlist">
+      <svg class="ic-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+      waitlist
+    </button>
+    <button data-tab="config">
+      <svg class="ic-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.8-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1-1.5 1.7 1.7 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.8 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1 1.7 1.7 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.8.3h0a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5h0a1.7 1.7 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.8v0a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/></svg>
+      config
+    </button>
+  </nav>
+
+  <!-- ============ BOOKS ============ -->
+  <main class="wrap" id="pgBooks">
+    <div class="books-toolbar">
+      <h1 class="h1">books</h1>
+      <span class="stats" id="bkStats"></span>
+      <span class="grow"></span>
+      <div class="search-box">
+        <input type="text" id="bookSearch" placeholder="title / author / id…"/>
+      </div>
+      <div class="filter-chips" id="filterChips">
+        <button class="chip on" data-filter="all">all</button>
+        <button class="chip" data-filter="visible">노출</button>
+        <button class="chip" data-filter="sold">품절</button>
+        <button class="chip" data-filter="hidden">숨김</button>
+        <button class="chip" data-filter="lowstock">재고적음</button>
+      </div>
+      <button class="btn-line" id="newCatBtn">+ 카테고리</button>
+      <button class="btn-pri" id="newBookBtn">+ 새 책</button>
+    </div>
+
+    <div class="new-cat-row" id="newCatRow" style="display:none">
+      <input type="text" id="newCatName" placeholder="카테고리 이름 (예: Photobook)"/>
+      <input type="text" id="newCatSlug" placeholder="slug (영문, 자동생성)" style="max-width:180px"/>
+      <button class="btn-line" id="newCatCancel">취소</button>
+      <button class="btn-pri" id="newCatSave">생성</button>
+    </div>
+
+    <div id="catSections"></div>
+  </main>
+
+  <!-- ============ ORDERS ============ -->
+  <main class="wrap hide" id="pgOrders">
+    <div class="books-toolbar">
+      <h1 class="h1">orders</h1>
+      <span class="stats">사업자 등록 후 본격 사용</span>
+      <span class="grow"></span>
+      <select id="orderFilter" class="btn-line">
+        <option value="">전체 상태</option>
+        <option value="pending">입금대기</option>
+        <option value="paid">입금완료</option>
+        <option value="shipped">배송중</option>
+        <option value="done">배송완료</option>
+        <option value="cancelled">취소</option>
+      </select>
+      <button class="btn-pri" id="orderNewBtn">+ 주문 추가</button>
+    </div>
+    <div class="panel-card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>주문번호</th><th>책</th><th>고객</th><th>연락처</th><th>금액</th><th>상태</th><th>일시</th><th></th>
+          </tr></thead>
+          <tbody id="orderTable"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <!-- ============ WAITLIST ============ -->
+  <main class="wrap hide" id="pgWaitlist">
+    <div class="books-toolbar">
+      <h1 class="h1">waitlist</h1>
+      <span class="stats">품절 책 대기 신청자</span>
+    </div>
+    <div class="panel-card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>책</th><th>고객</th><th>연락처</th><th>메모</th><th>알림</th><th>일시</th><th></th>
+          </tr></thead>
+          <tbody id="waitTable"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <!-- ============ CONFIG ============ -->
+  <main class="wrap hide" id="pgConfig">
+    <div class="books-toolbar">
+      <h1 class="h1">config</h1>
+      <span class="stats">사이트 전역 설정</span>
+    </div>
+
+    <div class="cfg-stack">
+
+      <!-- 판매 모드 -->
+      <section class="cfg-card">
+        <div class="cfg-row">
+          <div class="cfg-info">
+            <h3>판매 모드</h3>
+            <p>지금은 사업자 등록 전이라 Instagram DM 으로 문의를 받고 있어. 통신판매업 신고 후 직접 결제로 바꾸면 사이트의 모든 책에 결제 버튼이 나옴.</p>
+          </div>
+          <div class="cfg-control">
+            <label class="switch">
+              <input type="checkbox" id="cfg_shop_open"/>
+              <span class="track"><span class="thumb"></span></span>
+              <span class="switch-label" id="cfg_shop_open_label">Instagram 유도</span>
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <!-- 연락처 -->
+      <section class="cfg-card">
+        <div class="cfg-row stack">
+          <div class="cfg-info">
+            <h3>연락처</h3>
+            <p>사이트 푸터와 책 상세 페이지의 “구매 문의” 링크에 사용돼. Instagram 은 필수, 이메일은 선택.</p>
+          </div>
+          <div class="cfg-fields">
+            <div class="fld">
+              <label>Instagram URL</label>
+              <input type="text" id="cfg_instagram_url" placeholder="https://instagram.com/mottool.art"/>
+              <small class="hint">전체 URL 을 입력해줘.</small>
+            </div>
+            <div class="fld">
+              <label>이메일 (선택)</label>
+              <input type="text" id="cfg_contact_email" placeholder="hello@mottool.art"/>
+              <small class="hint">비워두면 푸터에서 안 보임.</small>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 매장 정보 -->
+      <section class="cfg-card">
+        <div class="cfg-row stack">
+          <div class="cfg-info">
+            <h3>매장 정보</h3>
+            <p>방문자에게 보여줄 매장 위치와 영업 시간이야. 푸터의 “VISIT” 섹션에 표시돼.</p>
+          </div>
+          <div class="cfg-fields">
+            <div class="fld">
+              <label>주소</label>
+              <input type="text" id="cfg_address" placeholder="대전 서구 둔산동 00-00, 2F"/>
+            </div>
+            <div class="fld">
+              <label>영업 시간</label>
+              <input type="text" id="cfg_hours" placeholder="TUE–SUN · 12:00–20:00"/>
+            </div>
+            <div class="fld">
+              <label>전화번호 (선택)</label>
+              <input type="text" id="cfg_phone" placeholder="070-0000-0000"/>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 사이트 텍스트 -->
+      <section class="cfg-card">
+        <div class="cfg-row stack">
+          <div class="cfg-info">
+            <h3>사이트 텍스트</h3>
+            <p>메인 화면과 SEO 에 쓰이는 짧은 한 줄들. 비워두면 기본값이 사용돼.</p>
+          </div>
+          <div class="cfg-fields">
+            <div class="fld">
+              <label>태그라인</label>
+              <input type="text" id="cfg_tagline" placeholder="artbook · lifestyle"/>
+            </div>
+            <div class="fld">
+              <label>SEO 설명</label>
+              <input type="text" id="cfg_seo_desc" placeholder="대전 둔산동의 작은 아트북 책방"/>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="cfg-actions">
+        <span class="cfg-saved" id="cfgSaved"></span>
+        <button class="btn-pri" id="cfgSaveBtn">변경사항 저장</button>
+      </div>
+
+    </div>
+  </main>
+
+</div>
+
+<!-- ============ DRAWER (book editor) ============ -->
+<div class="drawer-bg" id="drawerBg"></div>
+<aside class="drawer" id="drawer">
+  <div class="drw-hd">
+    <span class="t" id="drwTitle">새 책</span>
+    <button class="x" id="drwClose">✕</button>
+  </div>
+  <nav class="drw-tabs" id="drwTabs">
+    <button data-pane="basic" class="on">기본</button>
+    <button data-pane="images">이미지</button>
+    <button data-pane="detail">상세</button>
+  </nav>
+  <div class="drw-body">
+
+    <!-- basic -->
+    <section class="on" data-pane="basic">
+      <div class="fld">
+        <label>title</label>
+        <input type="text" id="f_title" placeholder="책 제목"/>
+        <small class="hint" id="slugHint" style="margin-top:4px"></small>
+      </div>
+      <input type="hidden" id="f_id"/>
+      <input type="hidden" id="f_position"/>
+      <div class="fld-row">
+        <div class="fld"><label>author</label><input type="text" id="f_author"/></div>
+        <div class="fld"><label>author meta</label><input type="text" id="f_authorMeta" placeholder="VICTOR UNWIN · PHOTO"/></div>
+      </div>
+      <div class="fld-row">
+        <div class="fld"><label>publisher</label><input type="text" id="f_publisher"/></div>
+        <div class="fld"><label>category</label>
+          <select id="f_categorySlug"><option value="">(미분류)</option></select>
+        </div>
+      </div>
+      <div class="fld-row three">
+        <div class="fld">
+          <label>date</label>
+          <input type="text" id="f_date" placeholder="2025 or 2025-04-30"/>
+        </div>
+        <div class="fld"><label>piece</label><input type="number" id="f_piece" min="0"/></div>
+        <div class="fld"><label>price krw</label><input type="number" id="f_priceKrw" placeholder="38000"/></div>
+      </div>
+      <div class="fld">
+        <label>price (표시)</label>
+        <input type="text" id="f_price" placeholder="₩38,000 · price soon · 품절"/>
+      </div>
+      <div class="fld">
+        <label>상태</label>
+        <div class="quick-toggles">
+          <button class="qtog warn" id="t_sold" type="button">품절</button>
+          <button class="qtog on" id="t_visible" type="button">사이트 노출</button>
+          <button class="qtog" id="t_featured" type="button">추천</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- detail -->
+    <section data-pane="detail">
+      <div class="fld-row">
+        <div class="fld"><label>kicker</label><input type="text" id="f_dt_kicker" placeholder="KERMESSE — EDITION · 2025"/></div>
+        <div class="fld"><label>byline</label><input type="text" id="f_dt_byline" placeholder="VICTOR UNWIN"/></div>
+      </div>
+      <div class="fld">
+        <label>display title (HTML 가능, &lt;br/&gt;)</label>
+        <input type="text" id="f_dt_displayTitle" placeholder="The Knight,&lt;br/&gt;the Princess"/>
+      </div>
+      <div class="fld">
+        <label>description (한 줄에 한 단락)</label>
+        <textarea id="f_dt_description"></textarea>
+      </div>
+      <div class="fld">
+        <label>spec (사양)</label>
+        <div id="specList"></div>
+        <button class="btn-line" id="specAddBtn" type="button" style="margin-top:6px">+ spec 추가</button>
+      </div>
+    </section>
+
+    <!-- images (cover + gallery 통합) -->
+    <section data-pane="images">
+      <!-- 현재 표지 미리보기 -->
+      <div class="cover-hero" id="coverHero">
+        <div class="cover-hero-pv" id="coverHeroPv"></div>
+        <div class="cover-hero-meta">
+          <p class="cover-hero-label">현재 표지</p>
+          <p class="cover-hero-hint" id="coverHeroHint">아래 이미지의 ★ 를 눌러 표지를 바꿔.</p>
+        </div>
+      </div>
+
+      <!-- 갤러리 -->
+      <div class="fld" style="margin-top:8px">
+        <label>이미지 — 드래그하여 순서 변경 · ★ 로 표지 지정</label>
+        <div class="img-gallery" id="imgGallery"></div>
+        <input type="file" id="imgFile" accept="image/*" multiple style="display:none"/>
+      </div>
+
+      <!-- 색상 표지 fallback -->
+      <div class="color-cover-box">
+        <label class="color-cover-toggle">
+          <input type="checkbox" id="useColorCover"/>
+          <span class="switch-mini"><span class="thumb"></span></span>
+          <span>이미지 대신 색상 표지 사용</span>
+        </label>
+        <div class="color-cover-fields" id="colorCoverFields">
+          <div class="cc-row">
+            <input type="color" id="f_covPicker"/>
+            <input type="text" id="f_covValue" placeholder="#d9d4c7"/>
+            <input type="text" id="f_covBorder" placeholder="border (선택, 예: 1px solid #ddd)"/>
+          </div>
+          <div id="colorPreview" class="color-preview"></div>
+        </div>
+      </div>
+
+      <input type="hidden" id="f_covSrc"/>
+    </section>
+
+  </div>
+  <div class="drw-foot">
+    <button class="btn-danger" id="deleteBtn">삭제</button>
+    <div style="display:flex;gap:8px">
+      <button class="btn-line" id="cancelBtn">닫기</button>
+      <button class="btn-pri" id="saveBtn">저장</button>
+    </div>
+  </div>
+</aside>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const toast = (msg, isErr = false) => {
+  const t = $('toast'); t.textContent = msg; t.className = 'toast show' + (isErr ? ' err' : '');
+  setTimeout(() => t.className = 'toast' + (isErr ? ' err' : ''), 2200);
+};
+const escapeHtml = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const escapeAttr = escapeHtml;
+
+const DB = window.MOTTOOL_DB;
+if (!DB) $('setupWarn').style.display = 'block';
+
+// ============ AUTH ============
+async function checkAuth(){
+  if (!DB) { showLogin(); return; }
+  const user = await DB.getUser();
+  if (user) showApp(user); else showLogin();
+}
+function showLogin(){ $('loginScreen').style.display='flex'; $('app').style.display='none'; }
+function showApp(user){
+  $('loginScreen').style.display='none';
+  $('app').style.display='block';
+  $('who').textContent = user?.email || '';
+  init();
+}
+$('loginBtn').addEventListener('click', async () => {
+  if (!DB) { $('loginErr').textContent='Supabase 설정 필요'; return; }
+  const email = $('loginEmail').value.trim();
+  const pw = $('loginPw').value;
+  $('loginErr').textContent='';
+  try { await DB.signIn(email, pw); showApp(await DB.getUser()); }
+  catch(e){ $('loginErr').textContent = e.message || '로그인 실패'; }
+});
+$('loginPw').addEventListener('keydown', e => { if (e.key==='Enter') $('loginBtn').click(); });
+$('logoutBtn').addEventListener('click', async () => { if (DB) await DB.signOut(); location.reload(); });
+
+// ============ NAV ============
+function switchTab(t){
+  document.querySelectorAll('#nav button, #mNav button').forEach(x => x.classList.toggle('on', x.dataset.tab === t));
+  ['Books','Orders','Waitlist','Config'].forEach(name => {
+    $('pg' + name).classList.toggle('hide', t !== name.toLowerCase());
+  });
+  if (t==='orders') loadOrders();
+  if (t==='waitlist') loadWaitlist();
+  if (t==='config') loadConfig();
+  window.scrollTo({top:0,behavior:'instant'});
+}
+['nav','mNav'].forEach(id => {
+  $(id).addEventListener('click', (e) => {
+    const b = e.target.closest('button[data-tab]');
+    if (b) switchTab(b.dataset.tab);
+  });
+});
+
+// ============ BOOKS + CATEGORIES ============
+let books = [];
+let categories = [];
+let editing = null;
+let filter = 'all';
+let foldedCats = new Set(JSON.parse(localStorage.getItem('mottool-folded-cats') || '[]'));
+
+async function loadBooks(){
+  if (!DB) return;
+  try {
+    [books, categories] = await Promise.all([
+      DB.listBooks({ all: true }),
+      DB.listCategories()
+    ]);
+    fillCategorySelector();
+    renderCategorySections();
+    updateBadges();
+  } catch(e){ toast('책 로딩 실패: '+e.message, true); }
+}
+
+function fillCategorySelector(){
+  const sel = $('f_categorySlug');
+  sel.innerHTML = '<option value="">(미분류)</option>';
+  categories.forEach(c => {
+    const op = document.createElement('option');
+    op.value = c.slug; op.textContent = c.name;
+    sel.appendChild(op);
+  });
+}
+
+function getFilteredBooks(){
+  const q = $('bookSearch').value.trim().toLowerCase();
+  return books.filter(b => {
+    if (q) {
+      const hay = `${b.title||''} ${b.author||''} ${b.id||''}`.toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    if (filter === 'visible') return b.visible !== false && !b.sold;
+    if (filter === 'sold') return b.sold;
+    if (filter === 'hidden') return b.visible === false;
+    if (filter === 'lowstock') return !b.sold && (b.piece||0) > 0 && (b.piece||0) <= 2;
+    return true;
+  });
+}
+
+function renderCategorySections(){
+  const root = $('catSections');
+  root.innerHTML = '';
+  const filtered = getFilteredBooks();
+  $('bkStats').textContent = `${filtered.length}권 · ${categories.length}개 카테고리`;
+
+  // group books by category_slug
+  const groups = new Map();
+  categories.forEach(c => groups.set(c.slug, []));
+  groups.set('__none__', []); // 미분류
+  filtered.forEach(b => {
+    const k = b.categorySlug && groups.has(b.categorySlug) ? b.categorySlug : '__none__';
+    groups.get(k).push(b);
+  });
+
+  // render category sections
+  categories.forEach(c => {
+    const list = groups.get(c.slug) || [];
+    root.appendChild(makeCategorySection(c, list));
+  });
+
+  // 미분류 섹션 (책이 있을 때만)
+  const orphans = groups.get('__none__');
+  if (orphans.length) {
+    root.appendChild(makeCategorySection({ slug: '__none__', name: '미분류', position: 999 }, orphans));
+  }
+
+  if (!books.length) {
+    root.innerHTML = '<div class="empty">아직 책이 없습니다. <strong>+ 새 책</strong> 으로 추가하세요.</div>';
+  }
+}
+
+function makeCategorySection(cat, list){
+  const sec = document.createElement('section');
+  sec.className = 'cat-section' + (foldedCats.has(cat.slug) ? ' folded' : '');
+  sec.dataset.slug = cat.slug;
+
+  const hd = document.createElement('header');
+  hd.className = 'cat-hd';
+  const isOrphan = cat.slug === '__none__';
+  hd.innerHTML = `
+    <button class="toggle-fold" title="접기/펼치기">${foldedCats.has(cat.slug) ? '▸' : '▾'}</button>
+    ${(cat.color && !isOrphan) ? `<span class="swatch" style="background:${escapeAttr(cat.color)}"></span>` : ''}
+    <span class="name">${escapeHtml(cat.name)}</span>
+    <span class="count">${list.length}권</span>
+    <span class="grow"></span>
+    <span class="acts">
+      ${isOrphan ? '' : `
+        <button class="ic-btn" data-act="settings" title="카테고리 설정 (색상/설명)">⚙</button>
+        <button class="ic-btn" data-act="add" title="이 카테고리에 책 추가">+</button>
+        <button class="ic-btn" data-act="up" title="위로">↑</button>
+        <button class="ic-btn" data-act="down" title="아래로">↓</button>
+        <button class="ic-btn danger" data-act="del" title="카테고리 삭제 (책은 미분류로 이동)">×</button>
+      `}
+    </span>
+  `;
+
+  // toggle fold
+  hd.querySelector('.toggle-fold').addEventListener('click', () => {
+    if (foldedCats.has(cat.slug)) foldedCats.delete(cat.slug);
+    else foldedCats.add(cat.slug);
+    localStorage.setItem('mottool-folded-cats', JSON.stringify([...foldedCats]));
+    renderCategorySections();
+  });
+
+  // header actions
+  hd.querySelector('.acts')?.addEventListener('click', async (e) => {
+    const b = e.target.closest('button[data-act]'); if (!b) return;
+    const act = b.dataset.act;
+    if (act === 'settings') {
+      const panel = sec.querySelector('.cat-settings');
+      panel?.classList.toggle('on');
+    } else if (act === 'add') {
+      preselectCategory = cat.slug;
+      openEditor(null);
+    } else if (act === 'del') {
+      if (!confirm(`카테고리 "${cat.name}" 을 삭제할까요?\n(이 카테고리의 책들은 '미분류' 로 이동)`)) return;
+      try { await DB.deleteCategory(cat.slug); toast('삭제됨'); await loadBooks(); }
+      catch(err){ toast(err.message, true); }
+    } else if (act === 'up' || act === 'down') {
+      const idx = categories.findIndex(c => c.slug === cat.slug);
+      const dir = act === 'up' ? -1 : 1;
+      const nIdx = idx + dir;
+      if (nIdx < 0 || nIdx >= categories.length) return;
+      const reordered = [...categories];
+      [reordered[idx], reordered[nIdx]] = [reordered[nIdx], reordered[idx]];
+      categories = reordered;
+      try { await DB.reorderCategories(reordered.map(c => c.slug)); renderCategorySections(); }
+      catch(err){ toast(err.message, true); }
+    }
+  });
+
+  sec.appendChild(hd);
+
+  // settings panel (collapsed by default)
+  if (!isOrphan) {
+    const panel = document.createElement('div');
+    panel.className = 'cat-settings';
+    panel.innerHTML = `
+      <input type="color" class="cs-color" value="${cat.color || '#888888'}" title="색상 태그"/>
+      <div class="ms"><label>이름</label><input type="text" class="cs-name" value="${escapeAttr(cat.name||'')}"/></div>
+      <div class="ms slug"><label>slug</label><input type="text" class="cs-slug" value="${escapeAttr(cat.slug||'')}" disabled/></div>
+      <div class="ms"><label>설명 (선택)</label><input type="text" class="cs-desc" value="${escapeAttr(cat.description||'')}" placeholder="간단한 한 줄 설명"/></div>
+    `;
+    const colorInp = panel.querySelector('.cs-color');
+    const nameInp  = panel.querySelector('.cs-name');
+    const descInp  = panel.querySelector('.cs-desc');
+    colorInp.addEventListener('change', async () => {
+      try { await DB.upsertCategory({ slug: cat.slug, name: cat.name, color: colorInp.value }); toast('색상 저장'); await loadBooks(); }
+      catch(err){ toast(err.message, true); }
+    });
+    let dirty = { n:false, d:false };
+    nameInp.addEventListener('input', () => dirty.n = true);
+    descInp.addEventListener('input', () => dirty.d = true);
+    const save = async () => {
+      if (!dirty.n && !dirty.d) return;
+      try {
+        await DB.upsertCategory({
+          slug: cat.slug,
+          name: nameInp.value.trim() || cat.name,
+          description: descInp.value.trim() || null
+        });
+        toast('저장됨'); dirty.n = false; dirty.d = false;
+        await loadBooks();
+      } catch(err){ toast(err.message, true); }
+    };
+    nameInp.addEventListener('blur', save);
+    descInp.addEventListener('blur', save);
+    nameInp.addEventListener('keydown', e => { if (e.key==='Enter') nameInp.blur(); });
+    descInp.addEventListener('keydown', e => { if (e.key==='Enter') descInp.blur(); });
+    sec.appendChild(panel);
+  }
+
+  // book grid
+  const grid = document.createElement('div');
+  grid.className = 'book-grid';
+  list.forEach(b => grid.appendChild(makeBookCard(b)));
+  if (!list.length && !isOrphan) {
+    const empty = document.createElement('div');
+    empty.className = 'cat-empty';
+    empty.style.gridColumn = '1/-1';
+    empty.textContent = '책이 없습니다 — 헤더의 + 버튼으로 추가하거나, 다른 카테고리에서 드래그해서 옮기세요';
+    grid.appendChild(empty);
+  }
+  // add card per category
+  if (!isOrphan) {
+    const add = document.createElement('div');
+    add.className = 'bk bk-add';
+    add.textContent = '+ 책 추가';
+    add.addEventListener('click', () => { preselectCategory = cat.slug; openEditor(null); });
+    grid.appendChild(add);
+  }
+  sec.appendChild(grid);
+
+  // drag-drop target for category
+  sec.addEventListener('dragover', e => {
+    if (!dragSource || dragSource.kind !== 'book') return;
+    e.preventDefault();
+    sec.classList.add('drag-over');
+  });
+  sec.addEventListener('dragleave', e => {
+    if (!sec.contains(e.relatedTarget)) sec.classList.remove('drag-over');
+  });
+  sec.addEventListener('drop', async e => {
+    e.preventDefault();
+    sec.classList.remove('drag-over');
+    if (!dragSource || dragSource.kind !== 'book') return;
+    const targetSlug = cat.slug === '__none__' ? null : cat.slug;
+    if (dragSource.book.categorySlug === targetSlug) return;
+    try {
+      await DB.moveBookToCategory(dragSource.book.id, targetSlug);
+      toast(`"${dragSource.book.title || dragSource.book.id}" → ${cat.name}`);
+      await loadBooks();
+    } catch(err){ toast(err.message, true); }
+  });
+
+  return sec;
+}
+
+let preselectCategory = null;
+let dragSource = null;
+
+function makeBookCard(b){
+  const el = document.createElement('article');
+  el.className = 'bk' + (b.sold?' sold':'') + (b.visible===false?' hidden':'');
+  el.draggable = true;
+  el.addEventListener('dragstart', e => {
+    dragSource = { kind: 'book', book: b };
+    el.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+  });
+  el.addEventListener('dragend', () => {
+    el.classList.remove('dragging');
+    dragSource = null;
+  });
+
+  // cover
+  const cv = document.createElement('div');
+  cv.className = 'bk-cover';
+  if (b.cover && b.cover.type === 'image' && b.cover.src) {
+    cv.innerHTML = `<img src="${escapeAttr(b.cover.src)}" alt="" loading="lazy"/>`;
+  } else {
+    cv.innerHTML = `<span class="ph" style="background:${escapeAttr((b.cover&&b.cover.value)||'#eee')};${b.cover?.border?`border:${escapeAttr(b.cover.border)}`:''}"></span>`;
+  }
+  const badges = document.createElement('div');
+  badges.className = 'badges';
+  if (b.featured) badges.innerHTML += '<span class="badge">추천</span>';
+  if (b.sold) badges.innerHTML += '<span class="badge warn">품절</span>';
+  if (b.visible === false) badges.innerHTML += '<span class="badge mute">숨김</span>';
+  if ((b.piece||0) > 0 && (b.piece||0) <= 2 && !b.sold) badges.innerHTML += '<span class="badge">재고적음</span>';
+  cv.appendChild(badges);
+  cv.addEventListener('click', () => openEditor(b));
+  el.appendChild(cv);
+
+  // body
+  const body = document.createElement('div');
+  body.className = 'bk-body';
+  body.innerHTML = `
+    <div class="bk-title">${escapeHtml(b.title||'(제목 없음)')}</div>
+    <div class="bk-author">${escapeHtml(b.authorMeta||b.author||b.id||'')}</div>
+  `;
+  body.querySelector('.bk-title').addEventListener('click', () => openEditor(b));
+
+  // inline controls
+  const row = document.createElement('div');
+  row.className = 'bk-row';
+  const piece = b.piece || 0;
+  const ICON_EYE = `<svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>`;
+  const ICON_EYE_OFF = `<svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/><line x1="3" y1="3" x2="21" y2="21"/></svg>`;
+  const ICON_SOLD = `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
+  const ICON_STAR = `<svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4 2 7-6.5-4-6.5 4 2-7L2 9h7z"/></svg>`;
+  const isVisible = b.visible !== false;
+  row.innerHTML = `
+    <span class="pcs-step">
+      <button data-act="dec" title="−1">−</button>
+      <span class="v">${piece}</span>
+      <button data-act="inc" title="+1">+</button>
+    </span>
+    <span class="toggles">
+      <button class="tg ${isVisible?'on':''}" data-act="visible" title="${isVisible?'사이트 노출 (클릭=숨김)':'숨김 (클릭=노출)'}">${isVisible ? ICON_EYE : ICON_EYE_OFF}</button>
+      <button class="tg warn ${b.sold?'on':''}" data-act="sold" title="${b.sold?'품절 (클릭=재입고)':'판매중 (클릭=품절)'}">${ICON_SOLD}</button>
+      <button class="tg fill ${b.featured?'on':''}" data-act="featured" title="${b.featured?'추천 (클릭=해제)':'클릭=추천'}">${ICON_STAR}</button>
+    </span>
+  `;
+  row.addEventListener('click', async (e) => {
+    const btn = e.target.closest('button[data-act]');
+    if (!btn) return;
+    e.stopPropagation();
+    const act = btn.dataset.act;
+    try {
+      if (act === 'inc' || act === 'dec') {
+        const next = await DB.adjustPiece(b.id, act === 'inc' ? +1 : -1);
+        b.piece = next;
+        if (next === 0) b.sold = true;
+        if (next > 0) b.sold = false;
+      } else if (act === 'sold') {
+        b.sold = !b.sold;
+        await DB.upsertBook(b);
+      } else if (act === 'visible') {
+        b.visible = b.visible === false ? true : false;
+        await DB.upsertBook(b);
+      } else if (act === 'featured') {
+        b.featured = !b.featured;
+        await DB.upsertBook(b);
+      }
+      renderCategorySections();
+    } catch(err){ toast(err.message, true); }
+  });
+  body.appendChild(row);
+  el.appendChild(body);
+  return el;
+}
+
+$('bookSearch').addEventListener('input', renderCategorySections);
+$('newBookBtn').addEventListener('click', () => { preselectCategory = null; openEditor(null); });
+$('filterChips').addEventListener('click', (e) => {
+  const b = e.target.closest('button[data-filter]'); if (!b) return;
+  filter = b.dataset.filter;
+  document.querySelectorAll('#filterChips button').forEach(x => x.classList.toggle('on', x === b));
+  renderCategorySections();
+});
+
+// ── 새 카테고리 ─────────────────────────────────
+$('newCatBtn').addEventListener('click', () => {
+  $('newCatRow').style.display = 'flex';
+  $('newCatName').focus();
+});
+$('newCatCancel').addEventListener('click', () => {
+  $('newCatRow').style.display = 'none';
+  $('newCatName').value = ''; $('newCatSlug').value = '';
+});
+function slugify(s){
+  return String(s).toLowerCase().trim()
+    .replace(/[^a-z0-9가-힣\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-');
+}
+$('newCatName').addEventListener('input', () => {
+  if (!$('newCatSlug').dataset.touched) $('newCatSlug').value = slugify($('newCatName').value);
+});
+$('newCatSlug').addEventListener('input', () => $('newCatSlug').dataset.touched = '1');
+$('newCatSave').addEventListener('click', async () => {
+  const name = $('newCatName').value.trim();
+  const slug = $('newCatSlug').value.trim() || slugify(name);
+  if (!name || !slug) { toast('이름/slug 가 필요합니다', true); return; }
+  try {
+    await DB.upsertCategory({ slug, name, position: categories.length });
+    toast('카테고리 생성됨');
+    $('newCatRow').style.display = 'none';
+    $('newCatName').value = ''; $('newCatSlug').value = ''; delete $('newCatSlug').dataset.touched;
+    await loadBooks();
+  } catch(e){ toast(e.message, true); }
+});
+$('newCatName').addEventListener('keydown', e => { if (e.key === 'Enter') $('newCatSave').click(); });
+$('newCatSlug').addEventListener('keydown', e => { if (e.key === 'Enter') $('newCatSave').click(); });
+
+// ============ DRAWER (editor) ============
+function openEditor(b){
+  editing = b ? {...b, detail:{...(b.detail||{})}} : null;
+  $('drwTitle').textContent = b ? (b.title || b.id || '편집') : '새 책';
+  fillForm(b);
+  $('drawer').classList.add('on');
+  $('drawerBg').classList.add('on');
+  switchPane('basic');
+}
+function closeEditor(){
+  $('drawer').classList.remove('on');
+  $('drawerBg').classList.remove('on');
+  editing = null;
+  preselectCategory = null;
+}
+$('drwClose').addEventListener('click', closeEditor);
+$('drawerBg').addEventListener('click', closeEditor);
+$('cancelBtn').addEventListener('click', closeEditor);
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && $('drawer').classList.contains('on')) closeEditor(); });
+
+function switchPane(name){
+  document.querySelectorAll('#drwTabs button').forEach(x => x.classList.toggle('on', x.dataset.pane === name));
+  document.querySelectorAll('.drw-body section').forEach(x => x.classList.toggle('on', x.dataset.pane === name));
+}
+$('drwTabs').addEventListener('click', e => {
+  const b = e.target.closest('button[data-pane]'); if (b) switchPane(b.dataset.pane);
+});
+
+// 제목 입력 시 자동으로 slug 생성 (편집 중인 책은 id 보존)
+$('f_title').addEventListener('input', () => {
+  // 기존 책 편집 중이면 id 변경 안 함 (URL 깨짐 방지)
+  if (editing) return;
+  const slug = generateUniqueSlug($('f_title').value);
+  $('f_id').value = slug;
+  updateSlugHint();
+});
+
+function generateUniqueSlug(title, ignoreId){
+  let base = slugify(title);
+  if (!base) return '';
+  let slug = base;
+  let n = 2;
+  while (books.some(b => b.id === slug && b.id !== ignoreId)) {
+    slug = `${base}-${n}`;
+    n++;
+  }
+  return slug;
+}
+
+function updateSlugHint(){
+  const hint = $('slugHint');
+  if (!hint) return;
+  const id = $('f_id').value;
+  hint.textContent = id ? `URL · ${id}` : '';
+}
+
+function fillForm(b){
+  $('f_id').value = b?.id || '';
+  $('f_position').value = b?.position ?? books.length;
+  $('f_title').value = b?.title || '';
+  updateSlugHint();
+  $('f_author').value = b?.author || '';
+  $('f_authorMeta').value = b?.authorMeta || '';
+  $('f_publisher').value = b?.publisher || '';
+  $('f_categorySlug').value = b?.categorySlug || preselectCategory || '';
+  // date: detail.date 가 우선, 없으면 legacy year
+  $('f_date').value = b?.detail?.date || (b?.year ? String(b.year) : '');
+  $('f_piece').value = b?.piece ?? 0;
+  $('f_price').value = b?.price || 'price soon';
+  $('f_priceKrw').value = b?.priceKrw || '';
+
+  setQTog('t_sold', !!b?.sold);
+  setQTog('t_visible', b?.visible !== false);
+  setQTog('t_featured', !!b?.featured);
+
+  const cover = b?.cover || {type:'image', src:''};
+  $('f_covValue').value = cover.value || '#d9d4c7';
+  $('f_covBorder').value = cover.border || '';
+  $('f_covSrc').value = cover.src || '';
+  $('f_covPicker').value = isHexColor(cover.value) ? cover.value : '#d9d4c7';
+  $('useColorCover').checked = (cover.type === 'color');
+  toggleColorCoverFields();
+  updateColorPreview();
+
+  const d = b?.detail || {};
+  $('f_dt_kicker').value = d.kicker || '';
+  $('f_dt_byline').value = d.byline || '';
+  $('f_dt_displayTitle').value = d.displayTitle || '';
+  $('f_dt_description').value = Array.isArray(d.description) ? d.description.join('\n') : (d.description||'');
+  renderSpec(d.spec || {});
+  renderImgGallery(d.images || []);
+}
+
+function setQTog(id, on){ $(id).classList.toggle('on', on); }
+['t_sold','t_visible','t_featured'].forEach(id => {
+  $(id).addEventListener('click', () => $(id).classList.toggle('on'));
+});
+
+function isHexColor(v){ return /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(String(v||'').trim()); }
+function getCovType(){ return $('useColorCover').checked ? 'color' : 'image'; }
+
+function toggleColorCoverFields(){
+  $('colorCoverFields').classList.toggle('on', $('useColorCover').checked);
+  updateCoverHero();
+}
+$('useColorCover').addEventListener('change', toggleColorCoverFields);
+
+// 색상 picker ↔ 텍스트 동기화
+$('f_covPicker').addEventListener('input', () => {
+  $('f_covValue').value = $('f_covPicker').value;
+  updateColorPreview();
+  updateCoverHero();
+});
+$('f_covValue').addEventListener('input', () => {
+  if (isHexColor($('f_covValue').value)) $('f_covPicker').value = $('f_covValue').value.trim();
+  updateColorPreview();
+  updateCoverHero();
+});
+$('f_covBorder').addEventListener('input', () => { updateColorPreview(); updateCoverHero(); });
+
+function updateColorPreview(){
+  const c = $('f_covValue').value.trim() || '#eee';
+  const bd = $('f_covBorder').value.trim();
+  $('colorPreview').style.background = c;
+  $('colorPreview').style.border = bd || 'none';
+}
+
+// 표지 미리보기 (이미지 탭 상단)
+function updateCoverHero(){
+  const pv = $('coverHeroPv');
+  const hint = $('coverHeroHint');
+  if ($('useColorCover').checked) {
+    pv.style.background = $('f_covValue').value.trim() || '#eee';
+    pv.style.backgroundImage = '';
+    pv.style.border = $('f_covBorder').value.trim() || 'none';
+    hint.textContent = '색상 표지가 사용됩니다. 아래에서 색상을 변경하거나 토글을 끄면 이미지 표지로 돌아갑니다.';
+  } else {
+    pv.style.border = '';
+    pv.style.background = '#ddd';
+    const src = $('f_covSrc').value.trim();
+    if (src) {
+      pv.style.backgroundImage = `url('${src}')`;
+      hint.textContent = '아래 갤러리에서 이미지의 ★ 를 눌러 표지를 변경할 수 있어.';
+    } else {
+      pv.style.backgroundImage = '';
+      hint.textContent = '아직 표지가 없어. 아래 갤러리에 이미지를 추가하면 자동으로 첫 이미지가 표지가 돼.';
+    }
+  }
+}
+
+// spec
+function renderSpec(spec){
+  const list = $('specList'); list.innerHTML='';
+  Object.entries(spec || {}).forEach(([k,v]) => addSpecRow(k,v));
+}
+function addSpecRow(k='',v=''){
+  const row = document.createElement('div'); row.className='spec-row';
+  row.innerHTML = `<input type="text" placeholder="key" value="${escapeAttr(k)}"/><input type="text" placeholder="value" value="${escapeAttr(v)}"/><button type="button">×</button>`;
+  row.querySelector('button').addEventListener('click', () => row.remove());
+  $('specList').appendChild(row);
+}
+$('specAddBtn').addEventListener('click', () => addSpecRow());
+function readSpec(){
+  const out = {};
+  $('specList').querySelectorAll('.spec-row').forEach(r => {
+    const ins = r.querySelectorAll('input');
+    const k = ins[0].value.trim(); const v = ins[1].value.trim();
+    if (k) out[k] = v;
+  });
+  return out;
+}
+
+// ── Image gallery (drag-reorder + click to set cover) ──
+let imgs = [];
+function renderImgGallery(arr){
+  imgs = [...(arr||[])];
+  // 표지가 갤러리에 없는 경우 보정
+  const covSrc = $('f_covSrc').value;
+  if (!$('useColorCover').checked) {
+    if (covSrc && !imgs.includes(covSrc)) imgs.unshift(covSrc);
+    if (!covSrc && imgs.length) {
+      $('f_covSrc').value = imgs[0];
+    }
+  }
+  const cover = $('f_covSrc').value;
+  const g = $('imgGallery'); g.innerHTML='';
+  imgs.forEach((url, i) => {
+    const t = document.createElement('div');
+    const isCover = (url === cover && !$('useColorCover').checked);
+    t.className = 'img-tile' + (isCover ? ' cover' : '');
+    t.draggable = true;
+    t.style.backgroundImage = `url('${url}')`;
+    t.dataset.idx = i;
+    t.innerHTML = `
+      <span class="label">${String(i+1).padStart(2,'0')}${isCover ? ' · 표지' : ''}</span>
+      <span class="acts">
+        <button data-act="cover" title="표지로 지정">★</button>
+        <button data-act="del" class="del" title="삭제">×</button>
+      </span>`;
+    t.addEventListener('click', e => {
+      const b = e.target.closest('button[data-act]');
+      if (b?.dataset.act === 'cover') {
+        $('f_covSrc').value = url;
+        $('useColorCover').checked = false;
+        toggleColorCoverFields();
+        renderImgGallery(imgs);
+        toast('표지로 지정');
+      } else if (b?.dataset.act === 'del') {
+        imgs.splice(i, 1);
+        if (cover === url) $('f_covSrc').value = imgs[0] || '';
+        renderImgGallery(imgs);
+      }
+    });
+    // drag-reorder
+    t.addEventListener('dragstart', e => { e.dataTransfer.setData('text/plain', i); t.classList.add('dragging'); });
+    t.addEventListener('dragend', () => t.classList.remove('dragging'));
+    t.addEventListener('dragover', e => { e.preventDefault(); t.classList.add('over'); });
+    t.addEventListener('dragleave', () => t.classList.remove('over'));
+    t.addEventListener('drop', e => {
+      e.preventDefault(); t.classList.remove('over');
+      const from = +e.dataTransfer.getData('text/plain');
+      const to = i;
+      if (from === to) return;
+      const moved = imgs.splice(from, 1)[0];
+      imgs.splice(to, 0, moved);
+      renderImgGallery(imgs);
+    });
+    g.appendChild(t);
+  });
+  // add tiles
+  const addUp = document.createElement('div');
+  addUp.className = 'img-tile add';
+  addUp.innerHTML = '+ 업로드';
+  addUp.addEventListener('click', () => $('imgFile').click());
+  g.appendChild(addUp);
+  const addUrl = document.createElement('div');
+  addUrl.className = 'img-tile add';
+  addUrl.innerHTML = '+ URL';
+  addUrl.addEventListener('click', () => {
+    const u = prompt('이미지 URL'); if (u) { imgs.push(u); if (!$('f_covSrc').value) $('f_covSrc').value = u; renderImgGallery(imgs); }
+  });
+  g.appendChild(addUrl);
+
+  updateCoverHero();
+}
+$('imgFile').addEventListener('change', async (e) => {
+  if (!DB) return;
+  for (const f of e.target.files) {
+    try {
+      toast('업로드 중...');
+      const u = await DB.uploadImage(f, `${$('f_id').value||'unknown'}/${Date.now()}-${f.name.replace(/\s+/g,'_')}`);
+      imgs.push(u);
+      if (!$('f_covSrc').value) $('f_covSrc').value = u; // 첫 업로드 → 표지로
+      renderImgGallery(imgs);
+      toast('업로드 완료');
+    } catch(err){ toast('업로드 실패: '+err.message, true); }
+  }
+  e.target.value = '';
+});
+
+// ── Save / Delete ──
+$('saveBtn').addEventListener('click', async () => {
+  if (!DB) return;
+  const title = $('f_title').value.trim();
+  if (!title) { toast('제목을 입력해줘', true); return; }
+  // id 가 비어있으면 title 에서 자동 생성
+  let id = $('f_id').value.trim();
+  if (!id) id = generateUniqueSlug(title);
+  if (!id) id = 'book-' + Date.now().toString(36).slice(-5);  // 한글만이라 slugify 가 비면
+  $('f_id').value = id;
+  const isColor = getCovType() === 'color';
+  const piece = +($('f_piece').value||0);
+  const sold = $('t_sold').classList.contains('on');
+  const book = {
+    id, slug: id,
+    title: $('f_title').value.trim(),
+    author: $('f_author').value.trim(),
+    authorMeta: $('f_authorMeta').value.trim(),
+    publisher: $('f_publisher').value.trim(),
+    categorySlug: $('f_categorySlug').value || null,
+    year: (() => { const m = ($('f_date').value||'').match(/^\s*(\d{4})/); return m ? +m[1] : null; })(),
+    piece, price: $('f_price').value.trim() || 'price soon',
+    priceKrw: +($('f_priceKrw').value||0) || null,
+    sold, visible: $('t_visible').classList.contains('on'),
+    featured: $('t_featured').classList.contains('on'),
+    position: +($('f_position').value||0),
+    cover: isColor
+      ? { type:'color', value:$('f_covValue').value.trim()||'#eee', ...($('f_covBorder').value.trim()?{border:$('f_covBorder').value.trim()}:{}) }
+      : { type:'image', src:($('f_covSrc').value.trim() || imgs[0] || '') },
+    detail: {
+      kicker: $('f_dt_kicker').value.trim(),
+      byline: $('f_dt_byline').value.trim(),
+      displayTitle: $('f_dt_displayTitle').value.trim(),
+      description: $('f_dt_description').value.split('\n').map(s=>s.trim()).filter(Boolean),
+      spec: readSpec(),
+      images: imgs,
+      date: $('f_date').value.trim() || null
+    }
+  };
+  try {
+    await DB.upsertBook(book);
+    toast('저장 완료');
+    await loadBooks();
+    closeEditor();
+  } catch(e){ toast('저장 실패: '+e.message, true); }
+});
+
+$('deleteBtn').addEventListener('click', async () => {
+  if (!editing) { closeEditor(); return; }
+  if (!confirm(`"${editing.title || editing.id}" 삭제할까요?`)) return;
+  try { await DB.deleteBook(editing.id); toast('삭제됨'); closeEditor(); await loadBooks(); }
+  catch(e){ toast('삭제 실패: '+e.message, true); }
+});
+
+// ============ ORDERS ============
+async function loadOrders(){
+  if (!DB) return;
+  try {
+    const status = $('orderFilter').value || undefined;
+    const list = await DB.listOrders({ status });
+    const tbody = $('orderTable'); tbody.innerHTML='';
+    list.forEach(o => {
+      const tr = document.createElement('tr');
+      if (o.status==='done' || o.status==='cancelled') tr.classList.add('done');
+      tr.innerHTML = `
+        <td>${escapeHtml(o.order_no)}</td>
+        <td>${escapeHtml(o.book_title||'-')}</td>
+        <td>${escapeHtml(o.customer_name||'-')}</td>
+        <td>${escapeHtml(o.customer_phone||o.customer_email||'-')}</td>
+        <td>${o.price_krw ? '₩'+Number(o.price_krw).toLocaleString() : '-'}</td>
+        <td><select data-id="${o.id}" class="ostatus">
+          ${['pending','paid','shipped','done','cancelled'].map(s=>`<option value="${s}"${s===o.status?' selected':''}>${s}</option>`).join('')}
+        </select></td>
+        <td style="font-size:11px;color:var(--mute)">${new Date(o.created_at).toLocaleString('ko')}</td>
+        <td><button class="btn-danger" data-id="${o.id}" style="padding:4px 10px;font-size:11px">삭제</button></td>`;
+      tbody.appendChild(tr);
+    });
+    tbody.querySelectorAll('.ostatus').forEach(sel => sel.addEventListener('change', async () => {
+      try { await DB.updateOrderStatus(sel.dataset.id, sel.value); toast('상태 변경됨'); await loadOrders(); updateBadges(); }
+      catch(e){ toast(e.message, true); }
+    }));
+    tbody.querySelectorAll('button.btn-danger').forEach(b => b.addEventListener('click', async () => {
+      if (!confirm('삭제?')) return;
+      try { await DB.deleteOrder(b.dataset.id); await loadOrders(); updateBadges(); } catch(e){ toast(e.message, true); }
+    }));
+  } catch(e){ toast('주문 로딩 실패: '+e.message, true); }
+}
+$('orderFilter').addEventListener('change', loadOrders);
+$('orderNewBtn').addEventListener('click', async () => {
+  const order_no = prompt('주문번호 (예: 20260429-001)'); if (!order_no) return;
+  const book_title = prompt('책 제목') || '';
+  const customer_name = prompt('고객명') || '';
+  const customer_phone = prompt('연락처') || '';
+  const price_krw = +prompt('금액 (숫자만)') || null;
+  try { await DB.upsertOrder({ order_no, book_title, customer_name, customer_phone, price_krw, status:'pending' }); toast('추가됨'); await loadOrders(); updateBadges(); }
+  catch(e){ toast(e.message, true); }
+});
+
+// ============ WAITLIST ============
+async function loadWaitlist(){
+  if (!DB) return;
+  try {
+    const list = await DB.listWaitlist();
+    const tbody = $('waitTable'); tbody.innerHTML='';
+    const bookMap = Object.fromEntries(books.map(b => [b.id, b.title]));
+    list.forEach(w => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${escapeHtml(bookMap[w.book_id]||w.book_id||'-')}</td>
+        <td>${escapeHtml(w.customer||'-')}</td>
+        <td>${escapeHtml(w.contact||'-')}</td>
+        <td>${escapeHtml(w.note||'')}</td>
+        <td>${w.notified?'✓':''}</td>
+        <td style="font-size:11px;color:var(--mute)">${new Date(w.created_at).toLocaleString('ko')}</td>
+        <td><button class="btn-danger" data-id="${w.id}" style="padding:4px 10px;font-size:11px">삭제</button></td>`;
+      tbody.appendChild(tr);
+    });
+    tbody.querySelectorAll('button.btn-danger').forEach(b => b.addEventListener('click', async () => {
+      if (!confirm('삭제?')) return;
+      try { await DB.deleteWaitlist(b.dataset.id); await loadWaitlist(); } catch(e){ toast(e.message, true); }
+    }));
+  } catch(e){ toast('대기 로딩 실패: '+e.message, true); }
+}
+
+// ============ CONFIG ============
+function updateShopOpenLabel(){
+  const on = $('cfg_shop_open').checked;
+  $('cfg_shop_open_label').textContent = on ? '직접 결제 ON' : 'Instagram 유도';
+  $('cfg_shop_open_label').style.color = on ? 'var(--ink)' : 'var(--mute)';
+}
+$('cfg_shop_open').addEventListener('change', updateShopOpenLabel);
+
+async function loadConfig(){
+  if (!DB) return;
+  try {
+    const c = await DB.listConfig();
+    $('cfg_shop_open').checked = (c.shop_open === true || c.shop_open === 'true');
+    updateShopOpenLabel();
+    $('cfg_instagram_url').value = c.instagram_url || '';
+    $('cfg_contact_email').value = c.contact_email || '';
+    $('cfg_address').value = c.address || '';
+    $('cfg_hours').value = c.hours || '';
+    $('cfg_phone').value = c.phone || '';
+    $('cfg_tagline').value = c.tagline || '';
+    $('cfg_seo_desc').value = c.seo_desc || '';
+  } catch(e){ toast('설정 로딩 실패: '+e.message, true); }
+}
+$('cfgSaveBtn').addEventListener('click', async () => {
+  try {
+    await Promise.all([
+      DB.setConfig('shop_open',     $('cfg_shop_open').checked),
+      DB.setConfig('instagram_url', $('cfg_instagram_url').value.trim()),
+      DB.setConfig('contact_email', $('cfg_contact_email').value.trim()),
+      DB.setConfig('address',       $('cfg_address').value.trim()),
+      DB.setConfig('hours',         $('cfg_hours').value.trim()),
+      DB.setConfig('phone',         $('cfg_phone').value.trim()),
+      DB.setConfig('tagline',       $('cfg_tagline').value.trim()),
+      DB.setConfig('seo_desc',      $('cfg_seo_desc').value.trim())
+    ]);
+    const s = $('cfgSaved'); s.textContent = '✓ 저장됨'; s.classList.add('show');
+    setTimeout(() => s.classList.remove('show'), 2000);
+    toast('저장됨');
+  } catch(e){ toast('저장 실패: '+e.message, true); }
+});
+
+// ============ Badges ============
+async function updateBadges(){
+  if (!DB) return;
+  try {
+    const orders = await DB.listOrders({status:'pending'});
+    const has = orders.length > 0;
+    $('dotOrd').style.display = has ? 'inline-block' : 'none';
+    $('dotOrdM').classList.toggle('on', has);
+  } catch(e) {}
+}
+
+async function init(){
+  await loadBooks();
+}
+
+checkAuth();
+</script>
+</body>
+</html>

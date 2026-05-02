@@ -1,0 +1,10 @@
+.DS_Store
+node_modules/
+*.log
+.env
+.env.local
+_backup/
+
+# anon key 는 공개되어도 RLS 로 보호되지만, 실수 방지를 위해 무시.
+# 배포 시에는 Vercel 에 직접 업로드하거나, 안전하다고 판단되면 이 줄 주석 처리.
+# supabase-config.js
