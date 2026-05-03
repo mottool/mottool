@@ -1087,45 +1087,35 @@
         <div class="cover-hero-pv" id="coverHeroPv"></div>
         <div class="cover-hero-meta">
           <p class="cover-hero-label">현재 표지</p>
-          <p class="cover-hero-hint" id="coverHeroHint">아래에서 이미지 또는 색상을 선택해 표지를 설정해주세요.</p>
+          <p class="cover-hero-hint" id="coverHeroHint">이미지를 추가해 표지를 설정하실 수 있고, 아래에서 배경 색상을 함께 정해주세요.</p>
         </div>
       </div>
 
-      <!-- 표지 종류 선택 (segmented) -->
-      <div class="cover-type-seg" id="covSeg">
-        <button type="button" data-mode="image" class="on">이미지 표지</button>
-        <button type="button" data-mode="color">색상 표지</button>
+      <!-- 이미지 갤러리 -->
+      <div class="fld">
+        <label>이미지 갤러리 — 드래그 정렬 · ★ 로 표지 지정</label>
+        <div class="img-gallery" id="imgGallery"></div>
+        <input type="file" id="imgFile" accept="image/*" multiple style="display:none"/>
+        <small class="hint">첫 업로드 이미지는 자동으로 표지가 됩니다. 이미지가 없으면 색상이 표지로 사용됩니다.</small>
       </div>
 
-      <!-- 이미지 모드 -->
-      <div class="cov-mode" data-mode="image">
-        <div class="fld">
-          <label>이미지 갤러리 — 드래그 정렬 · ★ 로 표지 지정</label>
-          <div class="img-gallery" id="imgGallery"></div>
-          <input type="file" id="imgFile" accept="image/*" multiple style="display:none"/>
-          <small class="hint">첫 업로드 이미지는 자동으로 표지가 됩니다. 다른 이미지를 표지로 사용하시려면 ★ 버튼을 눌러주세요.</small>
+      <!-- 표지 배경 색상 (항상 표시) -->
+      <div class="fld">
+        <label>표지 배경 색상</label>
+        <div class="cc-row">
+          <input type="color" id="f_covPicker"/>
+          <input type="text" id="f_covValue" placeholder="#d9d4c7"/>
         </div>
+        <small class="hint">이미지가 없을 땐 단색 표지로 사용되고, 이미지가 있을 땐 책 상세 페이지의 사진 주변 여백 색이 됩니다.</small>
       </div>
-
-      <!-- 색상 모드 -->
-      <div class="cov-mode" data-mode="color" hidden>
-        <div class="fld">
-          <label>책 배경 색상</label>
-          <div class="cc-row">
-            <input type="color" id="f_covPicker"/>
-            <input type="text" id="f_covValue" placeholder="#d9d4c7"/>
-          </div>
-          <small class="hint">사진이 없는 책의 경우 단색 배경을 표지로 사용합니다.</small>
-        </div>
-        <div class="fld">
-          <label>테두리 (선택)</label>
-          <input type="text" id="f_covBorder" placeholder="예: 1px solid #ddd"/>
-        </div>
-        <div id="colorPreview" class="color-preview"></div>
+      <div class="fld">
+        <label>테두리 (선택)</label>
+        <input type="text" id="f_covBorder" placeholder="예: 1px solid #ddd"/>
+        <small class="hint">단색 표지에만 적용됩니다 (이미지 표지엔 영향 없음).</small>
       </div>
+      <div id="colorPreview" class="color-preview" style="margin-top:6px"></div>
 
       <input type="hidden" id="f_covSrc"/>
-      <input type="checkbox" id="useColorCover" style="display:none"/>
     </section>
 
   </div>
@@ -1636,9 +1626,8 @@ function fillForm(b){
   $('f_covBorder').value = cover.border || '';
   $('f_covSrc').value = cover.src || '';
   $('f_covPicker').value = isHexColor(cover.value) ? cover.value : '#d9d4c7';
-  $('useColorCover').checked = (cover.type === 'color');
-  toggleColorCoverFields();
   updateColorPreview();
+  updateCoverHero();
 
   const d = b?.detail || {};
   $('f_dt_kicker').value = d.kicker || '';
@@ -1665,29 +1654,8 @@ function setQTog(id, on){ $(id).classList.toggle('on', on); }
 });
 
 function isHexColor(v){ return /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(String(v||'').trim()); }
-function getCovType(){ return $('useColorCover').checked ? 'color' : 'image'; }
-
-function toggleColorCoverFields(){
-  const isColor = $('useColorCover').checked;
-  // 모드 패널 표시/숨김
-  document.querySelectorAll('.cov-mode').forEach(el => {
-    el.hidden = (el.dataset.mode === 'color') !== isColor;
-  });
-  // segmented 활성 상태
-  document.querySelectorAll('#covSeg button').forEach(b => {
-    b.classList.toggle('on', (b.dataset.mode === 'color') === isColor);
-  });
-  updateCoverHero();
-}
-$('useColorCover').addEventListener('change', toggleColorCoverFields);
-
-// segmented 클릭 시 모드 전환
-$('covSeg')?.addEventListener('click', e => {
-  const b = e.target.closest('button[data-mode]');
-  if (!b) return;
-  $('useColorCover').checked = (b.dataset.mode === 'color');
-  toggleColorCoverFields();
-});
+// 표지 종류 = 갤러리에서 선택된 이미지가 있으면 'image', 없으면 'color'
+function getCovType(){ return $('f_covSrc').value.trim() ? 'image' : 'color'; }
 
 // 색상 picker ↔ 텍스트 동기화
 $('f_covPicker').addEventListener('input', () => {
@@ -1713,22 +1681,22 @@ function updateColorPreview(){
 function updateCoverHero(){
   const pv = $('coverHeroPv');
   const hint = $('coverHeroHint');
-  if ($('useColorCover').checked) {
-    pv.style.background = $('f_covValue').value.trim() || '#eee';
-    pv.style.backgroundImage = '';
-    pv.style.border = $('f_covBorder').value.trim() || 'none';
-    hint.textContent = '색상 표지가 사용됩니다. 아래에서 색상을 변경하시거나, 표지 종류를 다시 이미지로 전환하실 수 있습니다.';
-  } else {
+  const src = $('f_covSrc').value.trim();
+  const color = $('f_covValue').value.trim() || '#eee';
+  const border = $('f_covBorder').value.trim();
+
+  if (src) {
+    // 이미지 표지 — 색상은 배경/여백으로
+    pv.style.background = color;
+    pv.style.backgroundImage = `url('${src}')`;
     pv.style.border = '';
-    pv.style.background = '#ddd';
-    const src = $('f_covSrc').value.trim();
-    if (src) {
-      pv.style.backgroundImage = `url('${src}')`;
-      hint.textContent = '아래 갤러리에서 이미지의 ★ 를 눌러 표지를 변경하실 수 있습니다.';
-    } else {
-      pv.style.backgroundImage = '';
-      hint.textContent = '아직 표지가 설정되지 않았습니다. 아래 갤러리에 이미지를 추가하시면 자동으로 첫 이미지가 표지로 설정됩니다.';
-    }
+    hint.textContent = '★ 로 표지를 변경하실 수 있고, 아래 색상은 책 상세 페이지의 사진 주변 여백 색으로 사용됩니다.';
+  } else {
+    // 단색 표지
+    pv.style.background = color;
+    pv.style.backgroundImage = '';
+    pv.style.border = border || 'none';
+    hint.textContent = '아직 이미지가 없어 단색 표지가 사용됩니다. 아래에서 색상을 정하시거나 갤러리에 이미지를 추가해주세요.';
   }
 }
 
@@ -2165,17 +2133,14 @@ function renderImgGallery(arr){
   imgs = [...(arr||[])];
   // 표지가 갤러리에 없는 경우 보정
   const covSrc = $('f_covSrc').value;
-  if (!$('useColorCover').checked) {
-    if (covSrc && !imgs.includes(covSrc)) imgs.unshift(covSrc);
-    if (!covSrc && imgs.length) {
-      $('f_covSrc').value = imgs[0];
-    }
-  }
+  if (covSrc && !imgs.includes(covSrc)) imgs.unshift(covSrc);
+  if (!covSrc && imgs.length) $('f_covSrc').value = imgs[0];
+
   const cover = $('f_covSrc').value;
   const g = $('imgGallery'); g.innerHTML='';
   imgs.forEach((url, i) => {
     const t = document.createElement('div');
-    const isCover = (url === cover && !$('useColorCover').checked);
+    const isCover = (url === cover);
     t.className = 'img-tile' + (isCover ? ' cover' : '');
     t.draggable = true;
     t.style.backgroundImage = `url('${url}')`;
@@ -2190,8 +2155,7 @@ function renderImgGallery(arr){
       const b = e.target.closest('button[data-act]');
       if (b?.dataset.act === 'cover') {
         $('f_covSrc').value = url;
-        $('useColorCover').checked = false;
-        toggleColorCoverFields();
+        updateCoverHero();
         renderImgGallery(imgs);
         toast('표지로 지정');
       } else if (b?.dataset.act === 'del') {
@@ -2257,7 +2221,6 @@ $('saveBtn').addEventListener('click', async () => {
   if (!id) id = generateUniqueSlug(title);
   if (!id) id = 'book-' + Date.now().toString(36).slice(-5);  // 한글만이라 slugify 가 비면
   $('f_id').value = id;
-  const isColor = getCovType() === 'color';
   const piece = +($('f_piece').value||0);
   const sold = $('t_sold').classList.contains('on');
   const book = {
@@ -2273,9 +2236,15 @@ $('saveBtn').addEventListener('click', async () => {
     sold, visible: $('t_visible').classList.contains('on'),
     featured: $('t_featured').classList.contains('on'),
     position: +($('f_position').value||0),
-    cover: isColor
-      ? { type:'color', value:$('f_covValue').value.trim()||'#eee', ...($('f_covBorder').value.trim()?{border:$('f_covBorder').value.trim()}:{}) }
-      : { type:'image', src:($('f_covSrc').value.trim() || imgs[0] || '') },
+    cover: (() => {
+      const value = $('f_covValue').value.trim() || '#eee';
+      const border = $('f_covBorder').value.trim();
+      const src = $('f_covSrc').value.trim() || imgs[0] || '';
+      // src 가 있으면 image 타입, 없으면 color 타입. 색상은 어느 쪽이든 함께 저장 (배경/여백 용).
+      return src
+        ? { type:'image', src, value, ...(border?{border}:{}) }
+        : { type:'color', value, ...(border?{border}:{}) };
+    })(),
     detail: {
       kicker: $('f_dt_kicker').value.trim(),
       byline: $('f_dt_byline').value.trim(),

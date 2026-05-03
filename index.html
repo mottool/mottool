@@ -338,6 +338,12 @@
       slidesEl.innerHTML = (d.images || []).map(src =>
         '<div class="dt-slide"><img src="' + src + '" alt="" loading="lazy"/></div>'
       ).join('');
+      // 슬라이더 배경색 = 책의 표지 색상 (있으면). 이미지 주변 여백 색으로 사용됨.
+      const sliderEl = document.getElementById('dtSlider');
+      if (sliderEl) {
+        const bg = (b.cover && b.cover.value) ? b.cover.value : '';
+        sliderEl.style.setProperty('--cover-bg', bg || 'var(--card-bg)');
+      }
     }
     if (desc){
       const label = '<p class="dt-label">NOTE</p>';
