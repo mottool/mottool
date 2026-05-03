@@ -341,8 +341,13 @@
     }
     if (desc){
       const label = '<p class="dt-label">NOTE</p>';
-      const paras = (d.description || []).map(p => '<p class="dt-desc">' + p + '</p>').join('');
-      desc.innerHTML = label + paras;
+      let body = '';
+      if (Array.isArray(d.description)) {
+        body = d.description.map(p => '<p class="dt-desc">' + p + '</p>').join('');
+      } else if (typeof d.description === 'string') {
+        body = '<div class="dt-desc-rich">' + d.description + '</div>';
+      }
+      desc.innerHTML = label + body;
     }
     if (spec){
       spec.innerHTML = Object.entries(d.spec || {}).map(([k,v]) =>

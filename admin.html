@@ -1747,7 +1747,7 @@ function readSpec(){
 
 // ── Rich text editor (description) ──
 const richArea = $('f_dt_description');
-const ALLOWED_TAGS = ['EM','I','STRONG','B','U','S','BR','H3','BLOCKQUOTE','UL','OL','LI','HR','A','SPAN','FONT','DIV'];
+const ALLOWED_TAGS = ['P','EM','I','STRONG','B','U','S','BR','H1','H2','H3','H4','BLOCKQUOTE','UL','OL','LI','HR','A','SPAN','FONT','DIV'];
 // span/font/div 는 정렬·색상·크기 적용 시 만들어지는 wrapper. 내부 속성만 안전한 것 유지.
 const SAFE_ATTRS = {
   A:    ['href','target','rel'],
@@ -1813,31 +1813,22 @@ function sanitizeHTML(html){
   return tmp.innerHTML;
 }
 
-function setRichDesc(arr){
-  const paras = Array.isArray(arr) ? arr : (arr ? [arr] : []);
-  if (!paras.length) {
-    richArea.innerHTML = '';
-    richArea.dataset.empty = 'true';
-    return;
+function setRichDesc(input){
+  // 문자열(HTML) / 배열(legacy) 모두 지원
+  let html = '';
+  if (typeof input === 'string') {
+    html = sanitizeHTML(input);
+  } else if (Array.isArray(input)) {
+    html = input.map(p => `<p>${sanitizeHTML(p || '')}</p>`).join('');
   }
-  richArea.innerHTML = paras.map(p => `<p>${sanitizeHTML(p)}</p>`).join('');
-  richArea.dataset.empty = '';
+  richArea.innerHTML = html;
+  richArea.dataset.empty = (richArea.textContent.trim() === '') ? 'true' : '';
 }
 
 function getRichDesc(){
-  // 각 <p> 를 한 단락으로
-  const ps = richArea.querySelectorAll('p');
-  if (ps.length) {
-    return [...ps]
-      .map(p => sanitizeHTML(p.innerHTML.trim()))
-      .filter(Boolean);
-  }
-  // <p> 없는 경우 → <br> 기준으로 분리
-  const html = richArea.innerHTML.trim();
-  if (!html) return [];
-  return html.split(/<br\s*\/?>(?:\s*<br\s*\/?>)*/i)
-    .map(s => sanitizeHTML(s.trim()))
-    .filter(Boolean);
+  // 전체 innerHTML 을 그대로 보존 (블록 구조 유지)
+  const html = sanitizeHTML(richArea.innerHTML.trim());
+  return html;
 }
 
 // 빈 상태일 때 placeholder 보이게
