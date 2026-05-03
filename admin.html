@@ -951,7 +951,7 @@
 
             <!-- 글자 크기 -->
             <span class="rich-num" title="글자 크기 (px)">
-              <input type="number" id="richFontSize" min="10" max="72" step="1" placeholder="크기"/>
+              <input type="number" id="richFontSize" min="10" max="72" step="1" value="14"/>
               <span class="rich-num-unit">px</span>
             </span>
             <span class="rich-sep"></span>
@@ -1977,8 +1977,24 @@ function updateToolbarState(){
   } catch(e){}
 }
 document.addEventListener('selectionchange', () => {
-  if (document.activeElement === richArea) updateToolbarState();
+  if (document.activeElement === richArea) {
+    updateToolbarState();
+    updateFontSizeInput();
+  }
 });
+
+function updateFontSizeInput(){
+  const sel = window.getSelection();
+  if (!sel.rangeCount) return;
+  let node = sel.anchorNode;
+  if (!node || !richArea.contains(node)) return;
+  if (node.nodeType === 3) node = node.parentNode;
+  if (!node) return;
+  const px = parseFloat(window.getComputedStyle(node).fontSize);
+  if (Number.isFinite(px) && document.activeElement !== $('richFontSize')) {
+    $('richFontSize').value = Math.round(px);
+  }
+}
 
 // 키보드 단축키 + HR 등 블록 삭제 처리
 richArea.addEventListener('keydown', e => {
