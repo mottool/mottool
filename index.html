@@ -344,6 +344,10 @@
         const bg = (b.cover && b.cover.value) ? b.cover.value : '';
         sliderEl.style.setProperty('--cover-bg', bg || 'var(--card-bg)');
       }
+      // 슬라이드 개수 변경 → dots / counter / total 다시 계산
+      if (typeof window.__mottoolRebuildSlider === 'function') {
+        window.__mottoolRebuildSlider();
+      }
     }
     if (desc){
       const label = '<p class="dt-label">NOTE</p>';
@@ -637,21 +641,33 @@
   const slider = document.getElementById('dtSlider');
   const slides = document.getElementById('dtSlides');
   const dotsBox = document.getElementById('dtDots');
-  const total = slides.children.length;
+  let total = slides.children.length;
   let idx = 0;
   let autoTimer = null;
   const AUTO_MS = 4000;
 
-  // build dots
-  for (let i = 0; i < total; i++){
-    const b = document.createElement('button');
-    b.setAttribute('aria-label', `Slide ${i+1}`);
-    b.addEventListener('click', () => { goTo(i); resetAuto(); });
-    dotsBox.appendChild(b);
+  function rebuildDots(){
+    dotsBox.innerHTML = '';
+    total = slides.children.length;
+    for (let i = 0; i < total; i++){
+      const b = document.createElement('button');
+      b.setAttribute('aria-label', `Slide ${i+1}`);
+      b.addEventListener('click', () => { goTo(i); resetAuto(); });
+      dotsBox.appendChild(b);
+    }
+    // 한 장 이하면 dots/counter 숨김
+    dotsBox.style.display = total > 1 ? '' : 'none';
+    if (counter) counter.style.display = total > 1 ? '' : 'none';
+    idx = 0;
+    slides.style.transform = 'translateX(0)';
   }
+  rebuildDots();
+  // 외부에서 슬라이드 갱신 후 호출 가능하게 노출
+  window.__mottoolRebuildSlider = rebuildDots;
 
   const counter = document.getElementById('dtCounter');
   function goTo(i){
+    if (total < 1) return;
     idx = ((i % total) + total) % total;
     slides.style.transform = `translateX(${-idx * 100}%)`;
     [...dotsBox.children].forEach((d, j) => d.classList.toggle('on', j === idx));
