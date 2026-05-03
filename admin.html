@@ -304,7 +304,7 @@
 
   /* rich text editor */
   .rich-editor{border:1px solid var(--line);border-radius:2px;background:rgba(255,255,255,.4)}
-  .rich-toolbar{display:flex;gap:1px;align-items:center;padding:6px 8px;border-bottom:1px solid var(--line);background:var(--card);flex-wrap:wrap;position:sticky;top:0;z-index:5;overflow:visible}
+  .rich-toolbar{display:flex;gap:1px;align-items:center;padding:6px 8px;border-bottom:1px solid var(--line);background:var(--card);flex-wrap:wrap;position:sticky;top:0;z-index:5;overflow:visible;user-select:none;-webkit-user-select:none}
 
   /* 호버 툴팁 (data-tip 기반) */
   [data-tip]{position:relative}
@@ -1858,15 +1858,21 @@ richArea.addEventListener('blur', () => {
 // 단락 구분자를 <p> 로
 try { document.execCommand('defaultParagraphSeparator', false, 'p'); } catch(e){}
 
-// 툴바 — 버튼
+// 툴바 — 어떤 인터랙션이든 mousedown 에서 selection 손실 방지
+//   (color picker input 은 예외 — 자체적으로 selection 유지하려면 클릭 가능해야 함)
 $('richToolbar').addEventListener('mousedown', e => {
-  const b = e.target.closest('button[data-cmd]'); if (!b) return;
+  if (e.target.tagName === 'INPUT') return;          // number / color input 은 통과
   e.preventDefault();
+});
+
+// 버튼 클릭 처리 (click 이벤트 — selection 보존된 상태에서 명령 실행)
+$('richToolbar').addEventListener('click', e => {
+  const b = e.target.closest('button[data-cmd]'); if (!b) return;
   const cmd = b.dataset.cmd;
+  restoreSel();              // 안전: 저장된 selection 복원
   richArea.focus();
   // formatBlock 별칭 처리
   if (cmd === 'formatBlockH3') {
-    // 이미 H3 면 P 로 토글
     const cur = (document.queryCommandValue('formatBlock') || '').toUpperCase();
     document.execCommand('formatBlock', false, cur === 'H3' ? '<P>' : '<H3>');
   } else if (cmd === 'formatBlockBlockquote') {
@@ -1879,11 +1885,14 @@ $('richToolbar').addEventListener('mousedown', e => {
     }
     const url = prompt('연결할 URL 을 입력해주세요 (http:// 포함)');
     if (!url) return;
+    restoreSel();
+    richArea.focus();
     const safe = /^(https?:|mailto:|tel:)/i.test(url) ? url : 'https://' + url;
     document.execCommand('createLink', false, safe);
   } else {
     document.execCommand(cmd, false, null);
   }
+  saveSel();
   updateToolbarState();
 });
 
@@ -1939,10 +1948,13 @@ $('richFontSize').addEventListener('keydown', (e) => {
     applyFontSize(px);
   }
 });
-// 포커스 시 selection 자동 저장 보장
-$('richFontSize').addEventListener('focus', saveSel);
+// 클릭하기 직전(mousedown)에 selection 저장 — 클릭하면 selection 이 input 으로 옮겨가기 때문
+$('richFontSize').addEventListener('mousedown', saveSel);
+$('richFontSize').addEventListener('focus', saveSel);   // 키보드 Tab 으로 진입 시
 
-// 글자 색
+// 글자 색 — mousedown 시점에 selection 저장 (color 다이얼로그 열기 전)
+$('richColor').addEventListener('mousedown', saveSel);
+document.querySelector('.rich-color')?.addEventListener('mousedown', saveSel);
 $('richColor').addEventListener('input', e => {
   restoreSel();
   const c = e.target.value;
