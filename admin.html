@@ -887,13 +887,8 @@
       <!-- ── 제목 영역 ────────────────────────── -->
       <div class="fld">
         <label>제목 <span class="req">*</span></label>
-        <input type="text" id="f_title" placeholder="책의 제목을 입력해주세요"/>
+        <textarea id="f_title" rows="2" placeholder="책의 제목을 입력해주세요.&#10;여러 줄로 입력하시면 상세 페이지에서 그대로 줄바꿈되어 표시됩니다."></textarea>
         <small class="hint" id="slugHint" style="margin-top:4px"></small>
-      </div>
-      <div class="fld">
-        <label>꾸민 제목 <span class="opt">(선택)</span></label>
-        <textarea id="f_dt_displayTitle" rows="3" placeholder="여러 줄로 입력하시면 그대로 줄바꿈되어 표시됩니다.&#10;예:&#10;The Knight,&#10;the Princess&#10;&amp; the Good"></textarea>
-        <small class="hint">상세 페이지에서 큰 제목으로 사용됩니다. 비워두시면 위쪽 ‘제목’ 이 그대로 사용돼요.</small>
       </div>
       <div class="fld">
         <label>제목 위 작은 문구 <span class="opt">(선택)</span></label>
@@ -905,6 +900,7 @@
       <input type="hidden" id="f_authorMeta"/>
       <input type="hidden" id="f_price"/>
       <input type="hidden" id="f_dt_byline"/>
+      <input type="hidden" id="f_dt_displayTitle"/>
 
       <div class="fld-row">
         <div class="fld">
@@ -1553,7 +1549,9 @@ $('drwTabs').addEventListener('click', e => {
 $('f_title').addEventListener('input', () => {
   // 기존 책 편집 중이면 id 변경 안 함 (URL 깨짐 방지)
   if (editing) return;
-  const slug = generateUniqueSlug($('f_title').value);
+  // textarea 의 줄바꿈은 slug 에서 공백으로
+  const flat = $('f_title').value.replace(/\s*\n+\s*/g, ' ').replace(/\s+/g, ' ').trim();
+  const slug = generateUniqueSlug(flat);
   $('f_id').value = slug;
   updateSlugHint();
 });
@@ -1580,7 +1578,12 @@ function updateSlugHint(){
 function fillForm(b){
   $('f_id').value = b?.id || '';
   $('f_position').value = b?.position ?? books.length;
-  $('f_title').value = b?.title || '';
+  // 제목: 저장된 displayTitle 에 줄바꿈 정보가 있으면 그걸 복원해서 표시
+  if (b?.detail?.displayTitle && /<br/i.test(b.detail.displayTitle)) {
+    $('f_title').value = b.detail.displayTitle.replace(/<br\s*\/?>/gi, '\n');
+  } else {
+    $('f_title').value = b?.title || '';
+  }
   updateSlugHint();
   $('f_author').value = b?.author || '';
   $('f_authorMeta').value = b?.authorMeta || '';
@@ -1608,7 +1611,7 @@ function fillForm(b){
   $('f_dt_kicker').value = d.kicker || '';
   $('f_dt_byline').value = d.byline || '';
   // <br/> 을 줄바꿈으로 복원 (저장 시 \n → <br/> 변환됨)
-  $('f_dt_displayTitle').value = (d.displayTitle || '').replace(/<br\s*\/?>/gi, '\n');
+  // displayTitle 은 title 입력으로부터 자동 생성됨 (hidden field, 사용자에게 보이지 않음)
   setRichDesc(d.description);
   // 새 책일 때는 KNIGHT 기준 기본 스펙 키들 미리 제공 (값은 비움)
   const DEFAULT_SPEC_KEYS = ['publisher','printed by','paper','size','pages','binding','edition','date'];
@@ -2189,18 +2192,21 @@ $('imgFile').addEventListener('change', async (e) => {
 // ── Save / Delete ──
 $('saveBtn').addEventListener('click', async () => {
   if (!DB) return;
-  const title = $('f_title').value.trim();
-  if (!title) { toast('제목을 입력해줘', true); return; }
+  const rawTitle = $('f_title').value.trim();
+  if (!rawTitle) { toast('제목을 입력해줘', true); return; }
+  // 줄바꿈 포함된 제목 → 단일 줄(title) + <br/> 형식(displayTitle) 두 가지로
+  const titleSingleLine = rawTitle.replace(/\s*\n+\s*/g, ' ').replace(/\s+/g, ' ').trim();
+  const titleHtml = rawTitle.replace(/\n/g, '<br/>');
   // id 가 비어있으면 title 에서 자동 생성
   let id = $('f_id').value.trim();
-  if (!id) id = generateUniqueSlug(title);
-  if (!id) id = 'book-' + Date.now().toString(36).slice(-5);  // 한글만이라 slugify 가 비면
+  if (!id) id = generateUniqueSlug(titleSingleLine);
+  if (!id) id = 'book-' + Date.now().toString(36).slice(-5);
   $('f_id').value = id;
   const piece = +($('f_piece').value||0);
   const sold = $('t_sold').classList.contains('on');
   const book = {
     id, slug: id,
-    title: $('f_title').value.trim(),
+    title: titleSingleLine,
     author: $('f_author').value.trim(),
     authorMeta: $('f_authorMeta').value.trim(),
     publisher: $('f_publisher').value.trim(),
@@ -2230,8 +2236,8 @@ $('saveBtn').addEventListener('click', async () => {
     detail: {
       kicker: $('f_dt_kicker').value.trim(),
       byline: $('f_dt_byline').value.trim(),
-      // 줄바꿈을 <br/> 로 자동 변환 (사용자는 HTML 몰라도 됨)
-      displayTitle: $('f_dt_displayTitle').value.trim().replace(/\n/g, '<br/>'),
+      // 제목 입력의 줄바꿈을 그대로 보존 (상세 페이지 큰 제목용)
+      displayTitle: titleHtml,
       description: getRichDesc(),
       spec: readSpec(),
       images: imgs,
