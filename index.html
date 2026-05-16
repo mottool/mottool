@@ -292,7 +292,9 @@
       }
       const meta = document.createElement('div');
       meta.className = 'meta';
-      const titleHTML = '<p>' + b.title + '</p>';
+      // 카드 제목 — 줄바꿈을 표시할 수 있도록 \n → <br/> 변환 (단순 escape 후)
+      const escTitle = (b.title || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br/>');
+      const titleHTML = '<p>' + escTitle + '</p>';
       const authorHTML = '<p>' + (b.authorMeta || b.author || '') + '</p>';
       const pieceHTML = '<p>piece ' + b.piece + '</p>';
       const priceHTML = '<p>' + b.price + '</p>';
@@ -327,7 +329,11 @@
     const buyTitle = document.querySelector('.dt-buy-title');
     const buyMeta = document.querySelector('.dt-buy-meta');
     if (kicker) kicker.textContent = d.kicker || '';
-    if (h) h.innerHTML = d.displayTitle || b.title;
+    if (h) {
+      // 상세 페이지 큰 제목: displayTitle(이미 <br/>) 우선, 없으면 title 의 \n 을 <br/> 로
+      const titleHtml = d.displayTitle || (b.title || '').replace(/\n/g, '<br/>');
+      h.innerHTML = titleHtml;
+    }
     if (byline) byline.innerHTML = 'by <em>' + (d.byline || b.author) + '</em>';
     if (dateEl) {
       const s = d.date || (b.year ? String(b.year) : '');
@@ -364,7 +370,7 @@
         '<dt>' + k + '</dt><dd>' + v + '</dd>'
       ).join('');
     }
-    if (buyTitle) buyTitle.textContent = b.title;
+    if (buyTitle) buyTitle.textContent = (b.title || '').replace(/\n+/g, ' '); // 구매 바엔 한 줄로
     if (buyMeta) buyMeta.innerHTML = '<span>piece ' + b.piece + '</span> · <span>' + b.price + '</span>';
   }
 

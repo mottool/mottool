@@ -1578,8 +1578,10 @@ function updateSlugHint(){
 function fillForm(b){
   $('f_id').value = b?.id || '';
   $('f_position').value = b?.position ?? books.length;
-  // 제목: 저장된 displayTitle 에 줄바꿈 정보가 있으면 그걸 복원해서 표시
-  if (b?.detail?.displayTitle && /<br/i.test(b.detail.displayTitle)) {
+  // 제목: 줄바꿈이 포함되어 있으면 그대로, 아니면 displayTitle (<br/>) 에서 복원
+  if (b?.title && /\n/.test(b.title)) {
+    $('f_title').value = b.title;
+  } else if (b?.detail?.displayTitle && /<br/i.test(b.detail.displayTitle)) {
     $('f_title').value = b.detail.displayTitle.replace(/<br\s*\/?>/gi, '\n');
   } else {
     $('f_title').value = b?.title || '';
@@ -2194,7 +2196,7 @@ $('saveBtn').addEventListener('click', async () => {
   if (!DB) return;
   const rawTitle = $('f_title').value.trim();
   if (!rawTitle) { toast('제목을 입력해줘', true); return; }
-  // 줄바꿈 포함된 제목 → 단일 줄(title) + <br/> 형식(displayTitle) 두 가지로
+  // 줄바꿈은 그대로 보존. slug 만 단일 줄로 변환.
   const titleSingleLine = rawTitle.replace(/\s*\n+\s*/g, ' ').replace(/\s+/g, ' ').trim();
   const titleHtml = rawTitle.replace(/\n/g, '<br/>');
   // id 가 비어있으면 title 에서 자동 생성
@@ -2206,7 +2208,7 @@ $('saveBtn').addEventListener('click', async () => {
   const sold = $('t_sold').classList.contains('on');
   const book = {
     id, slug: id,
-    title: titleSingleLine,
+    title: rawTitle,                       // 줄바꿈 그대로 저장 (카드/상세 양쪽에서 사용)
     author: $('f_author').value.trim(),
     authorMeta: $('f_authorMeta').value.trim(),
     publisher: $('f_publisher').value.trim(),
