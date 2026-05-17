@@ -266,6 +266,15 @@
   }
   applySiteConfig();
 
+  // 카드/구매바용 깨끗한 한 줄 제목 — 줄바꿈 제거. 옛 데이터 호환: displayTitle 의 <br/> 로부터 복원.
+  function cleanTitle(b){
+    if (b?.title && /\n/.test(b.title)) return b.title.replace(/\n+/g, '');
+    if (b?.detail?.displayTitle && /<br/i.test(b.detail.displayTitle)) {
+      return b.detail.displayTitle.replace(/<br\s*\/?>/gi, '');
+    }
+    return (b?.title || '');
+  }
+
   function renderGrid(){
     const grid = document.getElementById('grid');
     if (!grid) return;
@@ -292,8 +301,9 @@
       }
       const meta = document.createElement('div');
       meta.className = 'meta';
-      // 카드 제목 — 줄바꿈을 제거해서 이어지게 표시 (사용자가 넣은 공백은 그대로 유지)
-      const escTitle = (b.title || '').replace(/\n+/g, '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      // 카드 제목 — 줄바꿈 제거해서 이어지게 표시
+      const cleanT = cleanTitle(b);
+      const escTitle = cleanT.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
       const titleHTML = '<p>' + escTitle + '</p>';
       const authorHTML = '<p>' + (b.authorMeta || b.author || '') + '</p>';
       const pieceHTML = '<p>piece ' + b.piece + '</p>';
@@ -370,7 +380,7 @@
         '<dt>' + k + '</dt><dd>' + v + '</dd>'
       ).join('');
     }
-    if (buyTitle) buyTitle.textContent = (b.title || '').replace(/\n+/g, ''); // 구매 바 — 줄바꿈 제거하고 이어지게
+    if (buyTitle) buyTitle.textContent = cleanTitle(b); // 구매 바 — 줄바꿈 제거하고 이어지게
     if (buyMeta) buyMeta.innerHTML = '<span>piece ' + b.piece + '</span> · <span>' + b.price + '</span>';
   }
 

@@ -1108,6 +1108,14 @@ const toast = (msg, isErr = false) => {
   setTimeout(() => t.className = 'toast' + (isErr ? ' err' : ''), 2200);
 };
 const escapeHtml = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+// 카드/리스트용 깨끗한 한 줄 제목 — 줄바꿈 제거. 옛 데이터: displayTitle 의 <br/> 로 복원.
+function cleanTitle(b){
+  if (b?.title && /\n/.test(b.title)) return b.title.replace(/\n+/g, '');
+  if (b?.detail?.displayTitle && /<br/i.test(b.detail.displayTitle)) {
+    return b.detail.displayTitle.replace(/<br\s*\/?>/gi, '');
+  }
+  return (b?.title || '');
+}
 const escapeAttr = escapeHtml;
 
 const DB = window.MOTTOOL_DB;
@@ -1419,7 +1427,7 @@ function makeBookCard(b){
   const body = document.createElement('div');
   body.className = 'bk-body';
   body.innerHTML = `
-    <div class="bk-title">${escapeHtml(b.title||'(제목 없음)')}</div>
+    <div class="bk-title">${escapeHtml(cleanTitle(b) || '(제목 없음)')}</div>
     <div class="bk-author">${escapeHtml(b.authorMeta||b.author||b.id||'')}</div>
   `;
   body.querySelector('.bk-title').addEventListener('click', () => openEditor(b));
@@ -1520,7 +1528,7 @@ $('newCatSlug').addEventListener('keydown', e => { if (e.key === 'Enter') $('new
 // ============ DRAWER (editor) ============
 function openEditor(b){
   editing = b ? {...b, detail:{...(b.detail||{})}} : null;
-  $('drwTitle').textContent = b ? (b.title || b.id || '편집') : '새 책';
+  $('drwTitle').textContent = b ? (cleanTitle(b) || b.id || '편집') : '새 책';
   fillForm(b);
   $('drawer').classList.add('on');
   $('drawerBg').classList.add('on');
