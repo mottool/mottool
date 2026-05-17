@@ -1108,13 +1108,15 @@ const toast = (msg, isErr = false) => {
   setTimeout(() => t.className = 'toast' + (isErr ? ' err' : ''), 2200);
 };
 const escapeHtml = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-// 카드/리스트용 깨끗한 한 줄 제목 — 줄바꿈 제거. 옛 데이터: displayTitle 의 <br/> 로 복원.
+// HTML 엔티티 디코드 (&amp; → &, &lt; → < 등)
+function decodeEntities(s){
+  const ta = document.createElement('textarea');
+  ta.innerHTML = String(s ?? '');
+  return ta.value;
+}
+// 카드/리스트용 깨끗한 한 줄 제목 — 줄바꿈만 제거. title 우선.
 function cleanTitle(b){
-  if (b?.title && /\n/.test(b.title)) return b.title.replace(/\n+/g, '');
-  if (b?.detail?.displayTitle && /<br/i.test(b.detail.displayTitle)) {
-    return b.detail.displayTitle.replace(/<br\s*\/?>/gi, '');
-  }
-  return (b?.title || '');
+  return (b?.title || '').replace(/\n+/g, '');
 }
 const escapeAttr = escapeHtml;
 
@@ -1586,11 +1588,12 @@ function updateSlugHint(){
 function fillForm(b){
   $('f_id').value = b?.id || '';
   $('f_position').value = b?.position ?? books.length;
-  // 제목: 줄바꿈이 포함되어 있으면 그대로, 아니면 displayTitle (<br/>) 에서 복원
+  // 제목: 줄바꿈 그대로 / displayTitle 의 <br/> 도 줄바꿈으로 복원. HTML 엔티티(&amp; 등) 디코드.
   if (b?.title && /\n/.test(b.title)) {
     $('f_title').value = b.title;
   } else if (b?.detail?.displayTitle && /<br/i.test(b.detail.displayTitle)) {
-    $('f_title').value = b.detail.displayTitle.replace(/<br\s*\/?>/gi, '\n');
+    const restored = b.detail.displayTitle.replace(/<br\s*\/?>/gi, '\n');
+    $('f_title').value = decodeEntities(restored);
   } else {
     $('f_title').value = b?.title || '';
   }

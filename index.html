@@ -266,13 +266,9 @@
   }
   applySiteConfig();
 
-  // 카드/구매바용 깨끗한 한 줄 제목 — 줄바꿈 제거. 옛 데이터 호환: displayTitle 의 <br/> 로부터 복원.
+  // 카드/구매바용 깨끗한 한 줄 제목 — 줄바꿈만 제거. title 우선.
   function cleanTitle(b){
-    if (b?.title && /\n/.test(b.title)) return b.title.replace(/\n+/g, '');
-    if (b?.detail?.displayTitle && /<br/i.test(b.detail.displayTitle)) {
-      return b.detail.displayTitle.replace(/<br\s*\/?>/gi, '');
-    }
-    return (b?.title || '');
+    return (b?.title || '').replace(/\n+/g, '');
   }
 
   function renderGrid(){
