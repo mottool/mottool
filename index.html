@@ -266,9 +266,26 @@
   }
   applySiteConfig();
 
-  // 카드/구매바용 깨끗한 한 줄 제목 — 줄바꿈만 제거. title 우선.
+  // HTML 엔티티 디코드
+  function decodeEntities(s){
+    const ta = document.createElement('textarea');
+    ta.innerHTML = String(s ?? '');
+    return ta.value;
+  }
+  // 옛 코드로 \n→공백 손상된 title 자동 복원
+  function resolveTitle(b){
+    const title = b?.title || '';
+    const dt    = b?.detail?.displayTitle || '';
+    if (/\n/.test(title)) return title;
+    if (!/<br/i.test(dt)) return title;
+    const ti = title.replace(/\s+/g,' ').trim();
+    const di = decodeEntities(dt.replace(/<br\s*\/?>/gi,' ')).replace(/\s+/g,' ').trim();
+    if (ti === di) return decodeEntities(dt.replace(/<br\s*\/?>/gi,'\n'));
+    return title;
+  }
+  // 카드/구매바용 깨끗한 한 줄 제목
   function cleanTitle(b){
-    return (b?.title || '').replace(/\n+/g, '');
+    return resolveTitle(b).replace(/\n+/g, '');
   }
 
   function renderGrid(){
@@ -336,9 +353,11 @@
     const buyMeta = document.querySelector('.dt-buy-meta');
     if (kicker) kicker.textContent = d.kicker || '';
     if (h) {
-      // 상세 페이지 큰 제목: displayTitle(이미 <br/>) 우선, 없으면 title 의 \n 을 <br/> 로
-      const titleHtml = d.displayTitle || (b.title || '').replace(/\n/g, '<br/>');
-      h.innerHTML = titleHtml;
+      // 상세 페이지 큰 제목: resolveTitle 의 줄바꿈을 <br/> 로 변환 (엔티티는 이미 디코드됨)
+      const escaped = resolveTitle(b)
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+        .replace(/\n/g, '<br/>');
+      h.innerHTML = escaped;
     }
     if (byline) byline.innerHTML = 'by <em>' + (d.byline || b.author) + '</em>';
     if (dateEl) {

@@ -1114,9 +1114,27 @@ function decodeEntities(s){
   ta.innerHTML = String(s ?? '');
   return ta.value;
 }
-// 카드/리스트용 깨끗한 한 줄 제목 — 줄바꿈만 제거. title 우선.
+
+// 새 코드로 저장된 title 인지, 옛 코드로 \n→공백 손상된 title 인지 구분 → 손상된 경우 displayTitle 로 복원
+function resolveTitle(b){
+  const title = b?.title || '';
+  const dt    = b?.detail?.displayTitle || '';
+  if (/\n/.test(title)) return title;              // 새 저장 — 그대로
+  if (!/<br/i.test(dt)) return title;              // displayTitle 도 분리 없음 — title 그대로
+
+  // 둘 다 공백 정규화 후 비교
+  const ti = title.replace(/\s+/g,' ').trim();
+  const di = decodeEntities(dt.replace(/<br\s*\/?>/gi,' ')).replace(/\s+/g,' ').trim();
+  if (ti === di) {
+    // 옛 코드로 저장될 때 \n→공백 으로 손상됨 → displayTitle 의 <br/> 을 \n 으로 복원
+    return decodeEntities(dt.replace(/<br\s*\/?>/gi,'\n'));
+  }
+  return title;                                    // KNIGHT 처럼 의도적으로 다른 경우
+}
+
+// 카드/리스트용 깨끗한 한 줄 제목 — 줄바꿈 제거
 function cleanTitle(b){
-  return (b?.title || '').replace(/\n+/g, '');
+  return resolveTitle(b).replace(/\n+/g, '');
 }
 const escapeAttr = escapeHtml;
 
@@ -1588,15 +1606,8 @@ function updateSlugHint(){
 function fillForm(b){
   $('f_id').value = b?.id || '';
   $('f_position').value = b?.position ?? books.length;
-  // 제목: 줄바꿈 그대로 / displayTitle 의 <br/> 도 줄바꿈으로 복원. HTML 엔티티(&amp; 등) 디코드.
-  if (b?.title && /\n/.test(b.title)) {
-    $('f_title').value = b.title;
-  } else if (b?.detail?.displayTitle && /<br/i.test(b.detail.displayTitle)) {
-    const restored = b.detail.displayTitle.replace(/<br\s*\/?>/gi, '\n');
-    $('f_title').value = decodeEntities(restored);
-  } else {
-    $('f_title').value = b?.title || '';
-  }
+  // 제목: 자동으로 적절한 형태 (줄바꿈 보존) 로 복원
+  $('f_title').value = resolveTitle(b);
   updateSlugHint();
   $('f_author').value = b?.author || '';
   $('f_authorMeta').value = b?.authorMeta || '';
