@@ -677,6 +677,8 @@
   let autoTimer = null;
   const AUTO_MS = 4000;
 
+  const counter = document.getElementById('dtCounter');
+
   function rebuildDots(){
     dotsBox.innerHTML = '';
     total = slides.children.length;
@@ -696,7 +698,6 @@
   // 외부에서 슬라이드 갱신 후 호출 가능하게 노출
   window.__mottoolRebuildSlider = rebuildDots;
 
-  const counter = document.getElementById('dtCounter');
   function goTo(i){
     if (total < 1) return;
     idx = ((i % total) + total) % total;
