@@ -310,6 +310,8 @@
         ph.className = 'ph';
         ph.style.background = b.cover.value;
         if (b.cover.border) ph.style.border = b.cover.border;
+        // 책마다 다른 비율 (없으면 기본 1/1.3)
+        if (b.detail && b.detail.coverAspect) ph.style.aspectRatio = b.detail.coverAspect;
         cv.appendChild(ph);
       }
       const meta = document.createElement('div');
@@ -326,8 +328,47 @@
       card.appendChild(meta);
       grid.appendChild(card);
     });
+    // 이미지 로드 후 높이가 바뀌므로 로드되면 재배치
+    grid.querySelectorAll('img').forEach(img => {
+      if (!img.complete) img.addEventListener('load', layoutMasonry, { once:true });
+    });
   }
+
+  // ===== JS 메이슨리 — 행 순서 유지하며 빈 여백 없이 배치 =====
+  function layoutMasonry(){
+    const grid = document.getElementById('grid');
+    if (!grid) return;
+    const cards = [...grid.children];
+    // 모바일(≤760px)은 sticky 스택 — JS 배치 안 함, inline 스타일 제거
+    if (window.innerWidth <= 760){
+      grid.style.height = '';
+      cards.forEach(c => { c.style.position=''; c.style.left=''; c.style.top=''; c.style.width=''; });
+      return;
+    }
+    const cols = 3, gap = 20, rowGap = 50;
+    const colW = (grid.clientWidth - gap*(cols-1)) / cols;
+    const colH = new Array(cols).fill(0);
+    cards.forEach(card => {
+      card.style.position = 'absolute';
+      card.style.width = colW + 'px';
+      // 가장 낮은 컬럼 — 동률이면 왼쪽 우선 (행 순서 유지)
+      let min = 0;
+      for (let i=1;i<cols;i++) if (colH[i] < colH[min] - 0.5) min = i;
+      card.style.left = (min*(colW+gap)) + 'px';
+      card.style.top  = colH[min] + 'px';
+      colH[min] += card.offsetHeight + rowGap;
+    });
+    grid.style.height = (Math.max(...colH) - rowGap) + 'px';
+  }
+  let _masonryRaf = null;
+  function relayout(){
+    if (_masonryRaf) cancelAnimationFrame(_masonryRaf);
+    _masonryRaf = requestAnimationFrame(layoutMasonry);
+  }
+  window.addEventListener('resize', relayout);
+
   renderGrid();
+  layoutMasonry();
 
   function formatDate(s){
     if (!s) return '';

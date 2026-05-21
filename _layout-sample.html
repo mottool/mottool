@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>mottool — 레이아웃 비교 샘플</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css" rel="stylesheet">
+<style>
+  :root{ --bg:#f7f5ee; --ink:#1a1a18; --sub:#555; --mute:#999; --line:#e6e1d3; }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:'Pretendard Variable',sans-serif;padding:40px 24px 80px}
+  h1{font-size:22px;font-weight:800;letter-spacing:-.02em;margin:0 0 6px}
+  .lead{color:var(--sub);font-size:13px;margin:0 0 40px;line-height:1.6}
+  section{max-width:900px;margin:0 auto 64px}
+  .sec-head{display:flex;align-items:baseline;gap:10px;margin-bottom:6px;padding-bottom:10px;border-bottom:2px solid var(--ink)}
+  .sec-head h2{font-size:17px;font-weight:700;margin:0}
+  .sec-head .tag{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#fff;background:var(--ink);padding:3px 8px;border-radius:3px}
+  .sec-head .tag.cur{background:#2e8b3a}
+  .sec-desc{font-size:12px;color:var(--sub);margin:8px 0 20px;line-height:1.6}
+  .sec-desc b{color:var(--ink)}
+
+  /* mock book card */
+  .bk{break-inside:avoid;margin-bottom:24px;cursor:default}
+  .bk .cover{border-radius:2px;box-shadow:0 2px 8px rgba(0,0,0,.1);display:flex;align-items:flex-end;padding:10px;color:#fff;font-weight:800;font-size:20px;text-shadow:0 1px 4px rgba(0,0,0,.55)}
+  .bk .t{font-size:12px;font-weight:600;margin-top:8px}
+  .bk .a{font-size:10px;color:var(--mute);letter-spacing:.08em;text-transform:uppercase;margin-top:2px}
+
+  /* 1. CSS multi-column masonry */
+  .lay-columns{columns:3;column-gap:20px}
+
+  /* 2. JS masonry */
+  .lay-jsmasonry{position:relative}
+
+  /* 3. CSS Grid (fixed rows) */
+  .lay-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px 20px}
+  .lay-grid .bk{margin-bottom:0}
+
+  @media (max-width:680px){
+    .lay-columns{columns:2}
+    .lay-grid{grid-template-columns:repeat(2,1fr)}
+  }
+</style>
+</head>
+<body>
+
+<h1>레이아웃 3종 비교</h1>
+<p class="lead">책 6권을 같은 데이터로 세 가지 방식으로 배치했습니다. 카드 안 숫자 = 추가 순서(1번이 가장 최근).<br/>책 표지 높이를 일부러 다르게 했어요 — 짧은 책 아래 빈 공간이 생기는지 확인해보세요.</p>
+
+<!-- ============ 1. CSS 메이슨리 (현재 적용됨) ============ -->
+<section>
+  <div class="sec-head">
+    <h2>① CSS 메이슨리</h2>
+    <span class="tag cur">현재 적용됨</span>
+  </div>
+  <p class="sec-desc">
+    행 정렬 없이 <b>컬럼 단위로 위→아래</b> 채움. <b>빈 여백 없음 ✓</b><br/>
+    단점: 읽는 순서가 1↓2 → 3↓4 → 5↓6 (최근 책이 가로가 아니라 세로로 나열).
+  </p>
+  <div class="lay-columns" id="lay1"></div>
+</section>
+
+<!-- ============ 2. JS 메이슨리 ============ -->
+<section>
+  <div class="sec-head">
+    <h2>② JS 메이슨리</h2>
+    <span class="tag">행 순서 유지</span>
+  </div>
+  <p class="sec-desc">
+    JavaScript 로 위치 계산. <b>빈 여백 없음 ✓ + 가로 순서 ✓</b><br/>
+    최근 책이 1·2·3 가로로 나열되면서도 짧은 책 아래 다음 책이 바로 올라옴.
+  </p>
+  <div class="lay-jsmasonry" id="lay2"></div>
+</section>
+
+<!-- ============ 3. CSS Grid (원래) ============ -->
+<section>
+  <div class="sec-head">
+    <h2>③ CSS Grid</h2>
+    <span class="tag">원래 방식</span>
+  </div>
+  <p class="sec-desc">
+    행마다 높이 고정. <b>가로 순서 ✓ / 하지만 짧은 책 아래 빈 여백 생김 ✗</b>
+  </p>
+  <div class="lay-grid" id="lay3"></div>
+</section>
+
+<script>
+  // 18권 mock 데이터 — 표지 높이를 일부러 다양하게
+  const BOOKS = [
+    { n:1,  h:260, c:'#b6643b', t:'BRICK & MORTAR',     a:'STUDIO NOOR' },
+    { n:2,  h:170, c:'#2b3a52', t:'BLUE HOUR',          a:'TOMÁS AGUIRRE' },
+    { n:3,  h:300, c:'#9fb7a2', t:'SEA GRASS',          a:'N. OSHIRO' },
+    { n:4,  h:200, c:'#f2d24a', t:'CITRUS',             a:'HA-NEUL SEO' },
+    { n:5,  h:240, c:'#d9d4c7', t:'QUIET ROOMS',        a:'HANNA LEE' },
+    { n:6,  h:160, c:'#1a1d3a', t:'NIGHT WALK',         a:'L. MOREAU' },
+    { n:7,  h:285, c:'#c8d3bd', t:'AFTER NOON',         a:'CLARA VOSS' },
+    { n:8,  h:190, c:'#dcc7f0', t:'LILAC NOTES',        a:'JUNE ITO' },
+    { n:9,  h:225, c:'#e7b7a6', t:'SOFT FIELD',         a:'YUJI NAKAMURA' },
+    { n:10, h:310, c:'#1a1a1a', t:'INDEX 01 — GROUND',  a:'ED. MIN PARK' },
+    { n:11, h:175, c:'#c2d9e0', t:'TIDE',               a:'ANDERS VIK' },
+    { n:12, h:255, c:'#efe9df', t:'A GUIDE TO WEATHER', a:'INES AURIOL' },
+    { n:13, h:205, c:'#a8b8a0', t:'FIELD STUDIES',      a:'J. PARK' },
+    { n:14, h:270, c:'#e8c7b0', t:'KITCHEN PLANS',      a:'STUDIO ORDINARY' },
+    { n:15, h:165, c:'#3a3a3a', t:'NOISE',              a:'T. VOGEL' },
+    { n:16, h:295, c:'#9fb7a2', t:'SEA GRASS II',       a:'N. OSHIRO' },
+    { n:17, h:185, c:'#fff7d6', t:'YEAR ONE',           a:'K. ANDERSEN' },
+    { n:18, h:240, c:'#b88', t:'OPEN DOOR',             a:'RAE OKAMOTO' },
+  ];
+
+  function cardHTML(b){
+    return `<div class="bk">
+      <div class="cover" style="height:${b.h}px;background:${b.c}">${b.n}</div>
+      <div class="t">${b.t}</div>
+      <div class="a">${b.a}</div>
+    </div>`;
+  }
+
+  // ① CSS columns
+  document.getElementById('lay1').innerHTML = BOOKS.map(cardHTML).join('');
+
+  // ③ CSS grid
+  document.getElementById('lay3').innerHTML = BOOKS.map(cardHTML).join('');
+
+  // ② JS masonry — 가장 짧은 컬럼에 순서대로 배치
+  function buildJsMasonry(){
+    const root = document.getElementById('lay2');
+    root.innerHTML = BOOKS.map(cardHTML).join('');
+    const cards = [...root.children];
+    const isNarrow = window.innerWidth <= 680;
+    const cols = isNarrow ? 2 : 3;
+    const gap = 20;
+    const colW = (root.clientWidth - gap*(cols-1)) / cols;
+    const colH = new Array(cols).fill(0);
+    cards.forEach(card => {
+      card.style.position = 'absolute';
+      card.style.width = colW + 'px';
+      card.style.margin = '0';
+      // 가장 낮은 컬럼 찾기 (동률이면 왼쪽 우선 → 가로 순서 유지)
+      let min = 0;
+      for (let i=1;i<cols;i++) if (colH[i] < colH[min] - 0.5) min = i;
+      card.style.left = (min*(colW+gap)) + 'px';
+      card.style.top  = colH[min] + 'px';
+      colH[min] += card.offsetHeight + 24;
+    });
+    root.style.height = Math.max(...colH) + 'px';
+  }
+  buildJsMasonry();
+  window.addEventListener('resize', buildJsMasonry);
+</script>
+</body>
+</html>

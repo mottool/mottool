@@ -242,14 +242,13 @@ html.dark .brand-mark img{filter:invert(1)}
   min-height:100vh;
 }
 
+/* 메이슨리 — JS 가 카드 위치를 계산 (행 순서 유지하며 빈 여백 없이) */
 .grid{
-  display:grid;
-  grid-template-columns:repeat(3, 1fr);
-  gap:50px 20px;
+  position:relative;
 }
 @media (max-width:760px){
   .grid{
-    display:block;
+    display:block;       /* 모바일은 단일 흐름 (sticky 카드용) */
   }
   .card{
     position:sticky;
