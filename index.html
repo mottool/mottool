@@ -567,9 +567,16 @@
   let depthRaf = false;
   function updateDepth(){
     depthRaf = false;
-    const isMobile = getComputedStyle(document.querySelector('.grid')).display === 'block';
+    const isMobile = window.innerWidth <= 760;
     if (!isMobile){
-      mCards.forEach(c => { c.style.cssText = ''; });
+      // 데스크탑 — sticky 축소 효과 끔. 단 메이슨리가 쓰는 inline 스타일(position/top/left/width)은 보존.
+      mCards.forEach(c => {
+        c.style.removeProperty('transform');
+        c.style.removeProperty('opacity');
+        c.style.removeProperty('z-index');
+        const cv = c.querySelector('.cv');
+        if (cv) cv.style.removeProperty('box-shadow');
+      });
       return;
     }
     const visible = mCards.filter(c => c.style.display !== 'none');
