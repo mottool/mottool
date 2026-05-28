@@ -787,19 +787,9 @@
     shut();
   }
   window.addEventListener('popstate', syncToHash);
-  // 페이지 첫 로드 시 URL 이 #book/xxx 이면 그 책 바로 열기
-  // 이때 history 에 "메인" 항목을 먼저 깔아두어, 뒤로가기 → 책 닫힘 이 정상 작동하게 함
-  if (/^#book\//.test(location.hash)) {
-    const m = location.hash.match(/^#book\/(.+)$/);
-    const id = m ? decodeURIComponent(m[1]) : null;
-    if (id && booksData.books.some(b => b.id === id)) {
-      const targetHash = '#book/' + encodeURIComponent(id);
-      // 현재 항목을 메인(/)으로 치환 → 책 항목 push → [메인, 책] 의 2단 stack 완성
-      history.replaceState({}, '', location.pathname + location.search);
-      history.pushState({ book: id }, '', targetHash);
-      openBookById(id, false);
-    }
-  }
+  // 첫 로드 시 #book/xxx 으로 들어왔으면 슬라이더/돋보기 셋업이 끝난 뒤에 책을 열도록
+  // 아래쪽에 _initialBookHash 로 처리.
+  const _initialBookHash = /^#book\//.test(location.hash) ? location.hash : null;
 
   // ===== SLIDER =====
   const slider = document.getElementById('dtSlider');
@@ -1107,6 +1097,18 @@
       if (navigator.vibrate) navigator.vibrate(8);
       dotsBox.classList.add('tick');
       setTimeout(() => dotsBox.classList.remove('tick'), 80);
+    }
+  }
+
+  // 모든 셋업(슬라이더/돋보기 포함) 완료 후 deep link 처리
+  if (_initialBookHash) {
+    const m = _initialBookHash.match(/^#book\/(.+)$/);
+    const id = m ? decodeURIComponent(m[1]) : null;
+    if (id && booksData.books.some(b => b.id === id)) {
+      const targetHash = '#book/' + encodeURIComponent(id);
+      history.replaceState({}, '', location.pathname + location.search);
+      history.pushState({ book: id }, '', targetHash);
+      openBookById(id, false);
     }
   }
 })();
