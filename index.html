@@ -682,23 +682,29 @@
 
   const detail = document.getElementById('detail');
   const close = document.getElementById('dtClose');
+
+  // 카드 클릭 → 책 상세 열기 + URL 갱신 (#book/<id>)
   document.querySelectorAll('.card[data-book] a').forEach(a => {
     a.addEventListener('click', e => {
       e.preventDefault();
       const cardEl = a.closest('.card');
       const id = cardEl?.dataset.book;
-      const book = booksData.books.find(b => b.id === id);
-      if (book) populateDetail(book);
-      openDetail();
+      if (id) openBookById(id, /*push*/ true);
     });
   });
-  function openDetail(){
+
+  function openBookById(id, push){
+    const book = booksData.books.find(b => b.id === id);
+    if (!book) return;
+    populateDetail(book);
     detail.scrollTop = 0;
     detail.classList.add('on');
     darkToggle.classList.add('above-bar');
     scrollTopBtn.classList.add('above-bar');
     document.body.style.overflow = 'hidden';
-    history.pushState({detail:true}, '', '#book');
+    if (push) history.pushState({ book: id }, '', '#book/' + encodeURIComponent(id));
+    // 페이지 제목도 함께 변경 — 공유 / 탭 식별 도움
+    document.title = (book.title || id) + ' — mottool';
     startAuto();
   }
   function shut(){
@@ -707,6 +713,7 @@
     darkToggle.classList.remove('above-bar');
     scrollTopBtn.classList.remove('above-bar');
     stopAuto();
+    document.title = 'mottool — artbook · lifestyle';
     setTimeout(() => { document.body.style.overflow = ''; }, 450);
   }
   close.addEventListener('click', () => { history.back(); });
@@ -716,7 +723,24 @@
     if (e.key === 'ArrowRight') goTo(idx + 1);
     if (e.key === 'ArrowLeft')  goTo(idx - 1);
   });
-  window.addEventListener('popstate', () => { shut(); });
+
+  // 뒤로가기 / 앞으로가기 / 해시 직접 변경 처리
+  function syncToHash(){
+    const m = location.hash.match(/^#book\/(.+)$/);
+    if (m) {
+      const id = decodeURIComponent(m[1]);
+      const book = booksData.books.find(b => b.id === id);
+      if (book) {
+        // open without pushing (이미 URL 에 있음)
+        if (!detail.classList.contains('on')) openBookById(id, false);
+        return;
+      }
+    }
+    shut();
+  }
+  window.addEventListener('popstate', syncToHash);
+  // 페이지 첫 로드 시 URL 이 #book/xxx 이면 그 책 바로 열기
+  if (/^#book\//.test(location.hash)) syncToHash();
 
   // ===== SLIDER =====
   const slider = document.getElementById('dtSlider');
