@@ -432,9 +432,11 @@
       desc.innerHTML = label + body;
     }
     if (spec){
-      spec.innerHTML = Object.entries(d.spec || {}).map(([k,v]) =>
-        '<dt>' + k + '</dt><dd>' + v + '</dd>'
-      ).join('');
+      // 값이 비어있는 항목은 표시 안 함
+      spec.innerHTML = Object.entries(d.spec || {})
+        .filter(([k,v]) => String(v ?? '').trim() !== '')
+        .map(([k,v]) => '<dt>' + k + '</dt><dd>' + v + '</dd>')
+        .join('');
     }
     if (buyTitle) buyTitle.textContent = cleanTitle(b); // 구매 바 — 줄바꿈 제거하고 이어지게
     if (buyMeta) buyMeta.innerHTML = '<span>piece ' + b.piece + '</span> · <span>' + b.price + '</span>';
