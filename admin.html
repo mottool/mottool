@@ -2237,10 +2237,8 @@ $('saveBtn').addEventListener('click', async () => {
     categorySlug: $('f_categorySlug').value || null,
     year: (() => { const m = ($('f_date').value||'').match(/^\s*(\d{4})/); return m ? +m[1] : null; })(),
     piece,
-    // priceKrw 있으면 자동으로 "₩38,000" 같이 포맷, 없으면 'price soon'
+    // 판매가(원) 가 있으면 "₩38,000" 으로 포맷, 없으면 'price soon'
     price: (() => {
-      const manual = $('f_price').value.trim();
-      if (manual) return manual;
       const krw = +($('f_priceKrw').value||0);
       return krw ? '₩' + krw.toLocaleString() : 'price soon';
     })(),
