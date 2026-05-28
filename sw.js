@@ -8,7 +8,7 @@
 //   - 알림 클릭 → 해당 페이지 열기
 // ============================================================
 
-const VERSION = 'mottool-v8';
+const VERSION = 'mottool-v10';
 const CORE = [
   '/',
   '/index.html',

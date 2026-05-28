@@ -134,7 +134,7 @@
       </svg>
     </div>
 
-    <!-- body: description + specs (text wraps around floated sticky spec) -->
+    <!-- body: float spec on right + description wraps around (pretext) -->
     <div class="dt-body">
       <div class="dt-spec-col">
         <p class="dt-label">SPEC</p>
@@ -464,18 +464,14 @@
     if (!sp) return;
     const sr = sp.getBoundingClientRect();
     const reserve = sp.offsetWidth + 40;
-    // 부드러운 진입/이탈을 위한 buffer zone — SPEC 위/아래로 이 만큼 거리에서부터 padding 점진 증가
     const buffer = 80;
     const sTop = sr.top - buffer;
     const sBot = sr.bottom + buffer;
     for (const el of _wrapEls) {
       const r = el.getBoundingClientRect();
-      // 단락 위/아래 끝의 buffer 포함 SPEC 범위 진입 정도
       const overlap = Math.max(0, Math.min(sBot, r.bottom) - Math.max(sTop, r.top));
-      // 분모: 단락 높이와 SPEC 높이의 작은 쪽 — 단락이 그만큼 비례 진입했을 때 ratio=1
       const denom = Math.max(1, Math.min(r.height, sr.height + buffer*2));
       let ratio = Math.min(1, overlap / denom);
-      // easeInOut — 진입·이탈 직후 부드럽게
       ratio = ratio < .5 ? 2*ratio*ratio : 1 - Math.pow(-2*ratio + 2, 2) / 2;
       const pad = ratio * reserve;
       el.style.paddingRight = pad < 1 ? '' : pad.toFixed(1) + 'px';

@@ -587,17 +587,18 @@ html.dark .dt-back:hover{background:var(--ink);color:var(--bg)}
   display:block;
   position:relative;
 }
+.dt-body::after{ content:''; display:block; clear:both; }   /* float 안 정리 */
 .dt-spec-col{
+  float:right;
   position:sticky;
   top:clamp(60px,8vh,100px);
-  float:right;
   width:36%;
   max-width:380px;
   margin:0 0 32px clamp(28px,4vw,60px);
   padding-left:clamp(20px,3vw,32px);
   border-left:1px solid var(--line);
 }
-/* JS 가 단락마다 padding-right 를 실시간으로 갱신해 SPEC 현재 위치를 피하게 함 */
+.dt-buybar{ clear:both; }    /* 위쪽 float 의 영향 차단 — 항상 풀폭으로 */
 .dt-desc-col .dt-wrap-aware{
   transition:padding-right .35s cubic-bezier(.2,.8,.2,1);
 }
