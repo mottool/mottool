@@ -884,16 +884,33 @@
     // 활성 중이면 계속 — 커서 정지해도 각도 수렴 보장
     if (magActive) _magRaf = requestAnimationFrame(_magTick);
   }
+  // object-fit:contain 으로 letterbox 된 이미지의 실제 표시 영역 계산
+  function getDisplayedImageRect(img){
+    const r = img.getBoundingClientRect();
+    const nw = img.naturalWidth, nh = img.naturalHeight;
+    if (!nw || !nh) return { left:r.left, top:r.top, width:r.width, height:r.height };
+    const elAR = r.width / r.height;
+    const imAR = nw / nh;
+    if (imAR > elAR){
+      // 가로로 꽉 차고 위/아래 letterbox
+      const h = r.width / imAR;
+      return { left:r.left, top:r.top + (r.height - h)/2, width:r.width, height:h };
+    } else {
+      // 세로로 꽉 차고 좌/우 letterbox
+      const w = r.height * imAR;
+      return { left:r.left + (r.width - w)/2, top:r.top, width:w, height:r.height };
+    }
+  }
+
   function showMag(cx, cy){
-    // 첫 등장 시 현재 각도를 타겟으로 즉시 맞춤 (애니메이션 없이)
     _curTheta = _tgtTheta = -Math.PI / 2;
     placeMag(cx, cy);
-    _curTheta = _tgtTheta;                  // 첫 프레임 보간 없이 정확한 타겟에 위치
+    _curTheta = _tgtTheta;
     const curSlide = slides.children[idx];
     const img = curSlide?.querySelector('img');
     if (!img) return;
     magImgSrc = img.src;
-    const imgRect = img.getBoundingClientRect();
+    const imgRect = getDisplayedImageRect(img);
     magLens.style.backgroundImage = `url(${magImgSrc})`;
     magLens.style.backgroundSize = `${imgRect.width * ZOOM}px ${imgRect.height * ZOOM}px`;
     magLens.style.backgroundPosition = `${-((cx - imgRect.left) * ZOOM - 100)}px ${-((cy - imgRect.top) * ZOOM - 100)}px`;
@@ -903,7 +920,7 @@
     const curSlide = slides.children[idx];
     const img = curSlide?.querySelector('img');
     if (!img) return;
-    const imgRect = img.getBoundingClientRect();
+    const imgRect = getDisplayedImageRect(img);
     magLens.style.backgroundPosition = `${-((cx - imgRect.left) * ZOOM - 100)}px ${-((cy - imgRect.top) * ZOOM - 100)}px`;
   }
   function hideMag(){
