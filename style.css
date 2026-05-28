@@ -580,29 +580,47 @@ html.dark .dt-back:hover{background:var(--ink);color:var(--bg)}
   .mag{ width:500px; height:500px; }
 }
 
-/* ---------- Body: description + specs ---------- */
+/* ---------- Body: description + specs (pretext-style dynamic wrap) ---------- */
 .dt-body{
   max-width:1200px;margin:0 auto;
   padding:clamp(40px,6vw,80px) clamp(20px,4vw,60px) clamp(60px,8vw,120px);
-  display:grid;
-  grid-template-columns:1fr 380px;
-  gap:clamp(32px,5vw,80px);
+  display:block;
+  position:relative;
+}
+.dt-spec-col{
+  position:sticky;
+  top:clamp(60px,8vh,100px);
+  float:right;
+  width:36%;
+  max-width:380px;
+  margin:0 0 32px clamp(28px,4vw,60px);
+  padding-left:clamp(20px,3vw,32px);
+  border-left:1px solid var(--line);
+}
+/* JS 가 단락마다 padding-right 를 실시간으로 갱신해 SPEC 현재 위치를 피하게 함 */
+.dt-desc-col .dt-wrap-aware{
+  transition:padding-right .35s cubic-bezier(.2,.8,.2,1);
 }
 @media (max-width:880px){
-  .dt-body{grid-template-columns:1fr;gap:40px}
+  .dt-spec-col{
+    float:none;width:auto;max-width:none;margin:0 0 40px;
+    padding:24px 0 0;border-left:0;border-top:1px solid var(--line);
+    position:static;
+  }
+  .dt-desc-col .dt-wrap-aware{ padding-right:0 !important }
 }
 .dt-label{
+  display:inline-block;        /* 글자 길이에만 맞게 박스 줄임 */
   font-family:"JetBrains Mono",monospace;
   font-size:10px;letter-spacing:.2em;color:var(--mute);
   margin-bottom:16px;
-  padding-bottom:10px;
+  padding:0 4px 8px 0;
   border-bottom:1px solid var(--ink);
 }
 .dt-desc-col .dt-desc{
   font-size:clamp(15px,1.4vw,18px);
   line-height:1.7;color:var(--ink);
   margin-bottom:16px;
-  max-width:560px;
 }
 .dt-desc-col .dt-desc em{
   font-style:normal;font-weight:600;
@@ -614,7 +632,6 @@ html.dark .dt-back:hover{background:var(--ink);color:var(--bg)}
 .dt-desc-col .dt-desc-rich{
   font-size:clamp(15px,1.4vw,18px);
   line-height:1.7;color:var(--ink);
-  max-width:560px;
 }
 .dt-desc-col .dt-desc-rich p{margin:0 0 1em}
 .dt-desc-col .dt-desc-rich p:last-child{margin-bottom:0}

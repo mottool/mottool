@@ -134,13 +134,8 @@
       </svg>
     </div>
 
-    <!-- body: description + specs -->
+    <!-- body: description + specs (text wraps around floated sticky spec) -->
     <div class="dt-body">
-      <div class="dt-desc-col">
-        <p class="dt-label">NOTE</p>
-        <p class="dt-desc">2023년 비오는 날, 뉴욕에서 장갑 전투 모임 중 촬영된 비디오의 스틸을 담은 <em>KERMESSE</em> 출판물입니다.</p>
-        <p class="dt-desc">250호 초판. 2025년에 <em>Die Keure</em>가 Symbol Freelife Gloss 150 및 300gsm으로 인쇄되었습니다.</p>
-      </div>
       <div class="dt-spec-col">
         <p class="dt-label">SPEC</p>
         <dl class="dt-spec-list">
@@ -153,6 +148,11 @@
           <dt>edition</dt><dd>1st · 250 copies</dd>
           <dt>date</dt><dd>2025</dd>
         </dl>
+      </div>
+      <div class="dt-desc-col">
+        <p class="dt-label">NOTE</p>
+        <p class="dt-desc">2023년 비오는 날, 뉴욕에서 장갑 전투 모임 중 촬영된 비디오의 스틸을 담은 <em>KERMESSE</em> 출판물입니다.</p>
+        <p class="dt-desc">250호 초판. 2025년에 <em>Die Keure</em>가 Symbol Freelife Gloss 150 및 300gsm으로 인쇄되었습니다.</p>
       </div>
     </div>
 
@@ -440,6 +440,50 @@
     }
     if (buyTitle) buyTitle.textContent = cleanTitle(b); // 구매 바 — 줄바꿈 제거하고 이어지게
     if (buyMeta) buyMeta.innerHTML = '<span>piece ' + b.piece + '</span> · <span>' + b.price + '</span>';
+    // pretext-style wrap: 단락마다 자동으로 SPEC 위치 피하게
+    setTimeout(setupSpecWrap, 50);
+  }
+
+  // ===== pretext: SPEC 박스 위치에 맞춰 단락 padding-right 동적 갱신 =====
+  let _wrapRaf = null;
+  let _wrapEls = [];
+  function setupSpecWrap(){
+    const dc = document.querySelector('.dt-desc-col');
+    if (!dc) return;
+    _wrapEls = [...dc.querySelectorAll('p, h1, h2, h3, h4, blockquote, ul, ol, hr, .dt-desc-rich > *')];
+    _wrapEls.forEach(el => el.classList.add('dt-wrap-aware'));
+    updateSpecWrap();
+  }
+  function updateSpecWrap(){
+    _wrapRaf = null;
+    if (window.innerWidth <= 880) {
+      _wrapEls.forEach(el => el.style.paddingRight = '');
+      return;
+    }
+    const sp = document.querySelector('.dt-spec-col');
+    if (!sp) return;
+    const sr = sp.getBoundingClientRect();
+    const reserve = sp.offsetWidth + 40;
+    // 부드러운 진입/이탈을 위한 buffer zone — SPEC 위/아래로 이 만큼 거리에서부터 padding 점진 증가
+    const buffer = 80;
+    const sTop = sr.top - buffer;
+    const sBot = sr.bottom + buffer;
+    for (const el of _wrapEls) {
+      const r = el.getBoundingClientRect();
+      // 단락 위/아래 끝의 buffer 포함 SPEC 범위 진입 정도
+      const overlap = Math.max(0, Math.min(sBot, r.bottom) - Math.max(sTop, r.top));
+      // 분모: 단락 높이와 SPEC 높이의 작은 쪽 — 단락이 그만큼 비례 진입했을 때 ratio=1
+      const denom = Math.max(1, Math.min(r.height, sr.height + buffer*2));
+      let ratio = Math.min(1, overlap / denom);
+      // easeInOut — 진입·이탈 직후 부드럽게
+      ratio = ratio < .5 ? 2*ratio*ratio : 1 - Math.pow(-2*ratio + 2, 2) / 2;
+      const pad = ratio * reserve;
+      el.style.paddingRight = pad < 1 ? '' : pad.toFixed(1) + 'px';
+    }
+  }
+  function scheduleSpecWrap(){
+    if (_wrapRaf) return;
+    _wrapRaf = requestAnimationFrame(updateSpecWrap);
   }
 
   // ===== Intro splash (mobile only) =====
@@ -682,6 +726,10 @@
 
   const detail = document.getElementById('detail');
   const close = document.getElementById('dtClose');
+
+  // pretext wrap — detail 스크롤마다 단락 padding-right 재계산
+  detail.addEventListener('scroll', scheduleSpecWrap, { passive:true });
+  window.addEventListener('resize', scheduleSpecWrap);
 
   // 카드 클릭 → 책 상세 열기 + URL 갱신 (#book/<id>)
   document.querySelectorAll('.card[data-book] a').forEach(a => {
