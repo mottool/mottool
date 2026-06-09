@@ -151,8 +151,26 @@ html.dark .side-mascot img{filter:invert(1)}
   color:var(--ink);
   text-transform:uppercase;
   margin-top:0;
-  margin-bottom:auto;
+  margin-bottom:auto;       /* 아래 brand-mark 를 사이드바 하단으로 밀어냄 */
 }
+
+/* SHOP 바로 아래 펼쳐지는 작은 카테고리 sub-nav */
+.side-subnav{
+  display:flex;flex-direction:column;gap:5px;
+  margin:6px 0 6px 14px;             /* SHOP 아래 + 살짝 들여쓰기 */
+  font-family:"JetBrains Mono",monospace;
+  text-transform:none;
+}
+.side-subnav button{
+  background:none;border:0;padding:1px 0;
+  font-family:inherit;font-size:11px;letter-spacing:.04em;font-weight:400;
+  color:var(--mute);text-align:left;cursor:pointer;
+  display:flex;align-items:baseline;gap:8px;
+  transition:color .15s;line-height:1.3;
+}
+.side-subnav button:hover{color:var(--ink)}
+.side-subnav button.on{color:var(--ink);font-weight:500}
+.side-subnav button .cnt{color:var(--mute);font-size:9px;letter-spacing:0}
 .side-nav a{color:var(--ink);padding:2px 0;display:block}
 .side-nav a:hover{color:var(--sub)}
 .side-nav a.on{text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:2px}

@@ -71,6 +71,7 @@
     <a href="#cart">CART</a>
     <a href="#about">ABOUT</a>
     <a href="#shop" class="on">SHOP</a>
+    <div class="side-subnav" id="sideCats" aria-label="Categories"></div>
     <a href="#editions">EDITIONS</a>
   </nav>
   <a href="/" class="brand-mark">
@@ -207,14 +208,18 @@
   // ===== Load books data (Supabase first, fallback to books.json) =====
   let booksData = {books:[]};
   let siteConfig = {};
+  let categories = [];
+  let activeCategory = null;        // null = 전체
   if (window.MOTTOOL_DB) {
     try {
-      const [list, cfg] = await Promise.all([
+      const [list, cfg, cats] = await Promise.all([
         window.MOTTOOL_DB.listBooks(),
-        window.MOTTOOL_DB.listConfig().catch(() => ({}))
+        window.MOTTOOL_DB.listConfig().catch(() => ({})),
+        window.MOTTOOL_DB.listCategories().catch(() => [])
       ]);
       booksData = { books: list };
       siteConfig = cfg || {};
+      categories = cats || [];
     } catch(e){
       console.warn('Supabase load failed, fallback to books.json', e);
     }
@@ -292,7 +297,10 @@
     const grid = document.getElementById('grid');
     if (!grid) return;
     grid.innerHTML = '';
-    booksData.books.forEach(b => {
+    const filtered = activeCategory
+      ? booksData.books.filter(b => b.categorySlug === activeCategory)
+      : booksData.books;
+    filtered.forEach(b => {
       const card = document.createElement('article');
       card.className = 'card' + (b.sold ? ' sold' : '');
       if (b.detail) card.dataset.book = b.id;
@@ -310,13 +318,11 @@
         ph.className = 'ph';
         ph.style.background = b.cover.value;
         if (b.cover.border) ph.style.border = b.cover.border;
-        // 책마다 다른 비율 (없으면 기본 1/1.3)
         if (b.detail && b.detail.coverAspect) ph.style.aspectRatio = b.detail.coverAspect;
         cv.appendChild(ph);
       }
       const meta = document.createElement('div');
       meta.className = 'meta';
-      // 카드 제목 — 줄바꿈 제거해서 이어지게 표시
       const cleanT = cleanTitle(b);
       const escTitle = cleanT.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
       const titleHTML = '<p>' + escTitle + '</p>';
@@ -328,7 +334,6 @@
       card.appendChild(meta);
       grid.appendChild(card);
     });
-    // 이미지 로드 후 높이가 바뀌므로 로드되면 재배치
     grid.querySelectorAll('img').forEach(img => {
       if (!img.complete) img.addEventListener('load', layoutMasonry, { once:true });
     });
@@ -339,7 +344,6 @@
     const grid = document.getElementById('grid');
     if (!grid) return;
     const cards = [...grid.children];
-    // 모바일(≤760px)은 sticky 스택 — JS 배치 안 함, inline 스타일 제거
     if (window.innerWidth <= 760){
       grid.style.height = '';
       cards.forEach(c => { c.style.position=''; c.style.left=''; c.style.top=''; c.style.width=''; });
@@ -351,7 +355,6 @@
     cards.forEach(card => {
       card.style.position = 'absolute';
       card.style.width = colW + 'px';
-      // 가장 낮은 컬럼 — 동률이면 왼쪽 우선 (행 순서 유지)
       let min = 0;
       for (let i=1;i<cols;i++) if (colH[i] < colH[min] - 0.5) min = i;
       card.style.left = (min*(colW+gap)) + 'px';
@@ -367,6 +370,43 @@
   }
   window.addEventListener('resize', relayout);
 
+  // ===== 사이드바 카테고리 렌더 =====
+  function renderSideCategories(){
+    const root = document.getElementById('sideCats');
+    if (!root) return;
+    // 책 수 카운트
+    const counts = {};
+    booksData.books.forEach(b => {
+      if (b.categorySlug) counts[b.categorySlug] = (counts[b.categorySlug]||0) + 1;
+    });
+    const visibleCats = categories.filter(c => counts[c.slug]);
+    if (!visibleCats.length) { root.innerHTML = ''; return; }
+    root.innerHTML = '';
+    // All
+    const allBtn = document.createElement('button');
+    allBtn.dataset.slug = '';
+    allBtn.className = activeCategory ? '' : 'on';
+    allBtn.innerHTML = `<span>all</span><span class="cnt">${booksData.books.length}</span>`;
+    root.appendChild(allBtn);
+    visibleCats.forEach(c => {
+      const b = document.createElement('button');
+      b.dataset.slug = c.slug;
+      if (activeCategory === c.slug) b.classList.add('on');
+      const name = (c.name || c.slug).toLowerCase();
+      b.innerHTML = `<span>${name}</span><span class="cnt">${counts[c.slug]||0}</span>`;
+      root.appendChild(b);
+    });
+    root.addEventListener('click', e => {
+      const b = e.target.closest('button'); if (!b) return;
+      activeCategory = b.dataset.slug || null;
+      renderSideCategories();
+      renderGrid();
+      requestAnimationFrame(layoutMasonry);
+      if (window.innerWidth <= 760 && typeof closeSide === 'function') closeSide();
+    }, { once: true });   // 매 렌더마다 새 리스너 부착
+  }
+
+  renderSideCategories();
   renderGrid();
   layoutMasonry();
 
